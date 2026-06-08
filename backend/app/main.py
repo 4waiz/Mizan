@@ -1,0 +1,309 @@
+"""Mizan FastAPI application — the public contract for the workflow UIs.
+
+The beneficiary UI drives intake -> documents -> run -> status. The officer UI
+drives queue -> case detail -> approve/override. Decisions come from the
+deterministic graph; these routes are thin orchestration + persistence.
+"""
+from __future__ import annotations
+
+from contextlib import asynccontextmanager
+
+from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+
+from . import __version__
+from .config import get_settings
+from .db import get_repository
+from .graph import engine_name, run_pipeline
+from .schemas import (
+    AuditEventType,
+    CandidatePlan,
+    CaseState,
+    CaseStatus,
+    OfficerDecision,
+    OutcomeType,
+)
+from .schemas.api import (
+    DocumentUploadRequest,
+    IntakeRequest,
+    IntakeResponse,
+    OfficerActionRequest,
+    OverrideRequest,
+    ProactiveAlert,
+    QueueItem,
+    RunResponse,
+)
+from .services import audit, case_factory
+from .services.mocks import registry
+from .services.replay import replay_summary
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    repo = get_repository()
+    # Seed demo data on first launch so the queues are populated.
+    if not repo.list_all():
+        from .fixtures.loader import seed_database
+
+        seed_database()
+    yield
+
+
+app = FastAPI(
+    title="Mizan — Arrears Rescheduling Case Officer",
+    description="Autonomous, auditable case processing for MOEI / Sheikh Zayed Housing Programme.",
+    version=__version__,
+    lifespan=lifespan,
+)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
+def _repo():
+    return get_repository()
+
+
+def _load(case_id: str) -> CaseState:
+    case = _repo().get(case_id)
+    if case is None:
+        raise HTTPException(status_code=404, detail=f"Case {case_id} not found")
+    return case
+
+
+# ── meta ─────────────────────────────────────────────────────────────────────
+@app.get("/")
+def root() -> dict:
+    s = get_settings()
+    return {
+        "app": "Mizan",
+        "version": __version__,
+        "engine": engine_name(),
+        "llm_provider": "anthropic" if s.use_real_llm else "mock",
+        "max_deduction_ratio": s.max_deduction_ratio,
+        "fixtures": sorted(registry.all_fixtures().keys()),
+    }
+
+
+@app.get("/api/fixtures")
+def list_fixtures() -> list[dict]:
+    out = []
+    for fid, rec in sorted(registry.all_fixtures().items()):
+        out.append(
+            {
+                "fixture_id": fid,
+                "beneficiary_id": rec.get("beneficiary", {}).get("beneficiary_id"),
+                "name_en": rec.get("beneficiary", {}).get("full_name_en"),
+                "trigger_type": rec.get("trigger_type", "application"),
+                "expected_outcome": rec.get("expected_outcome"),
+                "note": rec.get("scenario_note"),
+            }
+        )
+    return out
+
+
+# ── beneficiary flow ─────────────────────────────────────────────────────────
+@app.post("/api/cases/intake", response_model=IntakeResponse)
+def intake(req: IntakeRequest) -> IntakeResponse:
+    try:
+        case = case_factory.create_case(
+            fixture_id=req.fixture_id,
+            beneficiary_id=req.beneficiary_id,
+            trigger_type=req.trigger_type,
+        )
+    except (ValueError, PermissionError) as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    _repo().save(case)
+    return IntakeResponse(case_id=case.case_id, status=case.status)
+
+
+@app.post("/api/cases/{case_id}/documents", response_model=CaseState)
+def add_documents(case_id: str, req: DocumentUploadRequest) -> CaseState:
+    case = _load(case_id)
+    existing = {d.document_id: d for d in case.document_inventory.documents}
+    for d in req.documents:
+        existing[d.document_id] = d
+    case.document_inventory.documents = list(existing.values())
+    audit.record(
+        case,
+        AuditEventType.DOCUMENT_RECEIVED,
+        f"Received {len(req.documents)} uploaded document(s).",
+        node="api",
+        evidence_ids=[d.document_id for d in req.documents],
+    )
+    _repo().save(case)
+    return case
+
+
+@app.post("/api/cases/{case_id}/run", response_model=RunResponse)
+def run_case(case_id: str) -> RunResponse:
+    case = _load(case_id)
+    case = run_pipeline(case)
+    _repo().save(case)
+    rec = case.recommendation
+    return RunResponse(
+        case_id=case.case_id,
+        status=case.status,
+        outcome_type=rec.outcome_type if rec else None,
+        straight_through=rec.straight_through if rec else False,
+        needs_human_review=case.needs_human_review,
+        confidence=case.confidence.value if case.confidence else None,
+        case=case,
+    )
+
+
+@app.get("/api/cases/{case_id}", response_model=CaseState)
+def get_case(case_id: str) -> CaseState:
+    return _load(case_id)
+
+
+@app.get("/api/cases", response_model=list[CaseState])
+def list_cases() -> list[CaseState]:
+    return _repo().list_all()
+
+
+@app.get("/api/cases/{case_id}/audit")
+def get_audit(case_id: str) -> dict:
+    case = _load(case_id)
+    return {
+        "case_id": case_id,
+        "sla": case.sla.model_dump() if case.sla else None,
+        "events": [e.model_dump() for e in case.audit_events],
+    }
+
+
+# ── officer flow ─────────────────────────────────────────────────────────────
+@app.get("/api/officer/queue", response_model=list[QueueItem])
+def officer_queue() -> list[QueueItem]:
+    out: list[QueueItem] = []
+    for c in _repo().list_queue():
+        out.append(
+            QueueItem(
+                case_id=c.case_id,
+                beneficiary_name_en=c.beneficiary.full_name_en if c.beneficiary else "—",
+                status=c.status,
+                escalation_reason=c.escalation_reason,
+                confidence=c.confidence.value if c.confidence else None,
+                arrears_amount_aed=c.arrears.arrears_amount_aed if c.arrears else None,
+                created_at=c.sla.created_at if c.sla else None,
+            )
+        )
+    return out
+
+
+@app.post("/api/officer/{case_id}/approve", response_model=CaseState)
+def officer_approve(case_id: str, req: OfficerActionRequest) -> CaseState:
+    case = _load(case_id)
+    case.officer_decision = OfficerDecision(
+        officer_id=req.officer_id,
+        action="approve",
+        notes=req.notes,
+        edited_plan=case.recommendation.selected_plan if case.recommendation else None,
+        decided_at=audit.now_iso(),
+    )
+    case.needs_human_review = False
+    case.status = CaseStatus.OFFICER_APPROVED
+    audit.record(
+        case,
+        AuditEventType.OFFICER_ACTION,
+        f"Officer {req.officer_id} approved the recommendation."
+        + (f" Notes: {req.notes}" if req.notes else ""),
+        node="officer",
+        actor=f"officer:{req.officer_id}",
+    )
+    _repo().save(case)
+    return case
+
+
+@app.post("/api/officer/{case_id}/override", response_model=CaseState)
+def officer_override(case_id: str, req: OverrideRequest) -> CaseState:
+    case = _load(case_id)
+    income = case.beneficiary.monthly_income_aed if case.beneficiary else 0.0
+    ratio = round(req.new_installment_aed / income, 4) if (req.new_installment_aed and income) else None
+    edited = CandidatePlan(
+        outcome_type=req.outcome_type,
+        label_en=f"Officer override — {req.outcome_type.value}",
+        label_ar=f"تجاوز الموظف — {req.outcome_type.value}",
+        new_installment_aed=req.new_installment_aed,
+        new_term_months=req.new_term_months,
+        deduction_ratio=ratio,
+        is_valid=True,
+        rule_ids=["officer_override"],
+        rationale=req.notes or "Manual officer decision.",
+    )
+    case.officer_decision = OfficerDecision(
+        officer_id=req.officer_id,
+        action="override",
+        notes=req.notes,
+        edited_plan=edited,
+        decided_at=audit.now_iso(),
+    )
+    if case.recommendation:
+        case.recommendation.selected_plan = edited
+        case.recommendation.outcome_type = req.outcome_type
+        case.recommendation.decision_label_en = edited.label_en
+        case.recommendation.decision_label_ar = edited.label_ar
+    case.needs_human_review = False
+    case.status = CaseStatus.OFFICER_OVERRIDDEN
+    audit.record(
+        case,
+        AuditEventType.OFFICER_ACTION,
+        f"Officer {req.officer_id} overrode to {req.outcome_type.value}."
+        + (f" Notes: {req.notes}" if req.notes else ""),
+        node="officer",
+        actor=f"officer:{req.officer_id}",
+    )
+    _repo().save(case)
+    return case
+
+
+@app.post("/api/officer/{case_id}/reject", response_model=CaseState)
+def officer_reject(case_id: str, req: OfficerActionRequest) -> CaseState:
+    case = _load(case_id)
+    case.officer_decision = OfficerDecision(
+        officer_id=req.officer_id, action="reject", notes=req.notes, decided_at=audit.now_iso()
+    )
+    case.needs_human_review = False
+    case.status = CaseStatus.OFFICER_REJECTED
+    audit.record(
+        case,
+        AuditEventType.OFFICER_ACTION,
+        f"Officer {req.officer_id} rejected the case."
+        + (f" Notes: {req.notes}" if req.notes else ""),
+        node="officer",
+        actor=f"officer:{req.officer_id}",
+    )
+    _repo().save(case)
+    return case
+
+
+# ── replay + proactive ───────────────────────────────────────────────────────
+@app.get("/api/replay/summary")
+def replay() -> dict:
+    return replay_summary()
+
+
+@app.get("/api/proactive/alerts", response_model=list[ProactiveAlert])
+def proactive_alerts() -> list[ProactiveAlert]:
+    out: list[ProactiveAlert] = []
+    for c in _repo().list_proactive():
+        if c.risk is None:
+            continue
+        suggested = (
+            c.recommendation.decision_label_en
+            if c.recommendation
+            else "Early intervention recommended"
+        )
+        out.append(
+            ProactiveAlert(
+                case_id=c.case_id,
+                beneficiary_name_en=c.beneficiary.full_name_en if c.beneficiary else "—",
+                redefault_probability=c.risk.redefault_probability,
+                drivers=c.risk.drivers,
+                suggested_action=suggested,
+            )
+        )
+    return out

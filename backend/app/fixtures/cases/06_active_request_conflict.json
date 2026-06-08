@@ -1,0 +1,38 @@
+{
+  "fixture_id": "active_request_conflict",
+  "trigger_type": "application",
+  "expected_outcome": "REJECT_ACTIVE_REQUEST",
+  "scenario_note": "An active rescheduling application is already open (SZHP-R3) -> the new request is automatically rejected/held.",
+  "beneficiary": {
+    "beneficiary_id": "SZHP-1006",
+    "full_name_en": "Noura Al Shamsi",
+    "full_name_ar": "نورة الشامسي",
+    "emirates_id_masked": "784-****-****-1006",
+    "emirate": "Ras Al Khaimah",
+    "employment_status": "employed",
+    "employer_name": "RAK Ceramics",
+    "monthly_income_aed": 17000,
+    "income_verified": true,
+    "hardship_type": "none"
+  },
+  "family": {"household_size": 3, "dependents": 1, "is_sole_earner": true, "other_household_income_aed": 0},
+  "loan": {
+    "loan_id": "LN-1006",
+    "principal_aed": 650000,
+    "outstanding_principal_aed": 470000,
+    "original_term_months": 240,
+    "months_elapsed": 70,
+    "current_installment_aed": 2700,
+    "disbursed_on": "2020-08-01"
+  },
+  "arrears": {"arrears_amount_aed": 5400, "months_in_arrears": 2, "days_past_due": 65},
+  "payment_history": {"total_installments_due": 70, "installments_paid_on_time": 63, "installments_late": 5, "installments_missed": 2, "longest_on_time_streak": 26},
+  "active_application": {"exists": true, "application_id": "APP-2026-0555", "application_type": "arrears_rescheduling", "opened_on": "2026-05-20", "status": "under_review"},
+  "obligations": {"items": [{"creditor": "FAB Credit Card", "monthly_payment_aed": 900, "outstanding_aed": 7000, "kind": "credit_card"}]},
+  "salary_verification": {"verified": true, "verified_income_aed": 17000, "employer_name": "RAK Ceramics"},
+  "documents": [
+    {"document_id": "DOC-1006-EID", "doc_type": "emirates_id", "status": "present", "file_name": "eid.pdf", "issued_on": "2023-04-01", "uploaded_on": "2026-06-08", "raw_text": "Emirates ID 784-****-1006"},
+    {"document_id": "DOC-1006-SAL", "doc_type": "salary_certificate", "status": "present", "file_name": "salary.pdf", "issued_on": "2026-05-08", "uploaded_on": "2026-06-08", "raw_text": "Employer: RAK Ceramics\nMonthly Salary: AED 17,000\nIssued: 2026-05-08"},
+    {"document_id": "DOC-1006-BNK", "doc_type": "bank_statement", "status": "present", "file_name": "bank.pdf", "issued_on": "2026-05-31", "uploaded_on": "2026-06-08", "raw_text": "Balance: AED 22,000\nBalance: AED 25,000\nSalary credit: AED 17,000"}
+  ]
+}

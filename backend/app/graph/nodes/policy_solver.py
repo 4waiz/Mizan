@@ -5,10 +5,11 @@ select the outcome, computes the confidence score, and assembles the (tentative)
 recommendation. NO free-form LLM reasoning is involved.
 
 Selection precedence:
-  1. active application open      -> REJECT_ACTIVE_REQUEST   (SZHP-R3)
-  2. required documents missing   -> REQUEST_MORE_INFO       (SZHP-R4)
-  3. otherwise best valid plan    -> UPDATE / TRANSFER / MAINTAIN
-  4. nothing valid                -> REFER_TO_OFFICER
+  1. active application open       -> REJECT_ACTIVE_REQUEST  (SZHP-R3)
+  2. suspicious docs / income fraud -> REFER_TO_OFFICER       (SZHP-R7, untrusted inputs)
+  3. required documents missing    -> REQUEST_MORE_INFO      (SZHP-R4)
+  4. otherwise best valid plan     -> UPDATE / TRANSFER / MAINTAIN
+  5. nothing valid                 -> REFER_TO_OFFICER
 """
 from __future__ import annotations
 
@@ -34,8 +35,12 @@ def run(state: CaseState) -> CaseState:
     ranked = solver.solve(state)
     state.candidate_plans = ranked
 
+    untrusted = state.fraud_flags.has_high_severity or state.fraud_flags.suspicious_doc
     if state.active_application.exists:
         chosen = _find(ranked, OutcomeType.REJECT_ACTIVE_REQUEST)
+    elif untrusted:
+        # Inputs cannot be trusted -> no automatic plan; hand to an officer.
+        chosen = _find(ranked, OutcomeType.REFER_TO_OFFICER)
     elif rules.documents_block_straight_through(state.policy_checks):
         chosen = _find(ranked, OutcomeType.REQUEST_MORE_INFO)
     else:

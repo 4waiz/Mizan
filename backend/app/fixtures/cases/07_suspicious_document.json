@@ -1,0 +1,40 @@
+{
+  "fixture_id": "suspicious_document",
+  "trigger_type": "application",
+  "expected_outcome": "REFER_TO_OFFICER",
+  "scenario_note": "Declared income far exceeds independently-verified income and a document appears altered. Never auto-rejected on suspicion (SZHP-R7) -> referred to a human.",
+  "suspicious_document": true,
+  "duplicate_application": true,
+  "beneficiary": {
+    "beneficiary_id": "SZHP-1007",
+    "full_name_en": "Omar Al Balushi",
+    "full_name_ar": "عمر البلوشي",
+    "emirates_id_masked": "784-****-****-1007",
+    "emirate": "Dubai",
+    "employment_status": "employed",
+    "employer_name": "XYZ Trading LLC",
+    "monthly_income_aed": 25000,
+    "income_verified": false,
+    "hardship_type": "none"
+  },
+  "family": {"household_size": 4, "dependents": 2, "is_sole_earner": true, "other_household_income_aed": 0},
+  "loan": {
+    "loan_id": "LN-1007",
+    "principal_aed": 800000,
+    "outstanding_principal_aed": 600000,
+    "original_term_months": 240,
+    "months_elapsed": 48,
+    "current_installment_aed": 3500,
+    "disbursed_on": "2022-06-01"
+  },
+  "arrears": {"arrears_amount_aed": 10500, "months_in_arrears": 3, "days_past_due": 98},
+  "payment_history": {"total_installments_due": 48, "installments_paid_on_time": 40, "installments_late": 6, "installments_missed": 2, "longest_on_time_streak": 18},
+  "active_application": {"exists": false},
+  "obligations": {"items": [{"creditor": "Dubai Islamic Bank Finance", "monthly_payment_aed": 2000, "outstanding_aed": 55000, "kind": "loan"}]},
+  "salary_verification": {"verified": true, "verified_income_aed": 12000, "employer_name": "XYZ Trading LLC"},
+  "documents": [
+    {"document_id": "DOC-1007-EID", "doc_type": "emirates_id", "status": "present", "file_name": "eid.pdf", "issued_on": "2023-11-01", "uploaded_on": "2026-06-08", "raw_text": "Emirates ID 784-****-1007"},
+    {"document_id": "DOC-1007-SAL", "doc_type": "salary_certificate", "status": "present", "file_name": "salary.pdf", "issued_on": "2026-05-09", "uploaded_on": "2026-06-08", "raw_text": "Employer: XYZ Trading LLC\nMonthly Salary: AED 25,000 [ALTERED]\nIssued: 2026-05-09"},
+    {"document_id": "DOC-1007-BNK", "doc_type": "bank_statement", "status": "present", "file_name": "bank.pdf", "issued_on": "2026-05-31", "uploaded_on": "2026-06-08", "raw_text": "Balance: AED 8,000\nBalance: AED 11,000\nSalary credit: AED 12,000"}
+  ]
+}

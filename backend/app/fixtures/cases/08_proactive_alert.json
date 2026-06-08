@@ -1,0 +1,41 @@
+{
+  "fixture_id": "proactive_alert",
+  "trigger_type": "proactive_flag",
+  "expected_outcome": "MAINTAIN_INSTALLMENT",
+  "scenario_note": "BONUS: not yet in arrears, but recent unemployment + high obligations + weak recent payments flag a high re-default risk. System proactively surfaces the case for early intervention.",
+  "beneficiary": {
+    "beneficiary_id": "SZHP-1008",
+    "full_name_en": "Hessa Al Marri",
+    "full_name_ar": "حصة المري",
+    "emirates_id_masked": "784-****-****-1008",
+    "emirate": "Abu Dhabi",
+    "employment_status": "unemployed",
+    "employer_name": null,
+    "monthly_income_aed": 9000,
+    "income_verified": false,
+    "hardship_type": "unemployment",
+    "hardship_notes": "Lost employment May 2026; currently no arrears but trajectory is deteriorating."
+  },
+  "family": {"household_size": 5, "dependents": 3, "is_sole_earner": true, "other_household_income_aed": 9000},
+  "loan": {
+    "loan_id": "LN-1008",
+    "principal_aed": 500000,
+    "outstanding_principal_aed": 350000,
+    "original_term_months": 240,
+    "months_elapsed": 90,
+    "current_installment_aed": 1700,
+    "disbursed_on": "2018-12-01"
+  },
+  "arrears": {"arrears_amount_aed": 0, "months_in_arrears": 0, "days_past_due": 0},
+  "payment_history": {"total_installments_due": 90, "installments_paid_on_time": 45, "installments_late": 25, "installments_missed": 20, "longest_on_time_streak": 12},
+  "active_application": {"exists": false},
+  "obligations": {"items": [
+    {"creditor": "ADIB Personal Finance", "monthly_payment_aed": 3500, "outstanding_aed": 90000, "kind": "loan"},
+    {"creditor": "ADCB Credit Card", "monthly_payment_aed": 1900, "outstanding_aed": 38000, "kind": "credit_card"}
+  ]},
+  "salary_verification": {"verified": true, "verified_income_aed": 9000, "employer_name": null},
+  "documents": [
+    {"document_id": "DOC-1008-EID", "doc_type": "emirates_id", "status": "present", "file_name": "eid.pdf", "issued_on": "2022-12-01", "uploaded_on": "2026-06-08", "raw_text": "Emirates ID 784-****-1008"},
+    {"document_id": "DOC-1008-TRM", "doc_type": "termination_letter", "status": "present", "file_name": "termination.pdf", "issued_on": "2026-05-10", "uploaded_on": "2026-06-08", "raw_text": "Termination effective 2026-05-10 due to company downsizing."}
+  ]
+}
