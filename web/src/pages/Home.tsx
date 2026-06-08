@@ -47,6 +47,15 @@ export default function Home() {
         cases to a human.
       </p>
 
+      <div className="row" style={{ gap: 12, marginTop: 24 }}>
+        <button className="btn primary" onClick={() => nav("/new-request")}>
+          Start a request
+        </button>
+        <button className="btn ghost" onClick={() => nav("/replay")}>
+          View Replay Dashboard
+        </button>
+      </div>
+
       {err && (
         <Alert kind="err">
           Cannot reach the backend. Start it with{" "}
@@ -82,7 +91,6 @@ export default function Home() {
             {selected?.note && <div className="caption">{selected.note}</div>}
           </div>
           <button className="btn btn-uaepass" onClick={signIn}>
-            <img src="/uaepass.png" alt="" />
             {t("login")}
           </button>
         </div>
@@ -103,20 +111,16 @@ export default function Home() {
         </Alert>
       )}
 
-      <div className="section-title">Index</div>
+      <div className="section-title">How it works</div>
       <div className="grid grid-3">
         {[
-          { n: "A", h: t("beneficiary"), items: ["New Request", "My Case · status + result"] },
-          { n: "B", h: t("officer"), items: ["Review Queue", "Case detail + actions"] },
-          { n: "C", h: t("insight"), items: ["Proactive Alerts", "Replay Dashboard"] },
+          { icon: "✍", h: t("beneficiary"), items: ["New Request", "My Case · status + result"] },
+          { icon: "⚖", h: t("officer"), items: ["Review Queue", "Case detail + actions"] },
+          { icon: "📊", h: t("insight"), items: ["Proactive Alerts", "Replay Dashboard"] },
         ].map((c) => (
-          <div key={c.n} className="card">
-            <div className="row" style={{ gap: 10 }}>
-              <span className="stamp ink" style={{ fontSize: 12 }}>
-                {c.n}
-              </span>
-              <h4 style={{ fontSize: 18 }}>{c.h}</h4>
-            </div>
+          <div key={c.h} className="card">
+            <span className="chip">{c.icon}</span>
+            <h4 style={{ fontSize: 20, marginTop: 16 }}>{c.h}</h4>
             <ul className="ticks">
               {c.items.map((i) => (
                 <li key={i}>{i}</li>
