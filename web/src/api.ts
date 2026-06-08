@@ -24,7 +24,7 @@ const post = <T>(path: string, body?: unknown) =>
   }).then((r) => handle<T>(r));
 
 export const api = {
-  health: () => get<any>("/"),
+  health: () => get<any>("/api/health"),
   fixtures: () => get<any[]>("/api/fixtures"),
   intake: (fixture_id: string, trigger_type = "application") =>
     post<{ case_id: string; status: string }>("/api/cases/intake", {

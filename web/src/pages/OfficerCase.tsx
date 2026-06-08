@@ -24,7 +24,8 @@ const OUTCOMES = [
 
 export default function OfficerCase() {
   const { t, outcome } = useI18n();
-  const [caseId, setCaseId] = useState(getSession().officerCaseId ?? "");
+  const urlCase = new URLSearchParams(window.location.search).get("case");
+  const [caseId, setCaseId] = useState(urlCase ?? getSession().officerCaseId ?? "");
   const [caseData, setCaseData] = useState<any>(null);
   const [audit, setAudit] = useState<any>(null);
   const [officerId, setOfficerId] = useState("officer-001");

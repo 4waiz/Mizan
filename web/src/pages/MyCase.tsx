@@ -19,7 +19,8 @@ import {
 export default function MyCase() {
   const { t } = useI18n();
   const s = getSession();
-  const [caseId, setCaseId] = useState(s.lastRunCaseId ?? s.activeCaseId ?? "");
+  const urlCase = new URLSearchParams(window.location.search).get("case");
+  const [caseId, setCaseId] = useState(urlCase ?? s.lastRunCaseId ?? s.activeCaseId ?? "");
   const [caseData, setCaseData] = useState<any>(null);
   const [audit, setAudit] = useState<any>(null);
   const [err, setErr] = useState<string | null>(null);
