@@ -122,7 +122,8 @@ make frontend        # or: streamlit run streamlit_app/app.py
 Seed the SQLite DB with the 8 demo fixtures:
 
 ```bash
-make seed            # or: python -m app.fixtures.loader  (run with --app-dir backend)
+make seed            # or: cd backend && python -m app.fixtures.loader
+                     # (the backend also auto-seeds on first startup)
 ```
 
 Run the tests:

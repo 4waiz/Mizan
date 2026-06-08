@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from functools import lru_cache
 
+from pydantic import AliasChoices, Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -17,7 +18,11 @@ class Settings(BaseSettings):
     # LLM
     llm_provider: str = "mock"          # mock | anthropic
     llm_model: str = "claude-opus-4-8"
-    anthropic_api_key: str | None = None
+    # Accept both MIZAN_ANTHROPIC_API_KEY and the standard ANTHROPIC_API_KEY.
+    anthropic_api_key: str | None = Field(
+        default=None,
+        validation_alias=AliasChoices("MIZAN_ANTHROPIC_API_KEY", "ANTHROPIC_API_KEY"),
+    )
 
     # Database
     database_url: str = "sqlite:///./mizan.db"

@@ -1,0 +1,13 @@
+# Government-style theme for the Mizan workflow UI.
+[theme]
+primaryColor = "#0b7a4b"
+backgroundColor = "#ffffff"
+secondaryBackgroundColor = "#f6f8f7"
+textColor = "#1b1b1b"
+font = "sans serif"
+
+[browser]
+gatherUsageStats = false
+
+[server]
+headless = true
