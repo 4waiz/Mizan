@@ -1,0 +1,26 @@
+# Core (required) ------------------------------------------------------------
+fastapi==0.115.5
+uvicorn[standard]==0.32.1
+pydantic==2.9.2
+pydantic-settings==2.6.1
+python-multipart==0.0.17
+pandas==2.2.3
+
+# Orchestration (graceful fallback runner exists if these are absent) --------
+langgraph==0.2.50
+langchain-core==0.3.21
+
+# Optional model provider (MockLLM used when absent / no API key) ------------
+langchain-anthropic==0.3.0
+
+# Lightweight risk scoring (deterministic heuristic fallback if absent) ------
+scikit-learn==1.5.2
+numpy==2.1.3
+
+# Frontend --------------------------------------------------------------------
+streamlit==1.40.1
+requests==2.32.3
+
+# Tests -----------------------------------------------------------------------
+pytest==8.3.3
+httpx==0.27.2

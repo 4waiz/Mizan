@@ -1,0 +1,27 @@
+# One-shot local stack: FastAPI backend + Streamlit workflow UI.
+# Both run from the same image; the frontend talks to the backend over the
+# compose network. No external services required (MockLLM + SQLite).
+services:
+  backend:
+    build: .
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --app-dir backend
+    environment:
+      - MIZAN_DATABASE_URL=sqlite:////data/mizan.db
+      - MIZAN_LLM_PROVIDER=mock
+    ports:
+      - "8000:8000"
+    volumes:
+      - mizan-data:/data
+
+  frontend:
+    build: .
+    command: streamlit run streamlit_app/app.py --server.address 0.0.0.0 --server.port 8501
+    environment:
+      - MIZAN_API_BASE_URL=http://backend:8000
+    ports:
+      - "8501:8501"
+    depends_on:
+      - backend
+
+volumes:
+  mizan-data:
