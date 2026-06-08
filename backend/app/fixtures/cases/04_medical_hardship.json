@@ -1,0 +1,40 @@
+{
+  "fixture_id": "medical_hardship",
+  "trigger_type": "application",
+  "expected_outcome": "TRANSFER_ARREARS",
+  "scenario_note": "Temporary medical hardship near loan maturity; clearing arrears in the remaining term would breach the cap, so arrears are deferred to maturity. Strong evidence -> straight-through accommodation.",
+  "beneficiary": {
+    "beneficiary_id": "SZHP-1004",
+    "full_name_en": "Mariam Al Zaabi",
+    "full_name_ar": "مريم الزعابي",
+    "emirates_id_masked": "784-****-****-1004",
+    "emirate": "Dubai",
+    "employment_status": "employed",
+    "employer_name": "Dubai Health Authority",
+    "monthly_income_aed": 12000,
+    "income_verified": true,
+    "hardship_type": "medical",
+    "hardship_notes": "Three-month medical leave following surgery."
+  },
+  "family": {"household_size": 4, "dependents": 2, "is_sole_earner": false, "other_household_income_aed": 6000},
+  "loan": {
+    "loan_id": "LN-1004",
+    "principal_aed": 600000,
+    "outstanding_principal_aed": 250000,
+    "original_term_months": 240,
+    "months_elapsed": 180,
+    "current_installment_aed": 1800,
+    "disbursed_on": "2011-06-01"
+  },
+  "arrears": {"arrears_amount_aed": 10800, "months_in_arrears": 6, "days_past_due": 190},
+  "payment_history": {"total_installments_due": 180, "installments_paid_on_time": 168, "installments_late": 9, "installments_missed": 3, "longest_on_time_streak": 60},
+  "active_application": {"exists": false},
+  "obligations": {"items": [{"creditor": "Mashreq Credit Card", "monthly_payment_aed": 600, "outstanding_aed": 8000, "kind": "credit_card"}]},
+  "salary_verification": {"verified": true, "verified_income_aed": 12000, "employer_name": "Dubai Health Authority"},
+  "documents": [
+    {"document_id": "DOC-1004-EID", "doc_type": "emirates_id", "status": "present", "file_name": "eid.pdf", "issued_on": "2024-02-01", "uploaded_on": "2026-06-08", "raw_text": "Emirates ID 784-****-1004"},
+    {"document_id": "DOC-1004-SAL", "doc_type": "salary_certificate", "status": "present", "file_name": "salary.pdf", "issued_on": "2026-05-05", "uploaded_on": "2026-06-08", "raw_text": "Employer: Dubai Health Authority\nMonthly Salary: AED 12,000\nIssued: 2026-05-05"},
+    {"document_id": "DOC-1004-BNK", "doc_type": "bank_statement", "status": "present", "file_name": "bank.pdf", "issued_on": "2026-05-31", "uploaded_on": "2026-06-08", "raw_text": "Balance: AED 18,000\nBalance: AED 14,000\nSalary credit: AED 12,000"},
+    {"document_id": "DOC-1004-MED", "doc_type": "medical_report", "status": "present", "file_name": "medical.pdf", "issued_on": "2026-05-01", "uploaded_on": "2026-06-08", "raw_text": "Medical incapacity 3 months. Recommended rest following surgery."}
+  ]
+}

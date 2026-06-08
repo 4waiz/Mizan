@@ -1,0 +1,36 @@
+{
+  "fixture_id": "missing_documents",
+  "trigger_type": "application",
+  "expected_outcome": "REQUEST_MORE_INFO",
+  "scenario_note": "Employed beneficiary but salary certificate and bank statement are missing -> straight-through cannot proceed.",
+  "beneficiary": {
+    "beneficiary_id": "SZHP-1002",
+    "full_name_en": "Fatima Al Suwaidi",
+    "full_name_ar": "فاطمة السويدي",
+    "emirates_id_masked": "784-****-****-1002",
+    "emirate": "Sharjah",
+    "employment_status": "employed",
+    "employer_name": "Sharjah Municipality",
+    "monthly_income_aed": 16000,
+    "income_verified": false,
+    "hardship_type": "none"
+  },
+  "family": {"household_size": 3, "dependents": 1, "is_sole_earner": true, "other_household_income_aed": 0},
+  "loan": {
+    "loan_id": "LN-1002",
+    "principal_aed": 600000,
+    "outstanding_principal_aed": 480000,
+    "original_term_months": 240,
+    "months_elapsed": 72,
+    "current_installment_aed": 2800,
+    "disbursed_on": "2020-06-01"
+  },
+  "arrears": {"arrears_amount_aed": 8400, "months_in_arrears": 3, "days_past_due": 92},
+  "payment_history": {"total_installments_due": 72, "installments_paid_on_time": 64, "installments_late": 6, "installments_missed": 2, "longest_on_time_streak": 30},
+  "active_application": {"exists": false},
+  "obligations": {"items": [{"creditor": "Emirates NBD Auto Loan", "monthly_payment_aed": 1500, "outstanding_aed": 40000, "kind": "loan"}]},
+  "salary_verification": {"verified": true, "verified_income_aed": 16000, "employer_name": "Sharjah Municipality"},
+  "documents": [
+    {"document_id": "DOC-1002-EID", "doc_type": "emirates_id", "status": "present", "file_name": "eid.pdf", "issued_on": "2022-09-01", "uploaded_on": "2026-06-08", "raw_text": "Emirates ID 784-****-1002"}
+  ]
+}

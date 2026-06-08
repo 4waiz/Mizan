@@ -1,0 +1,41 @@
+{
+  "fixture_id": "high_obligations",
+  "trigger_type": "application",
+  "expected_outcome": "UPDATE_INSTALLMENT",
+  "scenario_note": "A valid plan exists, but external obligations exceed 50% of income (SZHP-R6) so aggressiveness is reduced and the case is referred for human review.",
+  "beneficiary": {
+    "beneficiary_id": "SZHP-1005",
+    "full_name_en": "Saeed Al Nuaimi",
+    "full_name_ar": "سعيد النعيمي",
+    "emirates_id_masked": "784-****-****-1005",
+    "emirate": "Ajman",
+    "employment_status": "employed",
+    "employer_name": "Ajman Ports",
+    "monthly_income_aed": 18000,
+    "income_verified": true,
+    "hardship_type": "reduced_income"
+  },
+  "family": {"household_size": 6, "dependents": 4, "is_sole_earner": true, "other_household_income_aed": 0},
+  "loan": {
+    "loan_id": "LN-1005",
+    "principal_aed": 700000,
+    "outstanding_principal_aed": 500000,
+    "original_term_months": 240,
+    "months_elapsed": 80,
+    "current_installment_aed": 2500,
+    "disbursed_on": "2019-10-01"
+  },
+  "arrears": {"arrears_amount_aed": 7500, "months_in_arrears": 3, "days_past_due": 96},
+  "payment_history": {"total_installments_due": 80, "installments_paid_on_time": 68, "installments_late": 9, "installments_missed": 3, "longest_on_time_streak": 28},
+  "active_application": {"exists": false},
+  "obligations": {"items": [
+    {"creditor": "Emirates NBD Personal Loan", "monthly_payment_aed": 6000, "outstanding_aed": 180000, "kind": "loan"},
+    {"creditor": "ADCB Credit Card", "monthly_payment_aed": 3500, "outstanding_aed": 60000, "kind": "credit_card"}
+  ]},
+  "salary_verification": {"verified": true, "verified_income_aed": 18000, "employer_name": "Ajman Ports"},
+  "documents": [
+    {"document_id": "DOC-1005-EID", "doc_type": "emirates_id", "status": "present", "file_name": "eid.pdf", "issued_on": "2023-07-01", "uploaded_on": "2026-06-08", "raw_text": "Emirates ID 784-****-1005"},
+    {"document_id": "DOC-1005-SAL", "doc_type": "salary_certificate", "status": "present", "file_name": "salary.pdf", "issued_on": "2026-05-12", "uploaded_on": "2026-06-08", "raw_text": "Employer: Ajman Ports\nMonthly Salary: AED 18,000\nIssued: 2026-05-12"},
+    {"document_id": "DOC-1005-BNK", "doc_type": "bank_statement", "status": "present", "file_name": "bank.pdf", "issued_on": "2026-05-31", "uploaded_on": "2026-06-08", "raw_text": "Balance: AED 9,000\nBalance: AED 6,500\nSalary credit: AED 18,000"}
+  ]
+}

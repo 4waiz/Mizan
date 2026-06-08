@@ -1,0 +1,38 @@
+{
+  "fixture_id": "clean_approval",
+  "trigger_type": "application",
+  "expected_outcome": "UPDATE_INSTALLMENT",
+  "scenario_note": "Healthy employed beneficiary, modest arrears, complete documents -> straight-through approval.",
+  "beneficiary": {
+    "beneficiary_id": "SZHP-1001",
+    "full_name_en": "Ahmed Al Mansoori",
+    "full_name_ar": "أحمد المنصوري",
+    "emirates_id_masked": "784-****-****-1001",
+    "emirate": "Abu Dhabi",
+    "employment_status": "employed",
+    "employer_name": "ADNOC",
+    "monthly_income_aed": 20000,
+    "income_verified": true,
+    "hardship_type": "none"
+  },
+  "family": {"household_size": 4, "dependents": 2, "is_sole_earner": true, "other_household_income_aed": 0},
+  "loan": {
+    "loan_id": "LN-1001",
+    "principal_aed": 720000,
+    "outstanding_principal_aed": 540000,
+    "original_term_months": 240,
+    "months_elapsed": 60,
+    "current_installment_aed": 3000,
+    "disbursed_on": "2021-06-01"
+  },
+  "arrears": {"arrears_amount_aed": 9000, "months_in_arrears": 3, "days_past_due": 95},
+  "payment_history": {"total_installments_due": 60, "installments_paid_on_time": 55, "installments_late": 4, "installments_missed": 1, "longest_on_time_streak": 24},
+  "active_application": {"exists": false},
+  "obligations": {"items": [{"creditor": "FAB Credit Card", "monthly_payment_aed": 800, "outstanding_aed": 5000, "kind": "credit_card"}]},
+  "salary_verification": {"verified": true, "verified_income_aed": 20000, "employer_name": "ADNOC"},
+  "documents": [
+    {"document_id": "DOC-1001-EID", "doc_type": "emirates_id", "status": "present", "file_name": "eid.pdf", "issued_on": "2023-01-01", "uploaded_on": "2026-06-08", "raw_text": "Emirates ID 784-****-1001"},
+    {"document_id": "DOC-1001-SAL", "doc_type": "salary_certificate", "status": "present", "file_name": "salary.pdf", "issued_on": "2026-05-10", "uploaded_on": "2026-06-08", "raw_text": "Employer: ADNOC\nMonthly Salary: AED 20,000\nIssued: 2026-05-10"},
+    {"document_id": "DOC-1001-BNK", "doc_type": "bank_statement", "status": "present", "file_name": "bank.pdf", "issued_on": "2026-05-31", "uploaded_on": "2026-06-08", "raw_text": "Balance: AED 45,000\nBalance: AED 52,000\nSalary credit: AED 20,000"}
+  ]
+}

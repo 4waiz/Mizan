@@ -1,0 +1,38 @@
+{
+  "fixture_id": "unemployment_hardship",
+  "trigger_type": "application",
+  "expected_outcome": "TRANSFER_ARREARS",
+  "scenario_note": "Recently unemployed; updating the installment would breach the 20% cap, so arrears are deferred. Unemployment + elevated risk -> human review.",
+  "beneficiary": {
+    "beneficiary_id": "SZHP-1003",
+    "full_name_en": "Khalid Al Hosani",
+    "full_name_ar": "خالد الحوسني",
+    "emirates_id_masked": "784-****-****-1003",
+    "emirate": "Abu Dhabi",
+    "employment_status": "unemployed",
+    "employer_name": null,
+    "monthly_income_aed": 8000,
+    "income_verified": false,
+    "hardship_type": "unemployment",
+    "hardship_notes": "Made redundant in April 2026; relying on partial household income."
+  },
+  "family": {"household_size": 5, "dependents": 3, "is_sole_earner": true, "other_household_income_aed": 8000},
+  "loan": {
+    "loan_id": "LN-1003",
+    "principal_aed": 480000,
+    "outstanding_principal_aed": 300000,
+    "original_term_months": 240,
+    "months_elapsed": 60,
+    "current_installment_aed": 1200,
+    "disbursed_on": "2021-06-01"
+  },
+  "arrears": {"arrears_amount_aed": 4800, "months_in_arrears": 4, "days_past_due": 125},
+  "payment_history": {"total_installments_due": 60, "installments_paid_on_time": 50, "installments_late": 7, "installments_missed": 3, "longest_on_time_streak": 20},
+  "active_application": {"exists": false},
+  "obligations": {"items": [{"creditor": "ADIB Personal Finance", "monthly_payment_aed": 1500, "outstanding_aed": 35000, "kind": "loan"}]},
+  "salary_verification": {"verified": true, "verified_income_aed": 8000, "employer_name": null},
+  "documents": [
+    {"document_id": "DOC-1003-EID", "doc_type": "emirates_id", "status": "present", "file_name": "eid.pdf", "issued_on": "2022-03-01", "uploaded_on": "2026-06-08", "raw_text": "Emirates ID 784-****-1003"},
+    {"document_id": "DOC-1003-TRM", "doc_type": "termination_letter", "status": "present", "file_name": "termination.pdf", "issued_on": "2026-04-15", "uploaded_on": "2026-06-08", "raw_text": "Termination effective 2026-04-15 due to redundancy. Employer: Gulf Logistics LLC."}
+  ]
+}
