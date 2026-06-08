@@ -12,11 +12,11 @@ export default function Replay() {
 
   if (err) return (
     <>
-      <Band title="📊 Replay Dashboard" subtitle="Consistency & impact across all synthetic cases" />
+      <Band title="Replay Dashboard" subtitle="Consistency & impact across all synthetic cases" />
       <Alert kind="err">{err}</Alert>
     </>
   );
-  if (!s) return <Band title="📊 Replay Dashboard" subtitle="Loading…" />;
+  if (!s) return <Band title="Replay Dashboard" subtitle="Loading…" />;
 
   const byOutcome: Record<string, number> = s.by_outcome ?? {};
   const max = Math.max(1, ...Object.values(byOutcome));
@@ -24,7 +24,7 @@ export default function Replay() {
 
   return (
     <>
-      <Band title="📊 Replay Dashboard" subtitle="Consistency & impact across all synthetic cases" />
+      <Band title="Replay Dashboard" subtitle="Consistency & impact across all synthetic cases" />
 
       <div className="grid grid-4">
         <Metric k="Total cases" v={s.total_cases} />
@@ -42,11 +42,11 @@ export default function Replay() {
       <div className="card bars">
         {Object.entries(byOutcome).map(([k, v]) => (
           <div key={k} className="bar-row">
-            <span>{k}</span>
+            <span className="lbl">{k}</span>
             <div className="bar-track">
               <div className="bar-fill" style={{ width: `${(v / max) * 100}%` }} />
             </div>
-            <span style={{ textAlign: "right" }}>{v}</span>
+            <span className="num">{v}</span>
           </div>
         ))}
       </div>

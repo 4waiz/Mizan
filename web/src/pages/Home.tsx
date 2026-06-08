@@ -39,12 +39,12 @@ export default function Home() {
 
   return (
     <>
-      <Band title={t("app_title")} subtitle={t("subtitle")} />
+      <Band title="An autonomous case officer" subtitle="Sheikh Zayed Housing Programme · MOEI" />
 
-      <p style={{ fontSize: 18, lineHeight: 1.6, maxWidth: 820 }}>
-        An autonomous case officer that turns the manual <b>5-working-day</b> arrears
-        rescheduling review into an <b>instant, explainable, auditable</b> decision —
-        and escalates only the exceptional cases to a human.
+      <p className="lead">
+        Mizan turns the manual <b>five-working-day</b> arrears rescheduling review into an{" "}
+        <b>instant, explainable, auditable</b> decision — escalating only the exceptional
+        cases to a human.
       </p>
 
       {err && (
@@ -56,20 +56,22 @@ export default function Home() {
         </Alert>
       )}
 
-      <div className="card" style={{ marginTop: 24 }}>
-        <h3 style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          <img src="/uaepass.png" alt="UAE PASS" style={{ height: 34 }} />
-          <span>{t("login")}</span>
-        </h3>
+      {/* Sign-in slip */}
+      <div className="card tab" style={{ marginTop: 28, maxWidth: 820 }}>
+        <div className="spread" style={{ alignItems: "center", marginBottom: 18 }}>
+          <div>
+            <div className="eyebrow">Authentication</div>
+            <h3 style={{ fontSize: 24, marginTop: 2 }}>{t("login")}</h3>
+          </div>
+          <img src="/uaepass.png" alt="UAE PASS" style={{ height: 40 }} />
+        </div>
 
         <div
           className="grid"
-          style={{ gridTemplateColumns: "1fr auto", alignItems: "end", marginTop: 16 }}
+          style={{ gridTemplateColumns: "1fr auto", alignItems: "end", gap: 16 }}
         >
           <div>
-            <label className="field">
-              Select a citizen identity to sign in as (synthetic UAE PASS):
-            </label>
+            <label className="field">Citizen identity · synthetic UAE PASS</label>
             <select value={choice} onChange={(e) => setChoice(e.target.value)}>
               {applicants.map((f) => (
                 <option key={f.fixture_id} value={f.fixture_id}>
@@ -88,7 +90,7 @@ export default function Home() {
 
       {signed && (
         <Alert kind="info">
-          ✅ {t("signed_in_as")} <b>{signed}</b>.{" "}
+          Signed in as <b>{signed}</b>.{" "}
           <a
             href="/new-request"
             onClick={(e) => {
@@ -101,30 +103,27 @@ export default function Home() {
         </Alert>
       )}
 
-      <hr className="rule" />
-
+      <div className="section-title">Index</div>
       <div className="grid grid-3">
-        <div className="card">
-          <h4>👤 {t("beneficiary")}</h4>
-          <ul>
-            <li>New Request</li>
-            <li>My Case (status + result)</li>
-          </ul>
-        </div>
-        <div className="card">
-          <h4>🧑‍⚖️ {t("officer")}</h4>
-          <ul>
-            <li>Review Queue</li>
-            <li>Case detail + actions</li>
-          </ul>
-        </div>
-        <div className="card">
-          <h4>📊 {t("insight")}</h4>
-          <ul>
-            <li>Proactive Alerts</li>
-            <li>Replay Dashboard</li>
-          </ul>
-        </div>
+        {[
+          { n: "A", h: t("beneficiary"), items: ["New Request", "My Case · status + result"] },
+          { n: "B", h: t("officer"), items: ["Review Queue", "Case detail + actions"] },
+          { n: "C", h: t("insight"), items: ["Proactive Alerts", "Replay Dashboard"] },
+        ].map((c) => (
+          <div key={c.n} className="card">
+            <div className="row" style={{ gap: 10 }}>
+              <span className="stamp ink" style={{ fontSize: 12 }}>
+                {c.n}
+              </span>
+              <h4 style={{ fontSize: 18 }}>{c.h}</h4>
+            </div>
+            <ul className="ticks">
+              {c.items.map((i) => (
+                <li key={i}>{i}</li>
+              ))}
+            </ul>
+          </div>
+        ))}
       </div>
     </>
   );

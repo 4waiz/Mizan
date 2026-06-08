@@ -91,7 +91,7 @@ export default function OfficerCase() {
 
   return (
     <>
-      <Band title="🧑‍⚖️ Case Review" subtitle={t("subtitle")} />
+      <Band title="Case Review" subtitle="Officer · evidence, policy & determination" />
 
       <div className="grid" style={{ gridTemplateColumns: "1fr auto auto", alignItems: "end" }}>
         <div>

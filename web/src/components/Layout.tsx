@@ -8,27 +8,39 @@ function HealthBadge() {
   const [h, setH] = useState<any>(null);
   const [err, setErr] = useState<string | null>(null);
   useEffect(() => {
-    api
-      .health()
-      .then(setH)
-      .catch((e) => setErr(String(e)));
+    api.health().then(setH).catch((e) => setErr(String(e)));
   }, []);
   if (err)
     return (
       <div className="alert err" style={{ fontSize: 12 }}>
-        Backend unreachable. Start it with <code>uvicorn</code> on :8000.
+        Backend offline — start <code>uvicorn</code> on :8000.
       </div>
     );
-  if (!h)
-    return (
-      <div className="caption">Checking backend…</div>
-    );
+  if (!h) return <div className="caption">Checking backend…</div>;
   return (
-    <div className="alert ok" style={{ fontSize: 12 }}>
-      Backend ✓ · engine: {h.engine} · LLM: {h.llm_provider}
+    <div className="row" style={{ gap: 8, fontSize: 12 }}>
+      <span className="stamp green" style={{ fontSize: 9, padding: "2px 7px" }}>
+        Online
+      </span>
+      <span className="muted mono" style={{ fontSize: 11 }}>
+        {h.engine} · {h.llm_provider}
+      </span>
     </div>
   );
 }
+
+const NAV = [
+  { to: "/", end: true, num: "00", key: "home" },
+  { group: "beneficiary" },
+  { to: "/new-request", num: "01", key: "new_request" },
+  { to: "/my-case", num: "02", key: "my_case" },
+  { group: "officer" },
+  { to: "/officer/queue", num: "03", key: "queue" },
+  { to: "/officer/case", num: "04", label: "Case Review" },
+  { group: "insight" },
+  { to: "/proactive", num: "05", key: "proactive" },
+  { to: "/replay", num: "06", key: "replay" },
+] as const;
 
 export default function Layout({ children }: { children: ReactNode }) {
   const { t, lang, setLang, hc, setHc } = useI18n();
@@ -44,49 +56,57 @@ export default function Layout({ children }: { children: ReactNode }) {
     <div className="shell">
       <aside className="sidebar">
         <div className="brand">
-          <span className="scale">⚖️</span> Mizan <span className="muted">/ ميزان</span>
+          <span className="seal">⚖</span>
+          <span>
+            <span className="word">
+              Mizan <small>ميزان</small>
+            </span>
+          </span>
         </div>
-        <div className="caption">{t("subtitle")}</div>
+        <div className="brand-sub">
+          Sheikh Zayed Housing Programme
+          <br />
+          MOEI · Arrears Rescheduling
+        </div>
 
         <nav className="nav">
-          <NavLink to="/" end>
-            🏠 {t("home")}
-          </NavLink>
-
-          <div className="nav-group-label">👤 {t("beneficiary")}</div>
-          <NavLink to="/new-request">📝 {t("new_request")}</NavLink>
-          <NavLink to="/my-case">📄 {t("my_case")}</NavLink>
-
-          <div className="nav-group-label">🧑‍⚖️ {t("officer")}</div>
-          <NavLink to="/officer/queue">📥 {t("queue")}</NavLink>
-          <NavLink to="/officer/case">🗂️ Case Review</NavLink>
-
-          <div className="nav-group-label">📊 {t("insight")}</div>
-          <NavLink to="/proactive">📡 {t("proactive")}</NavLink>
-          <NavLink to="/replay">📈 {t("replay")}</NavLink>
+          {NAV.map((item, i) =>
+            "group" in item ? (
+              <div key={i} className="nav-group eyebrow">
+                {t(item.group)}
+              </div>
+            ) : (
+              <NavLink key={item.to} to={item.to} end={(item as any).end}>
+                <span className="num">{item.num}</span>
+                {(item as any).label ?? t((item as any).key)}
+              </NavLink>
+            ),
+          )}
         </nav>
 
-        <hr className="rule" style={{ margin: "16px 0" }} />
+        <hr className="rule" style={{ margin: "20px 0" }} />
 
-        <label className="field">{t("language")} / اللغة</label>
-        <div className="row" style={{ marginBottom: 12 }}>
+        <div className="eyebrow" style={{ marginBottom: 8 }}>
+          {t("language")} · اللغة
+        </div>
+        <div className="row" style={{ marginBottom: 16, flexWrap: "nowrap" }}>
           <button
-            className={`btn ${lang === "en" ? "primary" : ""}`}
+            className={`btn ${lang === "en" ? "primary" : "ghost"}`}
             onClick={() => setLang("en")}
             style={{ flex: 1 }}
           >
-            English
+            EN
           </button>
           <button
-            className={`btn ${lang === "ar" ? "primary" : ""}`}
+            className={`btn ${lang === "ar" ? "primary" : "ghost"}`}
             onClick={() => setLang("ar")}
             style={{ flex: 1 }}
           >
-            العربية
+            ع
           </button>
         </div>
 
-        <label className="row" style={{ fontSize: 14, cursor: "pointer" }}>
+        <label className="row" style={{ fontSize: 13, cursor: "pointer" }}>
           <input
             type="checkbox"
             checked={hc}
@@ -96,14 +116,14 @@ export default function Layout({ children }: { children: ReactNode }) {
           {t("high_contrast")}
         </label>
 
-        <hr className="rule" style={{ margin: "16px 0" }} />
+        <hr className="rule" style={{ margin: "20px 0" }} />
         {s.name && (
-          <div className="alert info" style={{ fontSize: 12 }}>
-            ✅ {t("signed_in_as")} <b>{s.name}</b>
+          <div className="alert info" style={{ fontSize: 12, marginTop: 0 }}>
+            Signed in · <b>{s.name}</b>
           </div>
         )}
         <HealthBadge />
-        <div className="caption" style={{ marginTop: 8 }}>
+        <div className="caption" style={{ marginTop: 12, fontSize: 11 }}>
           Synthetic data only. No real identifiers.
         </div>
       </aside>

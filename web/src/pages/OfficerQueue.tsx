@@ -22,11 +22,11 @@ export default function OfficerQueue() {
 
   return (
     <>
-      <Band title={`🧑‍⚖️ ${t("queue")}`} subtitle={t("subtitle")} />
+      <Band title={t("queue")} subtitle="Officer · cases escalated for human review" />
       {err && <Alert kind="err">{err}</Alert>}
       {queue && (
-        <div className="caption" style={{ marginBottom: 12 }}>
-          {queue.length} case(s) escalated for human review.
+        <div className="eyebrow" style={{ marginBottom: 16 }}>
+          {queue.length} case(s) escalated · awaiting determination
         </div>
       )}
 
@@ -37,24 +37,26 @@ export default function OfficerQueue() {
       )}
 
       {queue?.map((item) => (
-        <div key={item.case_id} className="card">
+        <div key={item.case_id} className="card" style={{ borderLeft: "4px solid var(--gold)" }}>
           <div
             className="grid"
-            style={{ gridTemplateColumns: "2fr 1fr 1fr auto", alignItems: "center" }}
+            style={{ gridTemplateColumns: "1.6fr 1fr 1fr auto", alignItems: "center", gap: 18 }}
           >
             <div>
-              <b>{item.beneficiary_name_en}</b>
-              <div className="caption">
-                <code>{item.case_id}</code>
+              <div style={{ fontFamily: "var(--serif)", fontSize: 20, fontWeight: 600 }}>
+                {item.beneficiary_name_en}
               </div>
+              <div className="caption mono">{item.case_id}</div>
             </div>
             <Metric k={t("arrears")} v={aed(item.arrears_amount_aed)} />
             <Metric k={t("confidence")} v={pct(item.confidence)} />
             <button className="btn primary" onClick={() => open(item.case_id)}>
-              Open ➡
+              Open →
             </button>
           </div>
-          <div className="caption">⚠ {item.escalation_reason ?? ""}</div>
+          <div className="caption" style={{ marginTop: 12, paddingTop: 12, borderTop: "1px solid var(--line)" }}>
+            ⚠ {item.escalation_reason ?? ""}
+          </div>
         </div>
       ))}
     </>
