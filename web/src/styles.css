@@ -1,0 +1,587 @@
+/* ── Paper Design System — Mizan ────────────────────────────────────────────
+   Print-inspired, paper-textured, minimal color. Tokens from SKILL.md.        */
+
+:root {
+  /* Color tokens */
+  --primary: #111111;
+  --secondary: #8b5cf6;
+  --success: #16a34a;
+  --warning: #d97706;
+  --danger: #dc2626;
+  --info: #2456b3;
+  --surface: #ffffff;
+  --text: #111827;
+  --muted: #6b7280;
+
+  /* Brand (Sheikh Zayed Housing Programme / MOEI) */
+  --gov-green: #0b7a4b;
+  --gov-green-ink: #075a37;
+  --gov-gold: #b68a35;
+
+  /* Paper surfaces */
+  --paper: #f4f1ea;
+  --paper-2: #efe9dd;
+  --card: #fffdf8;
+  --line: #ddd6c7;
+  --line-soft: #e8e2d5;
+
+  /* Type scale 14/16/18/24/32/40 */
+  --fs-sm: 14px;
+  --fs-base: 16px;
+  --fs-md: 18px;
+  --fs-lg: 24px;
+  --fs-xl: 32px;
+  --fs-2xl: 40px;
+
+  --font-sans: "Roboto", system-ui, sans-serif;
+  --font-display: "Montserrat", system-ui, sans-serif;
+  --font-mono: "PT Mono", ui-monospace, monospace;
+
+  /* Spacing 4/8/12/16/24/32 */
+  --s1: 4px;
+  --s2: 8px;
+  --s3: 12px;
+  --s4: 16px;
+  --s6: 24px;
+  --s8: 32px;
+
+  --radius: 10px;
+  --shadow: 0 1px 2px rgba(28, 25, 23, 0.06), 0 6px 20px rgba(28, 25, 23, 0.05);
+}
+
+/* High contrast */
+.hc {
+  --paper: #ffffff;
+  --paper-2: #ffffff;
+  --card: #ffffff;
+  --line: #111111;
+  --line-soft: #111111;
+  --muted: #1f2937;
+  --text: #000000;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-sans);
+  font-size: var(--fs-base);
+  color: var(--text);
+  background-color: var(--paper);
+  /* Subtle paper grain via layered gradients (no external asset). */
+  background-image: radial-gradient(
+      rgba(120, 110, 90, 0.05) 1px,
+      transparent 1px
+    ),
+    radial-gradient(rgba(120, 110, 90, 0.04) 1px, transparent 1px);
+  background-size: 8px 8px, 14px 14px;
+  background-position: 0 0, 4px 6px;
+  -webkit-font-smoothing: antialiased;
+}
+
+[dir="rtl"] body,
+[dir="rtl"] {
+  font-family: "Noto Naskh Arabic", var(--font-sans);
+}
+
+a {
+  color: var(--gov-green-ink);
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-display);
+  color: var(--text);
+  margin: 0;
+}
+
+code,
+.mono {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+}
+
+/* ── Layout shell ─────────────────────────────────────────────────────────── */
+.shell {
+  display: grid;
+  grid-template-columns: 264px 1fr;
+  min-height: 100vh;
+}
+[dir="rtl"] .shell {
+  grid-template-columns: 1fr 264px;
+}
+
+.sidebar {
+  background: var(--paper-2);
+  border-right: 1px solid var(--line);
+  padding: var(--s6) var(--s4);
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+}
+[dir="rtl"] .sidebar {
+  border-right: none;
+  border-left: 1px solid var(--line);
+  order: 2;
+}
+
+.brand {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--fs-md);
+  display: flex;
+  align-items: center;
+  gap: var(--s2);
+  margin-bottom: var(--s2);
+}
+.brand .scale {
+  font-size: 22px;
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: var(--s4) 0;
+}
+.nav-group-label {
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-weight: 700;
+  margin: var(--s4) 0 var(--s1);
+}
+.nav a {
+  display: flex;
+  align-items: center;
+  gap: var(--s2);
+  padding: var(--s2) var(--s3);
+  border-radius: 8px;
+  color: var(--text);
+  font-size: var(--fs-sm);
+  font-weight: 500;
+}
+.nav a:hover {
+  background: rgba(11, 122, 75, 0.08);
+  text-decoration: none;
+}
+.nav a.active {
+  background: var(--gov-green);
+  color: #fff;
+}
+
+.main {
+  padding: var(--s8) var(--s8) 64px;
+  max-width: 1180px;
+  width: 100%;
+}
+
+/* ── Band / hero ──────────────────────────────────────────────────────────── */
+.band {
+  background: linear-gradient(135deg, var(--gov-green), var(--gov-green-ink));
+  color: #fff;
+  border-radius: var(--radius);
+  padding: var(--s6) var(--s6);
+  margin-bottom: var(--s6);
+  box-shadow: var(--shadow);
+}
+.band h1 {
+  color: #fff;
+  font-size: var(--fs-lg);
+}
+.band p {
+  margin: var(--s1) 0 0;
+  opacity: 0.92;
+  font-size: var(--fs-sm);
+  font-family: var(--font-sans);
+}
+
+/* ── Card ─────────────────────────────────────────────────────────────────── */
+.card {
+  background: var(--card);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius);
+  padding: var(--s4) var(--s4);
+  margin-bottom: var(--s3);
+  box-shadow: var(--shadow);
+}
+.card.flush {
+  box-shadow: none;
+}
+
+.section-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--fs-md);
+  margin: var(--s6) 0 var(--s3);
+}
+.muted {
+  color: var(--muted);
+  font-size: var(--fs-sm);
+}
+.caption {
+  color: var(--muted);
+  font-size: var(--fs-sm);
+  margin-top: var(--s1);
+}
+
+/* ── Pills / badges ───────────────────────────────────────────────────────── */
+.pill {
+  display: inline-block;
+  padding: 3px 12px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.03em;
+  color: #fff;
+}
+
+/* ── Buttons ──────────────────────────────────────────────────────────────── */
+.btn {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: var(--fs-sm);
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--text);
+  padding: 10px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.04s ease, box-shadow 0.15s ease, background 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s2);
+  justify-content: center;
+}
+.btn:hover {
+  box-shadow: var(--shadow);
+}
+.btn:active {
+  transform: translateY(1px);
+}
+.btn:focus-visible {
+  outline: 3px solid var(--secondary);
+  outline-offset: 2px;
+}
+.btn[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.btn.primary {
+  background: var(--gov-green);
+  border-color: var(--gov-green-ink);
+  color: #fff;
+}
+.btn.danger {
+  background: var(--danger);
+  border-color: var(--danger);
+  color: #fff;
+}
+.btn.block {
+  width: 100%;
+}
+
+/* UAE PASS button — matches official styling */
+.btn-uaepass {
+  background: #000;
+  border-color: #000;
+  color: #fff;
+  padding: 12px 20px;
+  font-size: var(--fs-base);
+}
+.btn-uaepass img {
+  height: 22px;
+  filter: invert(1);
+  display: block;
+}
+
+/* ── Form controls ────────────────────────────────────────────────────────── */
+label.field {
+  display: block;
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  margin-bottom: var(--s1);
+}
+select,
+input[type="text"],
+input[type="number"],
+textarea {
+  width: 100%;
+  font-family: var(--font-sans);
+  font-size: var(--fs-base);
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text);
+}
+select:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid var(--secondary);
+  outline-offset: 1px;
+  border-color: var(--secondary);
+}
+textarea {
+  min-height: 92px;
+  resize: vertical;
+}
+
+/* ── Metrics / grid ───────────────────────────────────────────────────────── */
+.grid {
+  display: grid;
+  gap: var(--s4);
+}
+.grid-2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+.grid-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+.grid-4 {
+  grid-template-columns: repeat(4, 1fr);
+}
+@media (max-width: 880px) {
+  .grid-2,
+  .grid-3,
+  .grid-4 {
+    grid-template-columns: 1fr;
+  }
+  .shell {
+    grid-template-columns: 1fr;
+  }
+}
+
+.metric {
+  background: var(--card);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius);
+  padding: var(--s4);
+}
+.metric .k {
+  font-size: var(--fs-sm);
+  color: var(--muted);
+  font-weight: 600;
+}
+.metric .v {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--fs-xl);
+  line-height: 1.15;
+  margin-top: var(--s1);
+}
+.metric .delta {
+  font-size: 13px;
+  color: var(--gov-green);
+  margin-top: 2px;
+}
+
+/* ── KV rows ──────────────────────────────────────────────────────────────── */
+.kv {
+  font-size: var(--fs-sm);
+  line-height: 1.55;
+}
+.kv b {
+  color: var(--gov-green-ink);
+}
+
+/* ── Progress bar ─────────────────────────────────────────────────────────── */
+.progress {
+  height: 8px;
+  background: var(--line-soft);
+  border-radius: 999px;
+  overflow: hidden;
+  margin: var(--s2) 0;
+}
+.progress > span {
+  display: block;
+  height: 100%;
+  background: var(--gov-green);
+}
+
+/* ── Decision badge ───────────────────────────────────────────────────────── */
+.decision {
+  border-left: 6px solid var(--gov-green);
+  padding: var(--s4);
+  background: var(--card);
+  border-radius: var(--radius);
+  border-top: 1px solid var(--line-soft);
+  border-right: 1px solid var(--line-soft);
+  border-bottom: 1px solid var(--line-soft);
+  box-shadow: var(--shadow);
+}
+[dir="rtl"] .decision {
+  border-left: 1px solid var(--line-soft);
+  border-right: 6px solid var(--gov-green);
+}
+.decision .label {
+  font-family: var(--font-display);
+  font-size: var(--fs-lg);
+  font-weight: 700;
+}
+
+/* ── Audit timeline ───────────────────────────────────────────────────────── */
+.timeline-row {
+  border-left: 2px solid var(--line);
+  padding: 6px 0 6px var(--s4);
+  margin-left: 6px;
+  font-size: var(--fs-sm);
+}
+[dir="rtl"] .timeline-row {
+  border-left: none;
+  border-right: 2px solid var(--line);
+  margin-left: 0;
+  margin-right: 6px;
+  padding: 6px var(--s4) 6px 0;
+}
+
+/* ── Alerts ───────────────────────────────────────────────────────────────── */
+.alert {
+  border-radius: var(--radius);
+  padding: var(--s3) var(--s4);
+  margin-bottom: var(--s3);
+  font-size: var(--fs-sm);
+  border: 1px solid;
+}
+.alert.ok {
+  background: #ecfdf3;
+  border-color: #abe9c2;
+  color: #075a37;
+}
+.alert.warn {
+  background: #fff7ed;
+  border-color: #fcd9a8;
+  color: #9a5b00;
+}
+.alert.err {
+  background: #fef2f2;
+  border-color: #f6caca;
+  color: #991b1b;
+}
+.alert.info {
+  background: #eff4ff;
+  border-color: #c2d4f7;
+  color: #1e3a8a;
+}
+
+/* ── Table ────────────────────────────────────────────────────────────────── */
+table.tbl {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--fs-sm);
+  background: var(--card);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+table.tbl th,
+table.tbl td {
+  text-align: left;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--line-soft);
+}
+[dir="rtl"] table.tbl th,
+[dir="rtl"] table.tbl td {
+  text-align: right;
+}
+table.tbl th {
+  background: var(--paper-2);
+  font-weight: 700;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+
+/* ── Bar chart ────────────────────────────────────────────────────────────── */
+.bars {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s2);
+}
+.bar-row {
+  display: grid;
+  grid-template-columns: 180px 1fr 40px;
+  align-items: center;
+  gap: var(--s3);
+  font-size: var(--fs-sm);
+}
+.bar-track {
+  background: var(--line-soft);
+  border-radius: 6px;
+  height: 18px;
+  overflow: hidden;
+}
+.bar-fill {
+  height: 100%;
+  background: var(--gov-green);
+}
+
+/* ── Misc ─────────────────────────────────────────────────────────────────── */
+.row {
+  display: flex;
+  align-items: center;
+  gap: var(--s3);
+  flex-wrap: wrap;
+}
+.spread {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s3);
+}
+hr.rule {
+  border: none;
+  border-top: 1px solid var(--line);
+  margin: var(--s6) 0;
+}
+details.expander {
+  border: 1px solid var(--line-soft);
+  border-radius: 8px;
+  padding: var(--s2) var(--s3);
+  margin-bottom: var(--s2);
+  background: var(--card);
+}
+details.expander > summary {
+  cursor: pointer;
+  font-weight: 600;
+  font-size: var(--fs-sm);
+}
+pre.raw {
+  background: var(--paper-2);
+  border: 1px solid var(--line-soft);
+  border-radius: 8px;
+  padding: var(--s3);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  white-space: pre-wrap;
+  overflow-x: auto;
+}
+.spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
