@@ -45,6 +45,8 @@ class FraudFlags(BaseModel):
 
 # ── Risk forecast ────────────────────────────────────────────────────────────
 class RiskScore(BaseModel):
+    model_config = {"protected_namespaces": ()}
+
     redefault_probability: float = Field(..., ge=0, le=1)
     band: str  # low | medium | high
     drivers: list[str] = Field(default_factory=list)

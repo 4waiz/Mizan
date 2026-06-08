@@ -26,6 +26,8 @@ def _escalation_reasons(state: CaseState) -> list[str]:
 
     if rec and rec.outcome_type == OutcomeType.REFER_TO_OFFICER:
         reasons.append("No automatic plan is clearly suitable.")
+    if state.is_proactive:
+        reasons.append("Proactive risk flag — officer outreach / early intervention.")
     if state.fraud_flags.has_high_severity:
         reasons.append("High-severity fraud flag requires human verification.")
     if state.fraud_flags.suspicious_doc:

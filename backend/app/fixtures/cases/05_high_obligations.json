@@ -13,7 +13,7 @@
     "employer_name": "Ajman Ports",
     "monthly_income_aed": 18000,
     "income_verified": true,
-    "hardship_type": "reduced_income"
+    "hardship_type": "none"
   },
   "family": {"household_size": 6, "dependents": 4, "is_sole_earner": true, "other_household_income_aed": 0},
   "loan": {
