@@ -44,7 +44,7 @@ def _escalation_reasons(state: CaseState) -> list[str]:
         OutcomeType.UPDATE_INSTALLMENT,
         OutcomeType.TRANSFER_ARREARS,
     ):
-        reasons.append("High external obligations alongside a hardship plan (SZHP-R6).")
+        reasons.append("High external obligations alongside a repayment-change plan (SZHP-R6).")
     return reasons
 
 

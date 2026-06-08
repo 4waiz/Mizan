@@ -9,7 +9,8 @@ from ..schemas import AuditEvent, AuditEventType, CaseState
 
 
 def now_iso() -> str:
-    return datetime.now(timezone.utc).isoformat(timespec="seconds")
+    # Microsecond precision so the SLA clock can show real sub-second processing.
+    return datetime.now(timezone.utc).isoformat(timespec="microseconds")
 
 
 def new_id(prefix: str = "evt") -> str:
