@@ -50,7 +50,7 @@ strongly-typed `CaseState`.
 ```
                        ┌──────────────────────────────────────────────┐
   Beneficiary UI ─────▶│  FastAPI  (/api/cases, /api/officer, ...)     │
-  (Streamlit)          │                                               │
+  (React + Vite)       │                                               │
   Officer UI ─────────▶│   builds & runs the LangGraph case pipeline    │
                        └───────────────────────┬──────────────────────┘
                                                │  shared typed CaseState
@@ -82,7 +82,8 @@ backend/
     db/              SQLite store (Postgres-ready repository pattern)
     fixtures/        synthetic JSON cases (8 scenarios) + loader
   tests/             pytest suite
-streamlit_app/       beneficiary + officer workflow UI (not a chat)
+web/                 React + Vite + TypeScript workflow UI (primary, "Paper" design system)
+streamlit_app/       legacy Streamlit workflow UI (still runnable against the same API)
 docs/                ARCHITECTURE, DECISION_LOGIC, API_CONTRACT, DEMO_SCRIPT, SLIDES_OUTLINE
 ```
 
@@ -115,7 +116,18 @@ Two commands, two terminals (or use the Makefile / docker-compose):
 # Terminal 1 — backend API  (http://localhost:8000, docs at /docs)
 make backend         # or: uvicorn app.main:app --reload --app-dir backend
 
-# Terminal 2 — frontend workflow UI  (http://localhost:8501)
+# Terminal 2 — React workflow UI  (http://localhost:5173)
+cd web && npm install && npm run dev
+```
+
+Vite proxies `/api` and `/` to the backend on :8000. Set `VITE_API_BASE` to
+point at a non-proxied backend for a production build (`npm run build`).
+See [web/README.md](web/README.md) for details.
+
+The legacy Streamlit UI is still available against the same API:
+
+```bash
+# http://localhost:8501
 make frontend        # or: streamlit run streamlit_app/app.py
 ```
 
@@ -146,10 +158,10 @@ human review → proactive risk alert (bonus).
 
 ## 8. Trade-offs
 
-- **Streamlit over Next.js** for the UI: fastest path to a polished, accessible,
-  bilingual *workflow* UI in a single-language repo for a hackathon MVP. The
-  FastAPI contract is UI-agnostic, so a Next.js front can be added without
-  touching the engine.
+- **React + Vite UI on a UI-agnostic API**: the primary frontend is a
+  React + TypeScript app (the "Paper" design system) talking to the same FastAPI
+  contract. A legacy Streamlit UI was the original hackathon MVP and still runs
+  unchanged against that contract — proof the engine is decoupled from any front end.
 - **No-interest loan math**: Sheikh Zayed housing assistance is profit-free, so
   the solver uses simple principal arithmetic. An interest/profit term can be
   injected into `policies/solver.py` without changing the node graph.
@@ -168,7 +180,6 @@ human review → proactive risk alert (bonus).
 - Postgres + Alembic migrations; event-sourced audit log.
 - Officer feedback loop to retrain the risk model on real (masked) outcomes.
 - Document OCR pipeline feeding the extraction node.
-- Next.js/Tailwind beneficiary portal reusing the FastAPI contract.
 - Policy versioning so historical cases replay against the rules in force at the time.
 
 ---
