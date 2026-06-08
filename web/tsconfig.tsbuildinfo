@@ -1,0 +1,1 @@
+{"root":["./src/app.tsx","./src/api.ts","./src/i18n.tsx","./src/main.tsx","./src/session.ts","./src/vite-env.d.ts","./src/components/layout.tsx","./src/components/ui.tsx","./src/pages/home.tsx","./src/pages/mycase.tsx","./src/pages/newrequest.tsx","./src/pages/officercase.tsx","./src/pages/officerqueue.tsx","./src/pages/proactive.tsx","./src/pages/replay.tsx"],"version":"5.9.3"}
