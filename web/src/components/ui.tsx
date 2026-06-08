@@ -113,16 +113,28 @@ export function ProfileCard({ case: c }: { case: any }) {
   );
 }
 
+const DECISION_STAMP: Record<string, { label: string; tone: string }> = {
+  auto_approved: { label: "Auto · Approved", tone: "green" },
+  officer_approved: { label: "Approved", tone: "green" },
+  officer_overridden: { label: "Overridden", tone: "blue" },
+  officer_rejected: { label: "Rejected", tone: "red" },
+  rejected: { label: "Rejected", tone: "red" },
+  pending_human_review: { label: "Refer to Officer", tone: "gold" },
+  info_requested: { label: "Info Requested", tone: "gold" },
+};
+
 export function DecisionBadge({ case: c }: { case: any }) {
   const { t, outcome } = useI18n();
   const rec = c.recommendation ?? {};
   const review = c.needs_human_review;
+  const stamp =
+    DECISION_STAMP[c.status] ?? (review
+      ? { label: "Refer to Officer", tone: "gold" }
+      : { label: "Determined", tone: "green" });
   return (
     <div className="determination">
       <div className="stamp-slot">
-        <span className={`stamp rotate lg ${review ? "gold" : "green"}`}>
-          {review ? "Refer to Officer" : "Auto · Approved"}
-        </span>
+        <span className={`stamp rotate lg ${stamp.tone}`}>{stamp.label}</span>
       </div>
       <div className="eyebrow">{t("recommendation")} · التوصية</div>
       <div className="verdict">{outcome(rec.outcome_type)}</div>

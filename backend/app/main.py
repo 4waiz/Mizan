@@ -88,6 +88,12 @@ def root() -> dict:
     }
 
 
+@app.get("/api/health")
+def health() -> dict:
+    # Same payload as root, but under /api so a SPA dev proxy can reach it.
+    return root()
+
+
 @app.get("/api/fixtures")
 def list_fixtures() -> list[dict]:
     out = []

@@ -22,8 +22,8 @@ export default function Proactive() {
 
   return (
     <>
-      <Band title={`📡 ${t("proactive")}`} subtitle={t("subtitle")} />
-      <p className="muted">
+      <Band title={t("proactive")} subtitle="Insight · early-warning watchlist" />
+      <p className="lead" style={{ fontSize: 20 }}>
         Cases flagged <b>before</b> they fall into serious arrears, ranked by re-default
         risk — enabling early officer outreach.
       </p>
@@ -32,24 +32,30 @@ export default function Proactive() {
 
       {alerts?.map((a) => {
         const rp = a.redefault_probability;
+        const tone = rp >= 0.6 ? "red" : rp >= 0.35 ? "gold" : "green";
         const color =
-          rp >= 0.6 ? "var(--danger)" : rp >= 0.35 ? "var(--gov-gold)" : "var(--gov-green)";
+          rp >= 0.6 ? "var(--danger)" : rp >= 0.35 ? "var(--gold)" : "var(--green)";
         return (
-          <div key={a.case_id} className="card" style={{ borderLeft: `6px solid ${color}` }}>
-            <b>{a.beneficiary_name_en}</b> · <code>{a.case_id}</code>
-            <div className="kv">
-              {t("risk")}: <b style={{ color }}>{pct(rp)}</b>
+          <div key={a.case_id} className="card" style={{ borderLeft: `4px solid ${color}` }}>
+            <div className="spread" style={{ alignItems: "flex-start" }}>
+              <div>
+                <div style={{ fontFamily: "var(--serif)", fontSize: 20, fontWeight: 600 }}>
+                  {a.beneficiary_name_en}
+                </div>
+                <div className="caption mono">{a.case_id}</div>
+              </div>
+              <span className={`stamp rotate ${tone}`}>
+                {t("risk")} {pct(rp)}
+              </span>
             </div>
-            <div className="muted">Drivers: {(a.drivers ?? []).join(", ")}</div>
-            <div className="kv">
+            <div className="muted" style={{ marginTop: 8 }}>
+              Drivers: {(a.drivers ?? []).join(", ")}
+            </div>
+            <div className="kv" style={{ marginTop: 4 }}>
               Suggested action: <b>{a.suggested_action}</b>
             </div>
-            <button
-              className="btn"
-              style={{ marginTop: 8 }}
-              onClick={() => open(a.case_id)}
-            >
-              Open case {a.case_id}
+            <button className="btn ghost" style={{ marginTop: 12 }} onClick={() => open(a.case_id)}>
+              Open case →
             </button>
           </div>
         );
