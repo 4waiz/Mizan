@@ -6,7 +6,7 @@
    ════════════════════════════════════════════════════════════════════════════ */
 
 :root {
-  /* — Palette tokens (SKILL.md) — */
+  /* - Palette tokens (SKILL.md) - */
   --primary: #111111;
   --secondary: #8b5cf6; /* focus / interactive accent */
   --success: #16a34a;
@@ -15,7 +15,7 @@
   --surface: #ffffff;
   --text: #111827;
 
-  /* — Ink + paper — */
+  /* - Ink + paper - */
   --ink: #111111;
   --ink-soft: #41464f;
   --muted: #6b7280; /* slate prose / secondary text */
@@ -36,7 +36,7 @@
   --line-2: #dcd8c9;
   --rule-ink: #111111;
 
-  /* — Type scale 14/16/18/24/32/40 — */
+  /* - Type scale 14/16/18/24/32/40 - */
   --fs-xs: 12px;
   --fs-sm: 14px;
   --fs-base: 16px;
@@ -51,7 +51,7 @@
   --label: "Montserrat", system-ui, sans-serif;
   --mono: "PT Mono", ui-monospace, monospace;
 
-  /* — Spacing 4/8/12/16/24/32 — */
+  /* - Spacing 4/8/12/16/24/32 - */
   --s1: 4px;
   --s2: 8px;
   --s3: 12px;
@@ -155,7 +155,7 @@ code,
   letter-spacing: -0.01em;
 }
 
-/* Eyebrow / kicker — tracked uppercase label */
+/* Eyebrow / kicker - tracked uppercase label */
 .eyebrow {
   font-family: var(--label);
   font-weight: 700;
@@ -197,7 +197,7 @@ code,
   flex: none;
 }
 .brand .seal {
-  height: 52px;
+  height: 96px;
   width: auto;
   object-fit: contain;
   flex: none;
@@ -344,9 +344,10 @@ code,
   color: #fff;
 }
 .footer .f-brand .seal {
-  border-color: rgba(255, 255, 255, 0.6);
-  background: transparent;
-  color: #fff;
+  height: 72px;
+  background: #fff;
+  border-radius: 10px;
+  padding: 8px 12px;
 }
 .footer .f-tag {
   margin-top: var(--s4);
@@ -403,16 +404,16 @@ code,
 .footer .f-logos {
   display: inline-flex;
   align-items: center;
-  gap: var(--s5);
+  gap: var(--s8);
 }
 .footer .f-logos img {
-  height: 30px;
+  height: 84px;
   width: auto;
   /* white chip so full-colour (MOEI) and black (42) logos both read on black */
   background: #fff;
-  border-radius: 6px;
-  padding: 5px 9px;
-  opacity: 0.92;
+  border-radius: 12px;
+  padding: 12px 20px;
+  opacity: 0.96;
 }
 .footer .f-logos img:hover {
   opacity: 1;
@@ -627,7 +628,7 @@ code,
   width: 100%;
 }
 
-/* UAE PASS — official black pill */
+/* UAE PASS - official black pill */
 .btn-uaepass {
   background: #000;
   border-color: #000;
@@ -1027,7 +1028,7 @@ ul.ticks li {
   color: var(--ink-soft);
 }
 ul.ticks li::before {
-  content: "—";
+  content: "-";
   position: absolute;
   left: 0;
   color: var(--green-deep);
@@ -1046,7 +1047,7 @@ ul.ticks li::before {
   color: var(--ink);
 }
 
-/* legacy sidebar (unused — kept harmless) */
+/* legacy sidebar (unused - kept harmless) */
 .sidebar,
 .nav,
 .nav-group,

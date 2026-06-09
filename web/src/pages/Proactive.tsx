@@ -25,7 +25,7 @@ export default function Proactive() {
       <Band title={t("proactive")} subtitle="Insight · early-warning watchlist" />
       <p className="lead" style={{ fontSize: 20 }}>
         Cases flagged <b>before</b> they fall into serious arrears, ranked by re-default
-        risk — enabling early officer outreach.
+        risk - enabling early officer outreach.
       </p>
       {err && <Alert kind="err">{err}</Alert>}
       {alerts?.length === 0 && <Alert kind="ok">No proactive alerts at present.</Alert>}

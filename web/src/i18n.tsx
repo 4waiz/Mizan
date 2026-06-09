@@ -9,7 +9,7 @@ import {
 type Lang = "en" | "ar";
 
 const T: Record<string, { en: string; ar: string }> = {
-  app_title: { en: "Mizan — Arrears Rescheduling", ar: "ميزان — إعادة جدولة المتأخرات" },
+  app_title: { en: "Mizan - Arrears Rescheduling", ar: "ميزان - إعادة جدولة المتأخرات" },
   subtitle: {
     en: "Sheikh Zayed Housing Programme · MOEI",
     ar: "برنامج الشيخ زايد للإسكان · وزارة الطاقة والبنية التحتية",
@@ -55,7 +55,7 @@ const OUTCOME: Record<string, { en: string; ar: string }> = {
   TRANSFER_ARREARS: { en: "Transfer arrears to end", ar: "ترحيل المتأخرات للنهاية" },
   MAINTAIN_INSTALLMENT: { en: "Maintain installment", ar: "الإبقاء على القسط" },
   REQUEST_MORE_INFO: { en: "Request more information", ar: "طلب مزيد من المعلومات" },
-  REJECT_ACTIVE_REQUEST: { en: "Reject — active request", ar: "رفض — طلب نشط" },
+  REJECT_ACTIVE_REQUEST: { en: "Reject - active request", ar: "رفض - طلب نشط" },
   REFER_TO_OFFICER: { en: "Refer to officer", ar: "إحالة إلى الموظف" },
 };
 
@@ -88,7 +88,7 @@ export function I18nProvider({ children }: { children: ReactNode }) {
 
   const t = (k: string) => T[k]?.[lang] ?? k;
   const outcome = (code?: string | null) =>
-    !code ? "—" : OUTCOME[code]?.[lang] ?? code;
+    !code ? "-" : OUTCOME[code]?.[lang] ?? code;
 
   return (
     <Ctx.Provider value={{ lang, setLang, t, outcome, hc, setHc }}>

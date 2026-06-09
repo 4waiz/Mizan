@@ -32,7 +32,7 @@ export default function OfficerQueue() {
 
       {queue?.length === 0 && (
         <Alert kind="ok">
-          Queue is empty — all recent cases were handled straight-through.
+          Queue is empty - all recent cases were handled straight-through.
         </Alert>
       )}
 

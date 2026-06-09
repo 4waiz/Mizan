@@ -43,7 +43,7 @@ export default function Home() {
 
       <p className="lead">
         Mizan turns the manual <b>five-working-day</b> arrears rescheduling review into an{" "}
-        <b>instant, explainable, auditable</b> decision — escalating only the exceptional
+        <b>instant, explainable, auditable</b> decision - escalating only the exceptional
         cases to a human.
       </p>
 

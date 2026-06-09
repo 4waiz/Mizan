@@ -4,9 +4,9 @@ import { useI18n } from "../i18n";
 export const aed = (n: number | null | undefined) =>
   `AED ${Math.round(n ?? 0).toLocaleString("en-US")}`;
 export const pct = (v: number | null | undefined) =>
-  v == null ? "—" : `${Math.round(v * 100)}%`;
+  v == null ? "-" : `${Math.round(v * 100)}%`;
 
-/* Letterhead masthead — eyebrow (org) · serif title · double rule · file ref. */
+/* Letterhead masthead - eyebrow (org) · serif title · double rule · file ref. */
 export function Band({
   title,
   subtitle,
@@ -86,7 +86,7 @@ export function ProfileCard({ case: c }: { case: any }) {
         <div>
           <div className="eyebrow">{t("profile")}</div>
           <div style={{ fontFamily: "var(--serif)", fontSize: 22, fontWeight: 600, marginTop: 2 }}>
-            {b.full_name_en ?? "—"}
+            {b.full_name_en ?? "-"}
           </div>
           <div style={{ fontFamily: "var(--serif)", color: "var(--ink-soft)" }} dir="rtl">
             {b.full_name_ar ?? ""}
@@ -95,7 +95,7 @@ export function ProfileCard({ case: c }: { case: any }) {
             {b.emirates_id_masked ?? ""} · {b.emirate ?? ""}
           </div>
           <div className="caption">
-            {b.employment_status ?? ""} · {b.employer_name ?? "—"}
+            {b.employment_status ?? ""} · {b.employer_name ?? "-"}
           </div>
         </div>
         <span className="stamp ink" style={{ fontSize: 10 }}>
@@ -145,7 +145,7 @@ export function DecisionBadge({ case: c }: { case: any }) {
       )}
       <hr className="perf" />
       <div className="muted">
-        {review ? `⚠ ${c.escalation_reason ?? ""}` : "Straight-through — issued without manual review."}
+        {review ? `⚠ ${c.escalation_reason ?? ""}` : "Straight-through - issued without manual review."}
       </div>
     </div>
   );
@@ -192,7 +192,7 @@ export function PolicyTable({ case: c }: { case: any }) {
             {RESULT_ICON[r.result] ?? "·"}
           </span>
           <span>
-            <b>{r.rule_id}</b> — {r.title}
+            <b>{r.rule_id}</b> - {r.title}
             <br />
             <span className="muted">{r.detail}</span>
           </span>
@@ -229,7 +229,7 @@ export function PlanCards({ case: c }: { case: any }) {
             {p.new_installment_aed != null && p.new_installment_aed > 0 && (
               <div className="kv mono" style={{ marginTop: 6 }}>
                 {aed(p.new_installment_aed)} · {pct(p.deduction_ratio)} of income ·{" "}
-                {p.new_term_months ?? "—"} months
+                {p.new_term_months ?? "-"} months
               </div>
             )}
             <div className="muted" style={{ marginTop: 4 }}>
@@ -258,7 +258,7 @@ export function ConfidenceBlock({ case: c }: { case: any }) {
         <div className="spread">
           <span className="eyebrow">{t("confidence")}</span>
           <span className="stamp ink" style={{ fontSize: 10 }}>
-            {conf.band ?? "—"}
+            {conf.band ?? "-"}
           </span>
         </div>
         <div style={{ fontFamily: "var(--mono)", fontSize: 32, marginTop: 6 }}>{pct(cv)}</div>
@@ -271,7 +271,7 @@ export function ConfidenceBlock({ case: c }: { case: any }) {
         <div className="spread">
           <span className="eyebrow">{t("risk")}</span>
           <span className="stamp gold" style={{ fontSize: 10 }}>
-            {risk.band ?? "—"}
+            {risk.band ?? "-"}
           </span>
         </div>
         <div style={{ fontFamily: "var(--mono)", fontSize: 32, marginTop: 6 }}>
@@ -310,7 +310,7 @@ export function AuditTimeline({ events }: { events: any[] }) {
         return (
           <div key={i} className="timeline-row">
             <span className="ts">{(e.timestamp ?? "").slice(11, 19)}</span> ·{" "}
-            <b>{e.node || e.event_type}</b> — {e.message}
+            <b>{e.node || e.event_type}</b> - {e.message}
             {rid && <span className="muted"> [{rid}]</span>}
           </div>
         );

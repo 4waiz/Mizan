@@ -70,7 +70,7 @@ export default function NewRequest() {
         {docs.length ? (
           docs.map((d: any) => (
             <div key={d.document_id} className="kv">
-              📎 <b>{d.doc_type}</b> · {d.file_name ?? ""} · issued {d.issued_on ?? "—"} ·{" "}
+              📎 <b>{d.doc_type}</b> · {d.file_name ?? ""} · issued {d.issued_on ?? "-"} ·{" "}
               <code>{d.status}</code>
             </div>
           ))
@@ -99,7 +99,7 @@ export default function NewRequest() {
           <div className="grid grid-3">
             <Metric
               k="Processing time"
-              v={proc != null ? `${Math.round(proc)} ms` : "—"}
+              v={proc != null ? `${Math.round(proc)} ms` : "-"}
               delta="vs. 5 working days manually"
             />
           </div>
