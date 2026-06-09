@@ -50,10 +50,7 @@ const FOOTER_GROUPS = [
 function Brand({ footer }: { footer?: boolean }) {
   return (
     <div className={`brand${footer ? " f-brand" : ""}`}>
-      <img className="seal" src="/logo.png" alt="Mizan" />
-      <span className="word">
-        Mizan <small>ميزان</small>
-      </span>
+      <img className="seal" src="/logo.png" alt="Mizan ميزان" />
     </div>
   );
 }

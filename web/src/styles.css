@@ -197,12 +197,9 @@ code,
   flex: none;
 }
 .brand .seal {
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  border: 1.5px solid var(--ink);
-  object-fit: cover;
-  background: var(--card);
+  height: 52px;
+  width: auto;
+  object-fit: contain;
   flex: none;
 }
 .brand .word {
