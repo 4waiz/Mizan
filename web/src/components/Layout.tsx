@@ -50,7 +50,7 @@ const FOOTER_GROUPS = [
 function Brand({ footer }: { footer?: boolean }) {
   return (
     <div className={`brand${footer ? " f-brand" : ""}`}>
-      <span className="seal">⚖</span>
+      <img className="seal" src="/logo.png" alt="Mizan" />
       <span className="word">
         Mizan <small>ميزان</small>
       </span>
@@ -159,7 +159,11 @@ export default function Layout({ children }: { children: ReactNode }) {
         </div>
 
         <div className="f-base">
-          <span>Synthetic data only · No real identifiers · MIZAN / ميزان</span>
+          <span className="f-copy">© Copyright Team AAU Mizan</span>
+          <div className="f-logos">
+            <img src="/moei.png" alt="Ministry of Energy and Infrastructure" />
+            <img src="/42abudhabi.png" alt="42 Abu Dhabi" />
+          </div>
           <label className="hc-toggle">
             <input type="checkbox" checked={hc} onChange={(e) => setHc(e.target.checked)} />
             {t("high_contrast")}

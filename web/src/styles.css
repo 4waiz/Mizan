@@ -201,9 +201,7 @@ code,
   height: 34px;
   border-radius: 50%;
   border: 1.5px solid var(--ink);
-  display: grid;
-  place-items: center;
-  font-size: 16px;
+  object-fit: cover;
   background: var(--card);
   flex: none;
 }
@@ -398,11 +396,29 @@ code,
   padding-top: var(--s6);
   border-top: 1px solid rgba(255, 255, 255, 0.12);
   display: flex;
+  align-items: center;
   justify-content: space-between;
   gap: var(--s4);
   flex-wrap: wrap;
   font-size: var(--fs-xs);
   color: rgba(255, 255, 255, 0.45);
+}
+.footer .f-logos {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s5);
+}
+.footer .f-logos img {
+  height: 30px;
+  width: auto;
+  /* white chip so full-colour (MOEI) and black (42) logos both read on black */
+  background: #fff;
+  border-radius: 6px;
+  padding: 5px 9px;
+  opacity: 0.92;
+}
+.footer .f-logos img:hover {
+  opacity: 1;
 }
 .footer label.hc-toggle {
   display: inline-flex;

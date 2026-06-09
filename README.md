@@ -147,7 +147,7 @@ make test            # or: pytest backend/tests -q
 Docker (one shot):
 
 ```bash
-docker-compose up --build      # backend on :8000, frontend on :8501
+docker-compose up --build      # backend :8000 · React UI :8080 · legacy Streamlit :8501
 ```
 
 ## 7. Demo

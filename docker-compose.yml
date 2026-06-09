@@ -1,6 +1,6 @@
-# One-shot local stack: FastAPI backend + Streamlit workflow UI.
-# Both run from the same image; the frontend talks to the backend over the
-# compose network. No external services required (MockLLM + SQLite).
+# One-shot local stack: FastAPI backend + React (primary) workflow UI.
+# The legacy Streamlit UI is kept as an optional secondary service.
+# No external services required (MockLLM + SQLite).
 services:
   backend:
     build: .
@@ -13,6 +13,15 @@ services:
     volumes:
       - mizan-data:/data
 
+  # Primary UI — React + Vite, served by nginx, proxies /api -> backend.
+  web:
+    build: ./web
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+
+  # Legacy UI — original Streamlit MVP, still runs against the same API.
   frontend:
     build: .
     command: streamlit run streamlit_app/app.py --server.address 0.0.0.0 --server.port 8501
