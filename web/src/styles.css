@@ -344,10 +344,7 @@ code,
   color: #fff;
 }
 .footer .f-brand .seal {
-  height: 72px;
-  background: #fff;
-  border-radius: 10px;
-  padding: 8px 12px;
+  height: 96px;
 }
 .footer .f-tag {
   margin-top: var(--s4);
