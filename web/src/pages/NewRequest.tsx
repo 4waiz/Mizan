@@ -32,6 +32,11 @@ export default function NewRequest() {
   const [activeLabel, setActiveLabel] = useState<string>("");
   const [failure, setFailure] = useState<string | null>(null);
 
+  // manual document upload (citizen portal)
+  const [docType, setDocType] = useState<string>("salary_certificate");
+  const [uploading, setUploading] = useState(false);
+  const [uploadMsg, setUploadMsg] = useState<string | null>(null);
+
   const s = getSession();
 
   useEffect(() => {
@@ -118,6 +123,43 @@ export default function NewRequest() {
     }
   };
 
+  const DOC_TYPES: { value: string; label: string }[] = [
+    { value: "emirates_id", label: "Emirates ID" },
+    { value: "salary_certificate", label: "Salary certificate" },
+    { value: "bank_statement", label: "Bank statement" },
+    { value: "liability_letter", label: "Financial obligations letter" },
+    { value: "termination_letter", label: "Termination / unemployment letter" },
+    { value: "medical_report", label: "Medical report" },
+    { value: "hardship_letter", label: "Hardship letter" },
+  ];
+
+  const onUpload = async (file: File | undefined) => {
+    if (!file) return;
+    const caseId = getSession().activeCaseId;
+    if (!caseId) return;
+    setUploading(true);
+    setUploadMsg(null);
+    setErr(null);
+    try {
+      const today = new Date().toISOString().slice(0, 10);
+      const doc = {
+        document_id: `UPL-${docType}-${Date.now()}`,
+        doc_type: docType,
+        status: "present",
+        file_name: file.name,
+        issued_on: today,
+        uploaded_on: today,
+      };
+      const updated = await api.uploadDocuments(caseId, [doc]);
+      setCaseData(updated);
+      setUploadMsg(`Uploaded ${file.name}.`);
+    } catch (e) {
+      setErr(String(e));
+    } finally {
+      setUploading(false);
+    }
+  };
+
   const docs = caseData?.document_inventory?.documents ?? [];
   const proc = run?.case?.sla?.processing_ms;
 
@@ -140,12 +182,56 @@ export default function NewRequest() {
             </div>
           ))
         ) : (
-          <span className="muted">No documents on file.</span>
+          <span className="muted">No documents on file yet.</span>
+        )}
+
+        <div
+          style={{
+            marginTop: 14,
+            paddingTop: 14,
+            borderTop: "1px solid var(--line, #e3e7ec)",
+            display: "flex",
+            flexWrap: "wrap",
+            gap: 8,
+            alignItems: "center",
+          }}
+        >
+          <select
+            value={docType}
+            onChange={(e) => setDocType(e.target.value)}
+            disabled={uploading}
+            style={{ padding: "6px 8px" }}
+          >
+            {DOC_TYPES.map((d) => (
+              <option key={d.value} value={d.value}>
+                {d.label}
+              </option>
+            ))}
+          </select>
+
+          <label className="btn" style={{ cursor: uploading ? "default" : "pointer" }}>
+            {uploading ? <span className="spinner" /> : "⬆"} Upload document
+            <input
+              type="file"
+              accept=".pdf,.png,.jpg,.jpeg"
+              style={{ display: "none" }}
+              disabled={uploading}
+              onChange={(e) => {
+                onUpload(e.target.files?.[0]);
+                e.currentTarget.value = "";
+              }}
+            />
+          </label>
+        </div>
+        {uploadMsg && (
+          <div className="caption" style={{ marginTop: 6, color: "var(--ok, #1e7d43)" }}>
+            ✓ {uploadMsg}
+          </div>
         )}
       </div>
       <div className="caption">
-        In production these are uploaded via the portal; here they are mocked in the
-        document store.
+        Upload your supporting documents (salary certificate, bank statement,
+        obligations letter, and any hardship evidence) before submitting.
       </div>
 
       <div className="section-title">3 · Submit &amp; assess</div>

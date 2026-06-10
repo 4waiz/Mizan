@@ -87,7 +87,7 @@ export default function Home() {
           <span className="chip">👤</span>
           <h4 style={{ fontSize: 22, marginTop: 16 }}>Citizen Portal</h4>
           <ul className="ticks">
-            <li>Sign in with a demo account or UAE PASS</li>
+            <li>Sign in with your account or UAE PASS</li>
             <li>Submit a rescheduling request</li>
             <li>Watch the assessment run, step by step</li>
             <li>Track the decision on My Case</li>

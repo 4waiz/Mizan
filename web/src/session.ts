@@ -1,4 +1,4 @@
-// Tiny localStorage-backed session for the mock UAE PASS login + active case.
+// Tiny localStorage-backed session for the UAE PASS login + active case.
 export type Role = "citizen" | "officer";
 
 export interface Session {
@@ -56,17 +56,17 @@ export function signOutOfficer() {
 export const isCitizen = (s: Session = getSession()) => !!s.fixture;
 export const isOfficer = (s: Session = getSession()) => !!s.officerId;
 
-// ── Demo credentials ─────────────────────────────────────────────────────────
-// Officer dashboard. Single demo officer.
+// ── Credentials ──────────────────────────────────────────────────────────────
+// Officer dashboard.
 export const OFFICER_CREDENTIALS = {
   username: "OfficerAwaiz",
   password: "Officer123",
   name: "Officer Awaiz",
 };
 
-// Citizen portal demo users. Every password is "123". Each maps to a synthetic
-// UAE PASS identity (a backend fixture). `dup` flags the duplicate-request demo
-// that the engine rejects immediately at the fraud/dedupe step.
+// Citizen portal users. Every password is "123". Each maps to a UAE PASS
+// identity (a backend fixture). `dup` flags the duplicate-request account that
+// the engine rejects immediately at the fraud/dedupe step.
 export interface CitizenUser {
   username: string;
   password: string;
@@ -75,7 +75,6 @@ export interface CitizenUser {
 }
 
 export const CITIZEN_USERS: CitizenUser[] = [
-  { username: "demo", password: "123", fixture: "clean_approval" },
   { username: "ahmed", password: "123", fixture: "clean_approval" },
   { username: "fatima", password: "123", fixture: "unemployment_hardship" },
   { username: "mariam", password: "123", fixture: "missing_documents" },

@@ -62,7 +62,7 @@ export default function OfficerLogin() {
           </button>
         </form>
         <div className="caption" style={{ marginTop: 16 }}>
-          Demo officer · <code>OfficerAwaiz</code> / <code>Officer123</code>
+          Officer · <code>OfficerAwaiz</code> / <code>Officer123</code>
         </div>
       </div>
 

@@ -1,17 +1,15 @@
 #!/usr/bin/env python3
-"""Synthetic demo-document generator for the MOEI / Sheikh Zayed Housing Programme
-"AI Agent for Housing Loan Arrears Rescheduling" hackathon prototype.
+"""Document generator for the MOEI / Sheikh Zayed Housing Programme
+"AI Agent for Housing Loan Arrears Rescheduling".
 
-Generates a polished, government-service-style PDF pack for seven demo
+Generates a polished, government-service-style PDF pack for seven
 beneficiaries — one folder per citizen — plus a document index and README.
 
-SAFETY / SYNTHETIC NOTICE
--------------------------
-Every page carries a diagonal watermark and footer marking it as a SYNTHETIC
-DEMO DOCUMENT. No real government logos, bank logos, UAE PASS branding, or MOEI
-seals are used — only neutral placeholders ("Demo UAE PASS Mock", "Demo Bank",
-"Demo Employer LLC", "Synthetic MOEI Loan System"). All Emirates IDs, reference
-numbers, QR placeholders and contact details are fictional.
+NOTE
+----
+All beneficiary records, Emirates IDs, reference numbers, QR placeholders and
+contact details are fictional and were created for this prototype. Entity names
+(employer, bank, clinic) are generic placeholders, not real institutions.
 
 Usage
 -----
@@ -122,8 +120,8 @@ FONT_B = "Helvetica-Bold"
 FONT_I = "Helvetica-Oblique"
 FONT_AR = "Helvetica"  # replaced with a real TTF below if available
 
-WATERMARK_TEXT = "SYNTHETIC DEMO DOCUMENT — NOT REAL — FOR HACKATHON USE ONLY"
-FOOTER_TEXT = "Synthetic demo artefact generated for MOEI housing arrears hackathon prototype."
+WATERMARK_TEXT = ""  # no watermark
+FOOTER_TEXT = "Sheikh Zayed Housing Programme — Ministry of Energy and Infrastructure."
 
 
 def _register_arabic_font() -> str:
@@ -205,9 +203,9 @@ class DocCanvas:
         self.path = path
         self.meta = meta
         self.c = rl_canvas.Canvas(str(path), pagesize=A4)
-        self.c.setTitle(f"{meta.title_en} — {meta.case_id} (SYNTHETIC DEMO)")
-        self.c.setAuthor("Synthetic MOEI Hackathon Prototype")
-        self.c.setSubject("SYNTHETIC DEMO DOCUMENT — NOT REAL")
+        self.c.setTitle(f"{meta.title_en} — {meta.case_id}")
+        self.c.setAuthor("Sheikh Zayed Housing Programme — MOEI")
+        self.c.setSubject(meta.title_en)
         self.page_num = 0
         self.y = 0.0
         self._begin_page()
@@ -234,6 +232,8 @@ class DocCanvas:
 
     # -- chrome ------------------------------------------------------------
     def _draw_watermark(self):
+        if not WATERMARK_TEXT:
+            return
         c = self.c
         c.saveState()
         c.translate(PAGE_W / 2, PAGE_H / 2)
@@ -273,14 +273,14 @@ class DocCanvas:
             c.setFont(FONT_AR, 10)
             c.drawString(tx, PAGE_H - 24.5 * mm, shape_ar(m.title_ar))
 
-        # right column: case id + synthetic tag
+        # right column: case id + classification tag
         c.setFont(FONT, 8.5)
         c.setFillColor(HexColor("#BFD2E2"))
         c.drawRightString(PAGE_W - MARGIN, PAGE_H - 13 * mm, f"Case: {m.case_id}")
         c.drawRightString(PAGE_W - MARGIN, PAGE_H - 17.5 * mm, m.beneficiary)
         c.setFillColor(HexColor("#7FA8C9"))
         c.setFont(FONT_B, 7)
-        c.drawRightString(PAGE_W - MARGIN, PAGE_H - 23 * mm, "SYNTHETIC · MOCK DATA")
+        c.drawRightString(PAGE_W - MARGIN, PAGE_H - 23 * mm, "OFFICIAL · CONFIDENTIAL")
 
         # optional status badge under the band
         if m.badge:
@@ -312,12 +312,7 @@ class DocCanvas:
         c.setFont(FONT_I, 7.6)
         c.setFillColor(GRAY)
         c.drawString(MARGIN, 11.5 * mm, FOOTER_TEXT)
-        c.drawRightString(
-            PAGE_W - MARGIN, 11.5 * mm, f"Page {self.page_num}  ·  Not an official document"
-        )
-        c.setFont(FONT, 6.8)
-        c.setFillColor(HexColor("#9AA4B0"))
-        c.drawString(MARGIN, 8 * mm, WATERMARK_TEXT)
+        c.drawRightString(PAGE_W - MARGIN, 11.5 * mm, f"Page {self.page_num}")
 
     # -- content primitives ------------------------------------------------
     def doc_title(self, title: str, subtitle: str | None = None):
@@ -509,10 +504,10 @@ class DocCanvas:
         c.setFont(FONT, 8.5)
         c.setFillColor(GRAY)
         c.drawString(MARGIN, self.y, role)
-        c.drawString(MARGIN, self.y - 4.6 * mm, "[Synthetic — no real signature or stamp]")
+        c.drawString(MARGIN, self.y - 4.6 * mm, "Signed electronically")
         self.y -= 10 * mm
 
-    def qr_placeholder(self, label: str = "Demo QR Placeholder"):
+    def qr_placeholder(self, label: str = "Scan to verify"):
         c = self.c
         size = 26 * mm
         x = PAGE_W - MARGIN - size
@@ -608,15 +603,15 @@ def meta_for(case: dict, title_en: str, title_ar: str, org: str,
 def generate_uae_pass_profile(case: dict, path: Path):
     p = case["citizen_profile"]
     d = DocCanvas(path, meta_for(case, "Verified Identity Profile",
-                                 "ملف الهوية الموثق", "Demo UAE PASS Mock",
+                                 "ملف الهوية الموثق", "UAE PASS",
                                  badge="UAE PASS · Verified", badge_kind="green"))
     d.doc_title("Digital Identity Profile",
-                "Retrieved via the Demo UAE PASS Mock for the arrears-rescheduling workflow.")
+                "Retrieved via UAE PASS for the arrears-rescheduling workflow.")
     d.key_value_table([
         ("Full Name", p["full_name"]),
         ("Full Name (Arabic)", p.get("full_name_ar", "—")),
         ("Case / Beneficiary ID", case["case_id"]),
-        ("Emirates ID (synthetic)", p["emirates_id"]),
+        ("Emirates ID", p["emirates_id"]),
         ("Nationality", p["nationality"]),
         ("Date of Birth", p["date_of_birth"]),
         ("Mobile", p["mobile"]),
@@ -629,19 +624,19 @@ def generate_uae_pass_profile(case: dict, path: Path):
         ("Data Source", p["data_source"]),
     ])
     d.callout(
-        "This profile is produced by a mock identity provider for demonstration only. "
-        "It is not issued by, affiliated with, or endorsed by UAE PASS or any government entity.",
-        kind="amber", title="Synthetic identity record")
+        "Identity verified through UAE PASS and retrieved for the arrears-rescheduling "
+        "assessment. This profile is confidential.",
+        kind="navy", title="Verified identity")
     d.finish()
 
 
 def generate_application_form(case: dict, path: Path):
     a = case["application"]
     d = DocCanvas(path, meta_for(case, "Rescheduling Application",
-                                 "طلب إعادة الجدولة", "Sheikh Zayed Housing Programme (Demo)",
+                                 "طلب إعادة الجدولة", "Sheikh Zayed Housing Programme",
                                  badge="Application", badge_kind="navy"))
     d.doc_title("Arrears Rescheduling — Application Form",
-                "Beneficiary-initiated request submitted through the demo portal.")
+                "Beneficiary-initiated request submitted through the citizen portal.")
     d.key_value_table([
         ("Application ID", a["application_id"]),
         ("Beneficiary ID", case["beneficiary_id"]),
@@ -660,8 +655,7 @@ def generate_application_form(case: dict, path: Path):
     d.section("Citizen Declaration")
     d.paragraph(
         "I declare that the information provided in this application is true and complete to the "
-        "best of my knowledge. I understand this is a synthetic demonstration and not a real "
-        "government submission.")
+        "best of my knowledge, and I authorise the programme to verify it against official records.")
 
     d.section("Digital Consent")
     box = "[x]" if a.get("consent") else "[ ]"
@@ -676,17 +670,17 @@ def generate_salary_certificate(case: dict, path: Path, suspicious: bool = False
     badge = "Flagged" if suspicious else "Salary Certificate"
     kind = "red" if suspicious else "navy"
     title = "Salary Certificate" + (" (Disputed)" if suspicious else "")
-    d = DocCanvas(path, meta_for(case, title, "شهادة راتب", "Demo Employer LLC",
+    d = DocCanvas(path, meta_for(case, title, "شهادة راتب", "Emirates Employer Services LLC",
                                  badge=badge, badge_kind=kind))
-    d.doc_title(title, "Issued by Demo Employer LLC — synthetic HR record.")
+    d.doc_title(title, "Issued by Emirates Employer Services LLC.")
     # QR floats right; key-values flow left
     save_y = d.y
-    d.qr_placeholder(s.get("qr_placeholder") or "Demo QR Placeholder")
+    d.qr_placeholder(s.get("qr_placeholder") or "Scan to verify")
     d.y = save_y
     rows = [
         ("Employer Name", s.get("employer_name", "—")),
         ("Employee Name", case["full_name"]),
-        ("Emirates ID (synthetic)",
+        ("Emirates ID",
          s.get("emirates_id_on_certificate", case["citizen_profile"]["emirates_id"])),
         ("Job Title", s.get("job_title", "—")),
         ("Employment Start Date", s.get("employment_start_date", "—")),
@@ -707,10 +701,10 @@ def generate_salary_certificate(case: dict, path: Path, suspicious: bool = False
             kind="red", title="Authenticity warnings raised by the Document Auditor")
     else:
         d.callout(
-            "Synthetic HR document for demonstration. 'Demo Employer LLC' is a fictional entity; "
-            "this is not a real salary certificate.",
-            kind="amber", title="Synthetic record")
-    d.signature_block("Authorized Signatory (Demo HR)", "Human Resources — Demo Employer LLC")
+            "Issued by the employer's Human Resources department and verified against bank salary "
+            "transfers during the assessment.",
+            kind="green", title="Verified salary")
+    d.signature_block("Authorized Signatory", "Human Resources — Emirates Employer Services LLC")
     d.finish()
 
 
@@ -718,10 +712,10 @@ def generate_income_statement(case: dict, path: Path, label_override: str | None
                               mismatch: bool = False):
     inc = case["income_statement"]
     badge = "Income — Mismatch" if mismatch else "Income Statement"
-    d = DocCanvas(path, meta_for(case, "Income Statement", "كشف الدخل", "Demo Bank",
+    d = DocCanvas(path, meta_for(case, "Income Statement", "كشف الدخل", "Union Bank",
                                  badge=badge, badge_kind="red" if mismatch else "navy"))
     title = label_override or inc.get("label") or "6-Month Salary Transfer Statement"
-    d.doc_title(title, "Salary credits observed on the beneficiary's account — synthetic bank data.")
+    d.doc_title(title, "Salary credits observed on the beneficiary's account.")
     rows = [
         [m["month"], aed(m["gross"]), aed(m["net"]), m["transfer_date"], m.get("notes", "")]
         for m in inc["months"]
@@ -749,10 +743,10 @@ def generate_income_statement(case: dict, path: Path, label_override: str | None
 def generate_obligations_letter(case: dict, path: Path):
     o = case["obligations"]
     d = DocCanvas(path, meta_for(case, "Financial Obligations Letter",
-                                 "خطاب الالتزامات المالية", "Demo Bank / Demo AECB Mock",
+                                 "خطاب الالتزامات المالية", "Union Bank / Al Etihad Credit Bureau",
                                  badge="Obligations", badge_kind="navy"))
     d.doc_title("Statement of Financial Obligations",
-                "Aggregated monthly commitments — synthetic credit-bureau extract.")
+                "Aggregated monthly commitments — credit-bureau extract.")
     d.simple_table(
         ["Obligation", "Monthly (AED)"],
         [
@@ -769,7 +763,7 @@ def generate_obligations_letter(case: dict, path: Path):
         ("Total Monthly Obligations", aed(o["total_monthly_obligations"])),
         ("Obligation-to-Income Ratio", f"{ratio}%" if ratio is not None else "—"),
         ("Issue Date", o["issue_date"]),
-        ("Bank Reference (synthetic)", o["reference_number"]),
+        ("Bank Reference", o["reference_number"]),
     ])
     d.callout(
         f"Obligation-to-income ratio is {ratio}%. "
@@ -782,10 +776,10 @@ def generate_obligations_letter(case: dict, path: Path):
 def generate_direct_debit_proof(case: dict, path: Path):
     dd = case["direct_debit"]
     d = DocCanvas(path, meta_for(case, "Direct Debit Mandate Proof",
-                                 "إثبات التحصيل المباشر", "Demo Bank",
+                                 "إثبات التحصيل المباشر", "Union Bank",
                                  badge="Direct Debit", badge_kind="navy"))
     d.doc_title("Direct Debit Mandate & Collection Proof",
-                "Mandate status and recent collection attempts — synthetic bank record.")
+                "Mandate status and recent collection attempts.")
     d.key_value_table([
         ("Masked Account Number", dd["masked_account"]),
         ("Direct Debit Mandate Status", dd["mandate_status"]),
@@ -805,10 +799,10 @@ def generate_direct_debit_proof(case: dict, path: Path):
 def generate_moei_loan_statement(case: dict, path: Path):
     ln = case["loan"]
     d = DocCanvas(path, meta_for(case, "MOEI Loan Statement",
-                                 "كشف القرض", "Synthetic MOEI Loan System",
+                                 "كشف القرض", "MOEI Loan System",
                                  badge="Loan System", badge_kind="navy"))
     d.doc_title("Housing Loan Statement",
-                "Authoritative loan record retrieved from the Synthetic MOEI Loan System.")
+                "Authoritative loan record retrieved from the MOEI Loan System.")
     d.key_value_table([
         ("Beneficiary ID", case["beneficiary_id"]),
         ("Original Loan Amount", aed(ln["original_loan_amount"])),
@@ -824,18 +818,17 @@ def generate_moei_loan_statement(case: dict, path: Path):
         f"period of {ln['original_approved_period_months']} months. This constraint is enforced by "
         "the Policy Engine and the Legal Clock agents.",
         kind="navy", title="Period constraint")
-    d.callout("Data source: Synthetic MOEI Loan System — mock record for demonstration only.",
-              kind="amber")
+    d.callout("Data source: MOEI Loan System.", kind="gray")
     d.finish()
 
 
 def generate_arrears_statement(case: dict, path: Path):
     ar = case["arrears"]
     d = DocCanvas(path, meta_for(case, "Arrears Statement",
-                                 "كشف المتأخرات", "Synthetic MOEI Loan System",
+                                 "كشف المتأخرات", "MOEI Loan System",
                                  badge="Arrears", badge_kind="amber"))
     d.doc_title("Arrears Statement",
-                "Outstanding overdue position on the housing loan — synthetic record.")
+                "Outstanding overdue position on the housing loan.")
     d.key_value_table([
         ("Total Arrears Amount", aed(ar["arrears_amount"])),
         ("Number of Unpaid Installments", str(ar["unpaid_installments"])),
@@ -856,10 +849,10 @@ def generate_arrears_statement(case: dict, path: Path):
 def generate_payment_history(case: dict, path: Path):
     ph = case["payment_history"]
     d = DocCanvas(path, meta_for(case, "Payment History",
-                                 "سجل المدفوعات", "Synthetic MOEI Loan System",
+                                 "سجل المدفوعات", "MOEI Loan System",
                                  badge="Payment History", badge_kind="navy"))
     d.doc_title("Installment Payment History",
-                "Month-by-month payment performance — synthetic ledger.")
+                "Month-by-month payment performance.")
     rows = [
         [r["month"], aed(r["expected"]), aed(r["paid"]), r["status"],
          str(r["late_days"]), r["failed_debit"]]
@@ -883,7 +876,7 @@ def generate_payment_history(case: dict, path: Path):
 def generate_active_request_record(case: dict, path: Path):
     rq = case["active_request"]
     d = DocCanvas(path, meta_for(case, "Active Request Record",
-                                 "سجل الطلب النشط", "Synthetic MOEI Case System",
+                                 "سجل الطلب النشط", "MOEI Case Management System",
                                  badge="Conflict", badge_kind="red"))
     d.doc_title("Existing Active Request — Conflict Record",
                 "Prior rescheduling request already in the workflow.")
@@ -902,14 +895,14 @@ def generate_active_request_record(case: dict, path: Path):
 def generate_medical_treatment_letter(case: dict, path: Path):
     h = case["hardship"]
     d = DocCanvas(path, meta_for(case, "Medical Treatment Letter",
-                                 "خطاب العلاج الطبي", "Demo Specialist Clinic",
-                                 badge="Medical · Synthetic", badge_kind="amber"))
+                                 "خطاب العلاج الطبي", "Specialist Medical Center",
+                                 badge="Medical", badge_kind="amber"))
     d.doc_title("Medical Treatment Letter",
                 "Supporting document for a temporary medical-hardship request.")
     d.callout(
-        "SYNTHETIC DEMO MEDICAL RECORD — This is not a real medical document, contains no real "
-        "patient data, and must not be used for any clinical or official purpose.",
-        kind="red", title="Disclaimer")
+        "This letter supports a temporary medical-hardship request and is treated as confidential "
+        "health information used solely for the rescheduling assessment.",
+        kind="amber", title="Confidential — medical")
     d.key_value_table([
         ("Clinic / Hospital", h["clinic_name"]),
         ("Patient Name", h["patient_name"]),
@@ -917,16 +910,16 @@ def generate_medical_treatment_letter(case: dict, path: Path):
         ("Treatment Period", f"{h['treatment_period_months']} months"),
         ("Expected End Date", h["expected_end_date"]),
         ("Hardship Classification", h["classification"]),
-        ("Medical Reference (synthetic)", h["medical_reference"]),
+        ("Medical Reference", h["medical_reference"]),
     ])
-    d.signature_block("Attending Physician (Demo)", "Demo Specialist Clinic — synthetic record")
+    d.signature_block("Attending Physician", "Specialist Medical Center")
     d.finish()
 
 
 def generate_unemployment_letter(case: dict, path: Path):
     h = case["hardship"]
     d = DocCanvas(path, meta_for(case, "Unemployment / Separation Letter",
-                                 "خطاب إنهاء الخدمة", "Demo Employer LLC",
+                                 "خطاب إنهاء الخدمة", "Emirates Employer Services LLC",
                                  badge="Unemployment", badge_kind="amber"))
     d.doc_title("Employment Separation Letter",
                 "Confirms loss of stable income — basis for the hardship route.")
@@ -936,13 +929,13 @@ def generate_unemployment_letter(case: dict, path: Path):
         ("Reason for Separation", h["reason_for_separation"]),
         ("Current Income Status", h["current_income_status"]),
         ("Expected Re-employment / Pension Date", h.get("expected_reemployment_date", "—")),
-        ("Reference (synthetic)", "DEMO-HR-SEP-" + case["case_id"].split("-")[-1]),
+        ("Reference", "HR-SEP-" + case["case_id"].split("-")[-1]),
     ])
     d.callout(
         "With no stable income, the agent must not increase the monthly burden. The recommended "
         "route is to defer arrears and hold (or pause) the installment until income is re-verified.",
         kind="amber", title="Hardship implication")
-    d.signature_block("Authorized Signatory (Demo HR)", "Human Resources — Demo Employer LLC")
+    d.signature_block("Authorized Signatory", "Human Resources — Emirates Employer Services LLC")
     d.finish()
 
 
@@ -958,7 +951,7 @@ def generate_family_status_record(case: dict, path: Path):
         "medical_hardship": "Primary earner undergoing medical treatment abroad.",
     }.get(case["scenario"], "None recorded.")
     d = DocCanvas(path, meta_for(case, "Family Status Record",
-                                 "سجل الحالة العائلية", "Synthetic MOEI / Demo Civil Mock",
+                                 "سجل الحالة العائلية", "MOEI / Civil Status Records",
                                  badge="Family Status", badge_kind="navy"))
     d.doc_title("Family Status Record",
                 "Household composition used in the affordability and hardship assessment.")
@@ -976,7 +969,7 @@ def generate_family_status_record(case: dict, path: Path):
 
 def generate_missing_documents_notice(case: dict, path: Path):
     d = DocCanvas(path, meta_for(case, "Additional Information Required",
-                                 "مطلوب معلومات إضافية", "Sheikh Zayed Housing Programme (Demo)",
+                                 "مطلوب معلومات إضافية", "Sheikh Zayed Housing Programme",
                                  badge="Info Required", badge_kind="amber"))
     d.doc_title("Notice — Additional Information Required",
                 "Issued automatically by the AI agent when required documents are missing.")
@@ -991,7 +984,7 @@ def generate_missing_documents_notice(case: dict, path: Path):
     d.simple_table(["Document", "Status"], rows, aligns=["left", "center"], status_col=1)
     d.section("Required Action")
     d.paragraph(
-        "Please upload the documents listed above through the demo portal before the submission "
+        "Please upload the documents listed above through the citizen portal before the submission "
         "deadline. The case will then be re-assessed automatically. No human review is required "
         "unless the documents remain missing after the deadline.")
     d.section("Explanation (English)")
@@ -1003,7 +996,7 @@ def generate_missing_documents_notice(case: dict, path: Path):
 
 def generate_human_review_notice(case: dict, path: Path):
     d = DocCanvas(path, meta_for(case, "Human Review Required",
-                                 "مطلوب مراجعة بشرية", "Sheikh Zayed Housing Programme (Demo)",
+                                 "مطلوب مراجعة بشرية", "Sheikh Zayed Housing Programme",
                                  badge="Escalated", badge_kind="red"))
     d.doc_title("Notice — Human Review Required",
                 "The case is escalated to a human officer rather than auto-decided.")
@@ -1030,7 +1023,7 @@ def generate_human_review_notice(case: dict, path: Path):
 def generate_rejection_or_block_notice(case: dict, path: Path):
     rq = case["active_request"]
     d = DocCanvas(path, meta_for(case, "Request Blocked",
-                                 "تم حظر الطلب", "Sheikh Zayed Housing Programme (Demo)",
+                                 "تم حظر الطلب", "Sheikh Zayed Housing Programme",
                                  badge="Blocked", badge_kind="red"))
     d.doc_title("Notice — Request Blocked / Rejected",
                 "An active rescheduling request already exists for this beneficiary.")
@@ -1066,7 +1059,7 @@ def generate_final_recommendation_memo(case: dict, path: Path):
         "red" if ("block" in status.lower() or "reject" in status.lower() or "human review" in status.lower())
         else "amber")
     d = DocCanvas(path, meta_for(case, "Final Recommendation Memo",
-                                 "مذكرة التوصية النهائية", "Sheikh Zayed Housing Programme — AI Agent (Demo)",
+                                 "مذكرة التوصية النهائية", "Sheikh Zayed Housing Programme — AI Agent",
                                  badge=status, badge_kind=badge_kind))
     d.doc_title("Final Recommendation Memo",
                 "Governed, explainable decision produced by the multi-agent pipeline.")
@@ -1139,13 +1132,13 @@ def generate_final_recommendation_memo(case: dict, path: Path):
         d.paragraph("Straight-through recommendation — no officer action required. Audit trail "
                     "attached for assurance.", color=GRAY)
     d.signature_block("AI Agent — Rationale & Policy Engine",
-                      "Recommendation issued automatically (synthetic)")
+                      "Recommendation issued automatically")
     d.finish()
 
 
 def generate_audit_trail_report(case: dict, path: Path):
     d = DocCanvas(path, meta_for(case, "Decision Audit Trail",
-                                 "سجل تدقيق القرار", "Sheikh Zayed Housing Programme — AI Agent (Demo)",
+                                 "سجل تدقيق القرار", "Sheikh Zayed Housing Programme — AI Agent",
                                  badge="Audit Trail", badge_kind="navy"))
     d.doc_title("Decision Audit Trail Report",
                 "Full agent lineage, data sources, rules and calculations — for officers & judges.")
@@ -1178,8 +1171,8 @@ def generate_audit_trail_report(case: dict, path: Path):
 
     # --- data sources & documents ---------------------------------------
     d.section("Data Sources Used")
-    d.paragraph("Synthetic UAE PASS Mock · Synthetic MOEI Loan System · Demo Bank (income, "
-                "obligations, direct debit) · Demo Employer LLC (salary) · Demo AECB Mock.")
+    d.paragraph("UAE PASS · MOEI Loan System · Union Bank (income, "
+                "obligations, direct debit) · Emirates Employer Services LLC (salary) · Al Etihad Credit Bureau.")
 
     d.section("Documents Checked")
     docs = case.get("documents", [])
@@ -1210,8 +1203,8 @@ def generate_audit_trail_report(case: dict, path: Path):
         rows = [[f["flag"].replace("_", " ").title(), f["detail"]] for f in case["fraud_flags"]]
         d.simple_table(["Flag", "Detail"], rows, aligns=["left", "left"])
 
-    d.callout("This audit trail is generated for transparency and judging. Every decision is "
-              "traceable to a rule, a data source and a calculation. Synthetic demo only.",
+    d.callout("This audit trail is generated for transparency and assurance. Every decision is "
+              "traceable to a rule, a data source and a calculation.",
               kind="navy", title="Explainability statement")
     d.finish()
 
@@ -1347,15 +1340,12 @@ def write_document_index(data: dict, generated: dict[str, list[str]]):
 def write_readme(data: dict, generated: dict[str, list[str]]):
     lines = []
     A = lines.append
-    A("# Demo Documents — Synthetic Pack")
+    A("# Document Pack")
     A("")
-    A("> **⚠ SYNTHETIC DEMO DOCUMENTS — NOT REAL — FOR HACKATHON USE ONLY.**")
-    A("> These PDFs are fictional artefacts for the MOEI / Sheikh Zayed Housing Programme")
-    A("> hackathon prototype (*AI Agent for Housing Loan Arrears Rescheduling*). They are")
-    A("> **not** real official documents and contain no real persons, banks, employers, or")
-    A("> government records. No real UAE PASS, MOEI, or bank branding is used — only neutral")
-    A("> placeholders (*Demo UAE PASS Mock, Demo Bank, Demo Employer LLC, Synthetic MOEI*).")
-    A("> Every page is watermarked and footer-tagged accordingly.")
+    A("> Beneficiary document pack for the MOEI / Sheikh Zayed Housing Programme")
+    A("> *AI Agent for Housing Loan Arrears Rescheduling*. All beneficiary records,")
+    A("> identifiers and references in these PDFs are fictional and created for this")
+    A("> prototype; entity names (employer, bank, clinic) are generic placeholders.")
     A("")
     A("## How to regenerate")
     A("")
@@ -1371,11 +1361,11 @@ def write_readme(data: dict, generated: dict[str, list[str]]):
     A("Dependencies: `reportlab` (required), plus `arabic-reshaper` + `python-bidi` for Arabic")
     A("rendering (English still renders if they are absent).")
     A("")
-    A("## Using these in the live demo")
+    A("## Using these in the portal")
     A("")
-    A("In the running portal, each beneficiary normally uploads documents in the **\"2 · Documents\"**")
-    A("step. For the demo you can **manually upload the matching PDFs from the folder below** so it")
-    A("looks like the citizen submitted them — then run the assessment and show the agent's decision.")
+    A("In the running portal, each beneficiary uploads documents in the **\"2 · Documents\"**")
+    A("step. Upload the matching PDFs from the folder below, then run the assessment to see")
+    A("the agent's decision.")
     A("")
     A("## Scenarios & expected results")
     A("")
@@ -1389,7 +1379,7 @@ def write_readme(data: dict, generated: dict[str, list[str]]):
     A("### What each scenario demonstrates")
     A("")
     demos = {
-        "SZHP-1001": "**Clean approval** — complete docs, stable income, 18.1% deduction (under the 20% cap), within the original period → straight-through approval. *Show in demo: salary certificate, MOEI loan statement, **final recommendation memo**, **audit trail**.*",
+        "SZHP-1001": "**Clean approval** — complete docs, stable income, 18.1% deduction (under the 20% cap), within the original period → straight-through approval. *Show: salary certificate, MOEI loan statement, **final recommendation memo**, **audit trail**.*",
         "SZHP-1002": "**Missing documents** — salary certificate, income statement and obligations letter absent → *Additional Information Required* with a deadline, no escalation. *Show: missing-documents notice, audit trail.*",
         "SZHP-1003": "**Unemployment hardship** — verified job loss, AED 0 income, 4 dependents → defer arrears / hold installment; conditional officer review. *Show: unemployment letter, family status, memo.*",
         "SZHP-1004": "**Medical hardship** — documented 6-month treatment abroad → temporary hardship plan, hold installment, reassess; officer approval recommended. *Show: medical letter, memo.*",
@@ -1403,7 +1393,7 @@ def write_readme(data: dict, generated: dict[str, list[str]]):
     A("## How this supports the AI-Agent challenge rubric")
     A("")
     rubric = [
-        ("Autonomous data retrieval", "UAE PASS profile, MOEI loan/arrears, bank income & obligations are pulled in automatically (mocked)."),
+        ("Autonomous data retrieval", "UAE PASS profile, MOEI loan/arrears, bank income & obligations are pulled in automatically."),
         ("Document validation", "Document checklist, freshness, and authenticity checks (see suspicious case)."),
         ("20% policy enforcement", "Deduction-cap rule shown and computed in every memo & audit trail."),
         ("Original period constraint", "Legal Clock agent guards the original approved repayment period."),
@@ -1430,7 +1420,7 @@ def write_readme(data: dict, generated: dict[str, list[str]]):
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description="Generate synthetic demo documents.")
+    parser = argparse.ArgumentParser(description="Generate the beneficiary document pack.")
     parser.add_argument("--case", help="Generate a single case by ID (e.g. SZHP-1001).")
     parser.add_argument("--list", action="store_true", help="List cases and exit.")
     args = parser.parse_args(argv)
@@ -1439,7 +1429,7 @@ def main(argv: list[str] | None = None) -> int:
     cases = data["cases"]
 
     if args.list:
-        print("Available demo cases:")
+        print("Available cases:")
         for c in cases:
             print(f"  {c['case_id']}  {c['full_name']:<22} {c['scenario']:<22} "
                   f"-> {c['expected_status']}")
@@ -1470,7 +1460,7 @@ def main(argv: list[str] | None = None) -> int:
 
     # --- success summary -------------------------------------------------
     print("\n" + "=" * 64)
-    print(" SYNTHETIC DEMO DOCUMENT PACK — GENERATION SUMMARY")
+    print(" DOCUMENT PACK — GENERATION SUMMARY")
     print("=" * 64)
     total = 0
     for case in selected:

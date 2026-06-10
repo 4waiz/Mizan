@@ -38,7 +38,7 @@ export default function CitizenLogin() {
   const completeLogin = (fixtureId: string, uname?: string) => {
     const fx = fixtures.find((f) => f.fixture_id === fixtureId);
     if (!fx) {
-      setErr("That demo identity is not available on the backend.");
+      setErr("That identity is not available on the backend.");
       return;
     }
     setSession({
@@ -58,7 +58,7 @@ export default function CitizenLogin() {
     const u = username.trim().toLowerCase();
     const match = CITIZEN_USERS.find((c) => c.username === u);
     if (!match || match.password !== password) {
-      setErr("Invalid username or password. Demo passwords are all 123.");
+      setErr("Invalid username or password.");
       return;
     }
     completeLogin(match.fixture, match.username);
@@ -75,8 +75,8 @@ export default function CitizenLogin() {
       <Band title="Citizen Portal" subtitle="Sheikh Zayed Housing Programme · MOEI" fileRef="CITIZEN · بوابة المستفيد" />
 
       <p className="lead">
-        Sign in to request an arrears rescheduling and track your case. Use a{" "}
-        <b>demo account</b> or the synthetic <b>UAE PASS</b> identity.
+        Sign in to request an arrears rescheduling and track your case. Use your{" "}
+        <b>account</b> or your <b>UAE PASS</b> identity.
       </p>
 
       {loadErr && (
@@ -91,7 +91,7 @@ export default function CitizenLogin() {
       <div className="card tab" style={{ marginTop: 24, maxWidth: 560 }}>
         <div className="seg" role="group" aria-label="Login method" style={{ marginBottom: 20 }}>
           <button className={mode === "password" ? "on" : ""} onClick={() => setMode("password")}>
-            Demo account
+            Account
           </button>
           <button className={mode === "uaepass" ? "on" : ""} onClick={() => setMode("uaepass")}>
             UAE PASS
@@ -108,7 +108,7 @@ export default function CitizenLogin() {
               autoFocus
               autoComplete="username"
               onChange={(e) => setUsername(e.target.value)}
-              placeholder="e.g. demo"
+              placeholder="e.g. ahmed"
             />
             <div style={{ height: 14 }} />
             <label className="field">Password</label>
@@ -124,7 +124,7 @@ export default function CitizenLogin() {
             </button>
 
             <div className="caption" style={{ marginTop: 16, lineHeight: 1.9 }}>
-              <b>Demo accounts</b> (password <code>123</code> for all):
+              <b>Accounts</b> (password <code>123</code> for all):
               <br />
               {CITIZEN_USERS.map((c) => (
                 <span key={c.username}>
@@ -138,7 +138,7 @@ export default function CitizenLogin() {
                   >
                     {c.username}
                   </code>
-                  {c.dup ? " (duplicate-request demo)" : ""}
+                  {c.dup ? " (duplicate request)" : ""}
                   {"  ·  "}
                 </span>
               ))}
@@ -150,7 +150,7 @@ export default function CitizenLogin() {
               <div className="eyebrow">Authentication</div>
               <img src="/uaepass.png" alt="UAE PASS" style={{ height: 34 }} />
             </div>
-            <label className="field">Citizen identity · synthetic UAE PASS</label>
+            <label className="field">Citizen identity · UAE PASS</label>
             <select value={choice} onChange={(e) => setChoice(e.target.value)}>
               {applicants.map((f) => (
                 <option key={f.fixture_id} value={f.fixture_id}>

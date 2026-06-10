@@ -75,6 +75,8 @@ export const api = {
       trigger_type,
     }),
   getCase: (id: string) => get<any>(`/api/cases/${id}`),
+  uploadDocuments: (id: string, documents: any[]) =>
+    post<any>(`/api/cases/${id}/documents`, { documents }),
   listCases: () => get<any[]>("/api/cases"),
   runCase: (id: string) => post<any>(`/api/cases/${id}/run`),
   runCaseStream: (id: string, onEvent: (e: any) => void) =>

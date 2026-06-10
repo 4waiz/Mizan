@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python scripts/generate_demo_documents.py)",
+      "Bash(python -)"
+    ]
+  }
+}

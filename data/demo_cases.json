@@ -1,8 +1,8 @@
 {
   "_meta": {
     "title": "Sheikh Zayed Housing Programme — Arrears Rescheduling AI Agent",
-    "subtitle": "Synthetic demo case pack for the MOEI hackathon prototype",
-    "disclaimer": "SYNTHETIC DEMO DATA — NOT REAL — FOR HACKATHON USE ONLY. No real persons, banks, employers, or government records are represented. All identifiers, references and QR codes are fictional placeholders.",
+    "subtitle": "Beneficiary case pack for the MOEI arrears-rescheduling AI agent",
+    "disclaimer": "All beneficiary records, identifiers and references in this pack are fictional and created for this prototype. Entity names (employer, bank, clinic) are generic placeholders, not real institutions.",
     "generated_for": "MOEI / Sheikh Zayed Housing Programme — AI Agent for Housing Loan Arrears Rescheduling",
     "policy_rules": {
       "deduction_cap_pct": 20,
@@ -13,7 +13,7 @@
       "human_review": "Reserved for complex, suspicious, low-confidence, or policy-ambiguous cases."
     },
     "currency": "AED",
-    "demo_date": "2026-06-10"
+    "assessment_date": "2026-06-10"
   },
   "cases": [
     {
@@ -32,25 +32,31 @@
         "nationality": "United Arab Emirates",
         "date_of_birth": "1985-03-14",
         "mobile": "+971-50-000-1001",
-        "email": "a.almansoori@demo-mail.ae",
+        "email": "a.almansoori@mail.ae",
         "family_book_number": "FB-AD-100101",
         "marital_status": "Married",
         "dependents": 2,
         "employment_status": "Employed",
         "login_timestamp": "2026-06-10T09:14:22+04:00",
-        "data_source": "Synthetic UAE PASS Mock"
+        "data_source": "UAE PASS"
       },
       "application": {
         "application_id": "APP-2026-1001",
         "request_date": "2026-06-10",
         "reason": "Temporary cash-flow gap after relocation costs; requesting re-spread of arrears within original term.",
         "request_type": "Reschedule arrears (update installment)",
-        "uploaded_documents": ["uae_pass_profile", "salary_certificate", "income_statement", "obligations_letter", "direct_debit_proof"],
+        "uploaded_documents": [
+          "uae_pass_profile",
+          "salary_certificate",
+          "income_statement",
+          "obligations_letter",
+          "direct_debit_proof"
+        ],
         "consent": true,
-        "consent_text": "I consent to retrieve my loan, arrears, payment, and financial information for this demo workflow."
+        "consent_text": "I consent to retrieve my loan, arrears, payment, and financial information for this rescheduling request."
       },
       "salary": {
-        "employer_name": "Demo Employer LLC",
+        "employer_name": "Emirates Employer Services LLC",
         "job_title": "Senior Operations Specialist",
         "employment_start_date": "2014-09-01",
         "basic_salary": 19000,
@@ -59,23 +65,59 @@
         "deductions": 2500,
         "net_salary": 29500,
         "issue_date": "2026-06-02",
-        "reference_number": "DEMO-SAL-1001-AE",
-        "qr_placeholder": "Demo QR Placeholder"
+        "reference_number": "REF-SAL-1001-AE",
+        "qr_placeholder": "Scan to verify"
       },
       "income_statement": {
         "average_monthly_income": 29500,
         "income_trend": "stable",
         "months": [
-          {"month": "2025-12", "gross": 32000, "net": 29500, "transfer_date": "2025-12-28", "notes": "Salary credit"},
-          {"month": "2026-01", "gross": 32000, "net": 29500, "transfer_date": "2026-01-28", "notes": "Salary credit"},
-          {"month": "2026-02", "gross": 32000, "net": 29500, "transfer_date": "2026-02-26", "notes": "Salary credit"},
-          {"month": "2026-03", "gross": 32000, "net": 29500, "transfer_date": "2026-03-28", "notes": "Salary credit"},
-          {"month": "2026-04", "gross": 32000, "net": 29500, "transfer_date": "2026-04-28", "notes": "Salary credit"},
-          {"month": "2026-05", "gross": 32000, "net": 29500, "transfer_date": "2026-05-28", "notes": "Salary credit"}
+          {
+            "month": "2025-12",
+            "gross": 32000,
+            "net": 29500,
+            "transfer_date": "2025-12-28",
+            "notes": "Salary credit"
+          },
+          {
+            "month": "2026-01",
+            "gross": 32000,
+            "net": 29500,
+            "transfer_date": "2026-01-28",
+            "notes": "Salary credit"
+          },
+          {
+            "month": "2026-02",
+            "gross": 32000,
+            "net": 29500,
+            "transfer_date": "2026-02-26",
+            "notes": "Salary credit"
+          },
+          {
+            "month": "2026-03",
+            "gross": 32000,
+            "net": 29500,
+            "transfer_date": "2026-03-28",
+            "notes": "Salary credit"
+          },
+          {
+            "month": "2026-04",
+            "gross": 32000,
+            "net": 29500,
+            "transfer_date": "2026-04-28",
+            "notes": "Salary credit"
+          },
+          {
+            "month": "2026-05",
+            "gross": 32000,
+            "net": 29500,
+            "transfer_date": "2026-05-28",
+            "notes": "Salary credit"
+          }
         ]
       },
       "obligations": {
-        "bank_name": "Demo Bank",
+        "bank_name": "Union Bank",
         "personal_loan": 3000,
         "car_loan": 2800,
         "credit_card_min": 1200,
@@ -83,13 +125,17 @@
         "total_monthly_obligations": 8000,
         "obligation_to_income_ratio_pct": 27.1,
         "issue_date": "2026-06-01",
-        "reference_number": "DEMO-AECB-1001"
+        "reference_number": "AECB-1001"
       },
       "direct_debit": {
         "masked_account": "AE** **** **** **** **01 01",
         "mandate_status": "Active",
         "last_successful_debit": "2025-09-05",
-        "failed_debit_dates": ["2025-10-05", "2025-11-05", "2025-12-05"],
+        "failed_debit_dates": [
+          "2025-10-05",
+          "2025-11-05",
+          "2025-12-05"
+        ],
         "failure_reason": "Insufficient funds",
         "mandate_expiry": "2028-12-31"
       },
@@ -111,26 +157,123 @@
         "risk_stage": "Pre-legal collections"
       },
       "payment_history": [
-        {"month": "2025-09", "expected": 4500, "paid": 4500, "status": "Paid", "late_days": 0, "failed_debit": "No"},
-        {"month": "2025-10", "expected": 4500, "paid": 0, "status": "Missed", "late_days": 30, "failed_debit": "Yes"},
-        {"month": "2025-11", "expected": 4500, "paid": 0, "status": "Missed", "late_days": 30, "failed_debit": "Yes"},
-        {"month": "2025-12", "expected": 4500, "paid": 0, "status": "Missed", "late_days": 31, "failed_debit": "Yes"},
-        {"month": "2026-01", "expected": 4500, "paid": 2000, "status": "Partial", "late_days": 20, "failed_debit": "No"},
-        {"month": "2026-02", "expected": 4500, "paid": 0, "status": "Missed", "late_days": 28, "failed_debit": "Yes"},
-        {"month": "2026-03", "expected": 4500, "paid": 0, "status": "Missed", "late_days": 31, "failed_debit": "Yes"},
-        {"month": "2026-04", "expected": 4500, "paid": 0, "status": "Missed", "late_days": 30, "failed_debit": "Yes"},
-        {"month": "2026-05", "expected": 4500, "paid": 0, "status": "Missed", "late_days": 30, "failed_debit": "Yes"}
+        {
+          "month": "2025-09",
+          "expected": 4500,
+          "paid": 4500,
+          "status": "Paid",
+          "late_days": 0,
+          "failed_debit": "No"
+        },
+        {
+          "month": "2025-10",
+          "expected": 4500,
+          "paid": 0,
+          "status": "Missed",
+          "late_days": 30,
+          "failed_debit": "Yes"
+        },
+        {
+          "month": "2025-11",
+          "expected": 4500,
+          "paid": 0,
+          "status": "Missed",
+          "late_days": 30,
+          "failed_debit": "Yes"
+        },
+        {
+          "month": "2025-12",
+          "expected": 4500,
+          "paid": 0,
+          "status": "Missed",
+          "late_days": 31,
+          "failed_debit": "Yes"
+        },
+        {
+          "month": "2026-01",
+          "expected": 4500,
+          "paid": 2000,
+          "status": "Partial",
+          "late_days": 20,
+          "failed_debit": "No"
+        },
+        {
+          "month": "2026-02",
+          "expected": 4500,
+          "paid": 0,
+          "status": "Missed",
+          "late_days": 28,
+          "failed_debit": "Yes"
+        },
+        {
+          "month": "2026-03",
+          "expected": 4500,
+          "paid": 0,
+          "status": "Missed",
+          "late_days": 31,
+          "failed_debit": "Yes"
+        },
+        {
+          "month": "2026-04",
+          "expected": 4500,
+          "paid": 0,
+          "status": "Missed",
+          "late_days": 30,
+          "failed_debit": "Yes"
+        },
+        {
+          "month": "2026-05",
+          "expected": 4500,
+          "paid": 0,
+          "status": "Missed",
+          "late_days": 30,
+          "failed_debit": "Yes"
+        }
       ],
-      "documents": ["uae_pass_profile", "application_form", "salary_certificate", "income_statement", "obligations_letter", "direct_debit_proof", "moei_loan_statement", "arrears_statement", "payment_history", "final_recommendation_memo", "audit_trail_report"],
-      "active_request": {"exists": false},
-      "hardship": {"type": "none"},
+      "documents": [
+        "uae_pass_profile",
+        "application_form",
+        "salary_certificate",
+        "income_statement",
+        "obligations_letter",
+        "direct_debit_proof",
+        "moei_loan_statement",
+        "arrears_statement",
+        "payment_history",
+        "final_recommendation_memo",
+        "audit_trail_report"
+      ],
+      "active_request": {
+        "exists": false
+      },
+      "hardship": {
+        "type": "none"
+      },
       "fraud_flags": [],
       "policy_results": {
-        "deduction_cap": {"result": "Pass", "proposed_deduction_rate_pct": 18.1, "proposed_installment": 5800, "basis": "net_income", "detail": "AED 5,800 / AED 29,500 = 18.1% ≤ 20% cap."},
-        "period_constraint": {"result": "Pass", "detail": "Re-spread stays within the original 300-month approved period; no extension required."},
-        "active_request": {"result": "Pass", "detail": "No existing active application."},
-        "document_completeness": {"result": "Pass", "detail": "All required documents present and fresh."},
-        "fraud_inconsistency": {"result": "Pass", "detail": "Declared income matches verified salary transfers."}
+        "deduction_cap": {
+          "result": "Pass",
+          "proposed_deduction_rate_pct": 18.1,
+          "proposed_installment": 5800,
+          "basis": "net_income",
+          "detail": "AED 5,800 / AED 29,500 = 18.1% ≤ 20% cap."
+        },
+        "period_constraint": {
+          "result": "Pass",
+          "detail": "Re-spread stays within the original 300-month approved period; no extension required."
+        },
+        "active_request": {
+          "result": "Pass",
+          "detail": "No existing active application."
+        },
+        "document_completeness": {
+          "result": "Pass",
+          "detail": "All required documents present and fresh."
+        },
+        "fraud_inconsistency": {
+          "result": "Pass",
+          "detail": "Declared income matches verified salary transfers."
+        }
       },
       "proposed_plan": {
         "outcome": "UPDATE_INSTALLMENT",
@@ -161,22 +304,24 @@
         "nationality": "United Arab Emirates",
         "date_of_birth": "1990-07-22",
         "mobile": "+971-50-000-1002",
-        "email": "f.alsuwaidi@demo-mail.ae",
+        "email": "f.alsuwaidi@mail.ae",
         "family_book_number": "FB-DU-100102",
         "marital_status": "Married",
         "dependents": 3,
         "employment_status": "Employed",
         "login_timestamp": "2026-06-10T10:02:41+04:00",
-        "data_source": "Synthetic UAE PASS Mock"
+        "data_source": "UAE PASS"
       },
       "application": {
         "application_id": "APP-2026-1002",
         "request_date": "2026-06-10",
         "reason": "Arrears accumulated after household expenses increased; requesting rescheduling.",
         "request_type": "Reschedule arrears",
-        "uploaded_documents": ["uae_pass_profile"],
+        "uploaded_documents": [
+          "uae_pass_profile"
+        ],
         "consent": true,
-        "consent_text": "I consent to retrieve my loan, arrears, payment, and financial information for this demo workflow."
+        "consent_text": "I consent to retrieve my loan, arrears, payment, and financial information for this rescheduling request."
       },
       "salary": null,
       "income_statement": null,
@@ -200,27 +345,102 @@
         "risk_stage": "Early collections"
       },
       "payment_history": [
-        {"month": "2025-12", "expected": 3900, "paid": 3900, "status": "Paid", "late_days": 0, "failed_debit": "No"},
-        {"month": "2026-01", "expected": 3900, "paid": 0, "status": "Missed", "late_days": 31, "failed_debit": "Yes"},
-        {"month": "2026-02", "expected": 3900, "paid": 0, "status": "Missed", "late_days": 28, "failed_debit": "Yes"},
-        {"month": "2026-03", "expected": 3900, "paid": 1500, "status": "Partial", "late_days": 25, "failed_debit": "No"},
-        {"month": "2026-04", "expected": 3900, "paid": 0, "status": "Missed", "late_days": 30, "failed_debit": "Yes"},
-        {"month": "2026-05", "expected": 3900, "paid": 0, "status": "Missed", "late_days": 30, "failed_debit": "Yes"}
+        {
+          "month": "2025-12",
+          "expected": 3900,
+          "paid": 3900,
+          "status": "Paid",
+          "late_days": 0,
+          "failed_debit": "No"
+        },
+        {
+          "month": "2026-01",
+          "expected": 3900,
+          "paid": 0,
+          "status": "Missed",
+          "late_days": 31,
+          "failed_debit": "Yes"
+        },
+        {
+          "month": "2026-02",
+          "expected": 3900,
+          "paid": 0,
+          "status": "Missed",
+          "late_days": 28,
+          "failed_debit": "Yes"
+        },
+        {
+          "month": "2026-03",
+          "expected": 3900,
+          "paid": 1500,
+          "status": "Partial",
+          "late_days": 25,
+          "failed_debit": "No"
+        },
+        {
+          "month": "2026-04",
+          "expected": 3900,
+          "paid": 0,
+          "status": "Missed",
+          "late_days": 30,
+          "failed_debit": "Yes"
+        },
+        {
+          "month": "2026-05",
+          "expected": 3900,
+          "paid": 0,
+          "status": "Missed",
+          "late_days": 30,
+          "failed_debit": "Yes"
+        }
       ],
-      "documents": ["uae_pass_profile", "application_form", "moei_loan_statement", "arrears_statement", "payment_history", "missing_documents_notice", "audit_trail_report"],
-      "active_request": {"exists": false},
-      "hardship": {"type": "unknown"},
+      "documents": [
+        "uae_pass_profile",
+        "application_form",
+        "moei_loan_statement",
+        "arrears_statement",
+        "payment_history",
+        "missing_documents_notice",
+        "audit_trail_report"
+      ],
+      "active_request": {
+        "exists": false
+      },
+      "hardship": {
+        "type": "unknown"
+      },
       "fraud_flags": [],
-      "missing_documents": ["salary_certificate", "income_statement", "obligations_letter"],
+      "missing_documents": [
+        "salary_certificate",
+        "income_statement",
+        "obligations_letter"
+      ],
       "submission_deadline": "2026-06-24",
       "policy_results": {
-        "deduction_cap": {"result": "Not Applicable", "detail": "Cannot compute deduction rate — income unknown."},
-        "period_constraint": {"result": "Not Applicable", "detail": "No proposed plan can be formed yet."},
-        "active_request": {"result": "Pass", "detail": "No existing active application."},
-        "document_completeness": {"result": "Fail", "detail": "Missing: salary certificate, income statement, obligations letter."},
-        "fraud_inconsistency": {"result": "Not Applicable", "detail": "Insufficient data to evaluate."}
+        "deduction_cap": {
+          "result": "Not Applicable",
+          "detail": "Cannot compute deduction rate — income unknown."
+        },
+        "period_constraint": {
+          "result": "Not Applicable",
+          "detail": "No proposed plan can be formed yet."
+        },
+        "active_request": {
+          "result": "Pass",
+          "detail": "No existing active application."
+        },
+        "document_completeness": {
+          "result": "Fail",
+          "detail": "Missing: salary certificate, income statement, obligations letter."
+        },
+        "fraud_inconsistency": {
+          "result": "Not Applicable",
+          "detail": "Insufficient data to evaluate."
+        }
       },
-      "proposed_plan": {"outcome": "REQUEST_MORE_INFO"},
+      "proposed_plan": {
+        "outcome": "REQUEST_MORE_INFO"
+      },
       "confidence_score": 0.41,
       "human_review_required": false,
       "bilingual_summary": {
@@ -244,22 +464,28 @@
         "nationality": "United Arab Emirates",
         "date_of_birth": "1982-11-05",
         "mobile": "+971-50-000-1003",
-        "email": "k.alhosani@demo-mail.ae",
+        "email": "k.alhosani@mail.ae",
         "family_book_number": "FB-SH-100103",
         "marital_status": "Married",
         "dependents": 4,
         "employment_status": "Unemployed",
         "login_timestamp": "2026-06-10T11:21:09+04:00",
-        "data_source": "Synthetic UAE PASS Mock"
+        "data_source": "UAE PASS"
       },
       "application": {
         "application_id": "APP-2026-1003",
         "request_date": "2026-06-10",
         "reason": "Job loss; no stable income. Requesting relief so the monthly burden is not increased.",
         "request_type": "Hardship rescheduling (defer arrears)",
-        "uploaded_documents": ["uae_pass_profile", "unemployment_letter", "last_income_statement", "family_status_record", "direct_debit_proof"],
+        "uploaded_documents": [
+          "uae_pass_profile",
+          "unemployment_letter",
+          "last_income_statement",
+          "family_status_record",
+          "direct_debit_proof"
+        ],
         "consent": true,
-        "consent_text": "I consent to retrieve my loan, arrears, payment, and financial information for this demo workflow."
+        "consent_text": "I consent to retrieve my loan, arrears, payment, and financial information for this rescheduling request."
       },
       "salary": null,
       "income_statement": {
@@ -267,12 +493,48 @@
         "income_trend": "stopped",
         "label": "Last income statement (pre-separation, trailing 6 months)",
         "months": [
-          {"month": "2025-08", "gross": 24000, "net": 21500, "transfer_date": "2025-08-28", "notes": "Salary credit"},
-          {"month": "2025-09", "gross": 24000, "net": 21500, "transfer_date": "2025-09-28", "notes": "Salary credit"},
-          {"month": "2025-10", "gross": 24000, "net": 21500, "transfer_date": "2025-10-28", "notes": "Final salary credit"},
-          {"month": "2025-11", "gross": 0, "net": 0, "transfer_date": "-", "notes": "No income — separation"},
-          {"month": "2025-12", "gross": 0, "net": 0, "transfer_date": "-", "notes": "No income"},
-          {"month": "2026-01", "gross": 0, "net": 0, "transfer_date": "-", "notes": "No income"}
+          {
+            "month": "2025-08",
+            "gross": 24000,
+            "net": 21500,
+            "transfer_date": "2025-08-28",
+            "notes": "Salary credit"
+          },
+          {
+            "month": "2025-09",
+            "gross": 24000,
+            "net": 21500,
+            "transfer_date": "2025-09-28",
+            "notes": "Salary credit"
+          },
+          {
+            "month": "2025-10",
+            "gross": 24000,
+            "net": 21500,
+            "transfer_date": "2025-10-28",
+            "notes": "Final salary credit"
+          },
+          {
+            "month": "2025-11",
+            "gross": 0,
+            "net": 0,
+            "transfer_date": "-",
+            "notes": "No income — separation"
+          },
+          {
+            "month": "2025-12",
+            "gross": 0,
+            "net": 0,
+            "transfer_date": "-",
+            "notes": "No income"
+          },
+          {
+            "month": "2026-01",
+            "gross": 0,
+            "net": 0,
+            "transfer_date": "-",
+            "notes": "No income"
+          }
         ]
       },
       "obligations": null,
@@ -280,7 +542,12 @@
         "masked_account": "AE** **** **** **** **01 03",
         "mandate_status": "Active (failing)",
         "last_successful_debit": "2025-10-05",
-        "failed_debit_dates": ["2025-11-05", "2025-12-05", "2026-01-05", "2026-02-05"],
+        "failed_debit_dates": [
+          "2025-11-05",
+          "2025-12-05",
+          "2026-01-05",
+          "2026-02-05"
+        ],
         "failure_reason": "Insufficient funds — no salary credit",
         "mandate_expiry": "2029-06-30"
       },
@@ -302,23 +569,100 @@
         "risk_stage": "Pre-legal collections — hardship hold recommended"
       },
       "payment_history": [
-        {"month": "2025-09", "expected": 3800, "paid": 3800, "status": "Paid", "late_days": 0, "failed_debit": "No"},
-        {"month": "2025-10", "expected": 3800, "paid": 3800, "status": "Paid", "late_days": 0, "failed_debit": "No"},
-        {"month": "2025-11", "expected": 3800, "paid": 0, "status": "Failed Debit", "late_days": 30, "failed_debit": "Yes"},
-        {"month": "2025-12", "expected": 3800, "paid": 0, "status": "Failed Debit", "late_days": 31, "failed_debit": "Yes"},
-        {"month": "2026-01", "expected": 3800, "paid": 0, "status": "Failed Debit", "late_days": 31, "failed_debit": "Yes"},
-        {"month": "2026-02", "expected": 3800, "paid": 0, "status": "Failed Debit", "late_days": 28, "failed_debit": "Yes"},
-        {"month": "2026-03", "expected": 3800, "paid": 0, "status": "Missed", "late_days": 31, "failed_debit": "Yes"},
-        {"month": "2026-04", "expected": 3800, "paid": 0, "status": "Missed", "late_days": 30, "failed_debit": "Yes"},
-        {"month": "2026-05", "expected": 3800, "paid": 0, "status": "Missed", "late_days": 30, "failed_debit": "Yes"}
+        {
+          "month": "2025-09",
+          "expected": 3800,
+          "paid": 3800,
+          "status": "Paid",
+          "late_days": 0,
+          "failed_debit": "No"
+        },
+        {
+          "month": "2025-10",
+          "expected": 3800,
+          "paid": 3800,
+          "status": "Paid",
+          "late_days": 0,
+          "failed_debit": "No"
+        },
+        {
+          "month": "2025-11",
+          "expected": 3800,
+          "paid": 0,
+          "status": "Failed Debit",
+          "late_days": 30,
+          "failed_debit": "Yes"
+        },
+        {
+          "month": "2025-12",
+          "expected": 3800,
+          "paid": 0,
+          "status": "Failed Debit",
+          "late_days": 31,
+          "failed_debit": "Yes"
+        },
+        {
+          "month": "2026-01",
+          "expected": 3800,
+          "paid": 0,
+          "status": "Failed Debit",
+          "late_days": 31,
+          "failed_debit": "Yes"
+        },
+        {
+          "month": "2026-02",
+          "expected": 3800,
+          "paid": 0,
+          "status": "Failed Debit",
+          "late_days": 28,
+          "failed_debit": "Yes"
+        },
+        {
+          "month": "2026-03",
+          "expected": 3800,
+          "paid": 0,
+          "status": "Missed",
+          "late_days": 31,
+          "failed_debit": "Yes"
+        },
+        {
+          "month": "2026-04",
+          "expected": 3800,
+          "paid": 0,
+          "status": "Missed",
+          "late_days": 30,
+          "failed_debit": "Yes"
+        },
+        {
+          "month": "2026-05",
+          "expected": 3800,
+          "paid": 0,
+          "status": "Missed",
+          "late_days": 30,
+          "failed_debit": "Yes"
+        }
       ],
-      "documents": ["uae_pass_profile", "application_form", "unemployment_letter", "last_income_statement", "family_status_record", "direct_debit_proof", "moei_loan_statement", "arrears_statement", "payment_history", "final_recommendation_memo", "audit_trail_report"],
-      "active_request": {"exists": false},
+      "documents": [
+        "uae_pass_profile",
+        "application_form",
+        "unemployment_letter",
+        "last_income_statement",
+        "family_status_record",
+        "direct_debit_proof",
+        "moei_loan_statement",
+        "arrears_statement",
+        "payment_history",
+        "final_recommendation_memo",
+        "audit_trail_report"
+      ],
+      "active_request": {
+        "exists": false
+      },
       "hardship": {
         "type": "unemployment",
-        "previous_employer": "Demo Employer LLC",
+        "previous_employer": "Emirates Employer Services LLC",
         "last_working_date": "2025-10-31",
-        "reason_for_separation": "Position redundancy (synthetic)",
+        "reason_for_separation": "Position redundancy",
         "current_income_status": "No stable income",
         "expected_reemployment_date": "2026-12-01",
         "previous_gross_salary": 24000,
@@ -327,11 +671,26 @@
       },
       "fraud_flags": [],
       "policy_results": {
-        "deduction_cap": {"result": "Not Applicable", "detail": "Income is AED 0 — deduction-cap arithmetic does not apply; hardship route taken."},
-        "period_constraint": {"result": "Pass", "detail": "Deferring arrears to maturity keeps the schedule within the original 300-month period."},
-        "active_request": {"result": "Pass", "detail": "No existing active application."},
-        "document_completeness": {"result": "Pass", "detail": "Hardship route documents present (unemployment letter, last income statement, family status)."},
-        "fraud_inconsistency": {"result": "Pass", "detail": "Termination date consistent with halted salary transfers."}
+        "deduction_cap": {
+          "result": "Not Applicable",
+          "detail": "Income is AED 0 — deduction-cap arithmetic does not apply; hardship route taken."
+        },
+        "period_constraint": {
+          "result": "Pass",
+          "detail": "Deferring arrears to maturity keeps the schedule within the original 300-month period."
+        },
+        "active_request": {
+          "result": "Pass",
+          "detail": "No existing active application."
+        },
+        "document_completeness": {
+          "result": "Pass",
+          "detail": "Hardship route documents present (unemployment letter, last income statement, family status)."
+        },
+        "fraud_inconsistency": {
+          "result": "Pass",
+          "detail": "Termination date consistent with halted salary transfers."
+        }
       },
       "proposed_plan": {
         "outcome": "TRANSFER_ARREARS",
@@ -361,25 +720,32 @@
         "nationality": "United Arab Emirates",
         "date_of_birth": "1988-04-18",
         "mobile": "+971-50-000-1004",
-        "email": "m.alzaabi@demo-mail.ae",
+        "email": "m.alzaabi@mail.ae",
         "family_book_number": "FB-AD-100104",
         "marital_status": "Married",
         "dependents": 3,
         "employment_status": "Employed (on medical leave)",
         "login_timestamp": "2026-06-10T12:48:55+04:00",
-        "data_source": "Synthetic UAE PASS Mock"
+        "data_source": "UAE PASS"
       },
       "application": {
         "application_id": "APP-2026-1004",
         "request_date": "2026-06-10",
         "reason": "Medical treatment abroad for 6 months; temporary documented hardship.",
         "request_type": "Temporary hardship rescheduling",
-        "uploaded_documents": ["uae_pass_profile", "salary_certificate", "income_statement", "medical_treatment_letter", "family_status_record", "direct_debit_proof"],
+        "uploaded_documents": [
+          "uae_pass_profile",
+          "salary_certificate",
+          "income_statement",
+          "medical_treatment_letter",
+          "family_status_record",
+          "direct_debit_proof"
+        ],
         "consent": true,
-        "consent_text": "I consent to retrieve my loan, arrears, payment, and financial information for this demo workflow."
+        "consent_text": "I consent to retrieve my loan, arrears, payment, and financial information for this rescheduling request."
       },
       "salary": {
-        "employer_name": "Demo Employer LLC",
+        "employer_name": "Emirates Employer Services LLC",
         "job_title": "Finance Analyst",
         "employment_start_date": "2016-01-15",
         "basic_salary": 16000,
@@ -388,23 +754,59 @@
         "deductions": 3000,
         "net_salary": 24000,
         "issue_date": "2026-06-01",
-        "reference_number": "DEMO-SAL-1004-AE",
-        "qr_placeholder": "Demo QR Placeholder"
+        "reference_number": "REF-SAL-1004-AE",
+        "qr_placeholder": "Scan to verify"
       },
       "income_statement": {
         "average_monthly_income": 24000,
         "income_trend": "stable",
         "months": [
-          {"month": "2025-12", "gross": 27000, "net": 24000, "transfer_date": "2025-12-28", "notes": "Salary credit"},
-          {"month": "2026-01", "gross": 27000, "net": 24000, "transfer_date": "2026-01-28", "notes": "Salary credit"},
-          {"month": "2026-02", "gross": 27000, "net": 24000, "transfer_date": "2026-02-26", "notes": "Salary credit"},
-          {"month": "2026-03", "gross": 27000, "net": 24000, "transfer_date": "2026-03-28", "notes": "Salary credit"},
-          {"month": "2026-04", "gross": 27000, "net": 24000, "transfer_date": "2026-04-28", "notes": "Salary credit"},
-          {"month": "2026-05", "gross": 27000, "net": 24000, "transfer_date": "2026-05-28", "notes": "Salary credit"}
+          {
+            "month": "2025-12",
+            "gross": 27000,
+            "net": 24000,
+            "transfer_date": "2025-12-28",
+            "notes": "Salary credit"
+          },
+          {
+            "month": "2026-01",
+            "gross": 27000,
+            "net": 24000,
+            "transfer_date": "2026-01-28",
+            "notes": "Salary credit"
+          },
+          {
+            "month": "2026-02",
+            "gross": 27000,
+            "net": 24000,
+            "transfer_date": "2026-02-26",
+            "notes": "Salary credit"
+          },
+          {
+            "month": "2026-03",
+            "gross": 27000,
+            "net": 24000,
+            "transfer_date": "2026-03-28",
+            "notes": "Salary credit"
+          },
+          {
+            "month": "2026-04",
+            "gross": 27000,
+            "net": 24000,
+            "transfer_date": "2026-04-28",
+            "notes": "Salary credit"
+          },
+          {
+            "month": "2026-05",
+            "gross": 27000,
+            "net": 24000,
+            "transfer_date": "2026-05-28",
+            "notes": "Salary credit"
+          }
         ]
       },
       "obligations": {
-        "bank_name": "Demo Bank",
+        "bank_name": "Union Bank",
         "personal_loan": 4500,
         "car_loan": 3000,
         "credit_card_min": 1500,
@@ -412,13 +814,17 @@
         "total_monthly_obligations": 10500,
         "obligation_to_income_ratio_pct": 43.8,
         "issue_date": "2026-06-01",
-        "reference_number": "DEMO-AECB-1004"
+        "reference_number": "AECB-1004"
       },
       "direct_debit": {
         "masked_account": "AE** **** **** **** **01 04",
         "mandate_status": "Active",
         "last_successful_debit": "2025-11-05",
-        "failed_debit_dates": ["2025-12-05", "2026-01-05", "2026-02-05"],
+        "failed_debit_dates": [
+          "2025-12-05",
+          "2026-01-05",
+          "2026-02-05"
+        ],
         "failure_reason": "Insufficient funds during treatment period",
         "mandate_expiry": "2030-01-31"
       },
@@ -440,35 +846,123 @@
         "risk_stage": "Collections — medical hardship hold recommended"
       },
       "payment_history": [
-        {"month": "2025-10", "expected": 4000, "paid": 4000, "status": "Paid", "late_days": 0, "failed_debit": "No"},
-        {"month": "2025-11", "expected": 4000, "paid": 0, "status": "Failed Debit", "late_days": 30, "failed_debit": "Yes"},
-        {"month": "2025-12", "expected": 4000, "paid": 0, "status": "Failed Debit", "late_days": 31, "failed_debit": "Yes"},
-        {"month": "2026-01", "expected": 4000, "paid": 2000, "status": "Partial", "late_days": 22, "failed_debit": "No"},
-        {"month": "2026-02", "expected": 4000, "paid": 0, "status": "Missed", "late_days": 28, "failed_debit": "Yes"},
-        {"month": "2026-03", "expected": 4000, "paid": 0, "status": "Missed", "late_days": 31, "failed_debit": "Yes"},
-        {"month": "2026-04", "expected": 4000, "paid": 0, "status": "Missed", "late_days": 30, "failed_debit": "Yes"},
-        {"month": "2026-05", "expected": 4000, "paid": 0, "status": "Missed", "late_days": 30, "failed_debit": "Yes"}
+        {
+          "month": "2025-10",
+          "expected": 4000,
+          "paid": 4000,
+          "status": "Paid",
+          "late_days": 0,
+          "failed_debit": "No"
+        },
+        {
+          "month": "2025-11",
+          "expected": 4000,
+          "paid": 0,
+          "status": "Failed Debit",
+          "late_days": 30,
+          "failed_debit": "Yes"
+        },
+        {
+          "month": "2025-12",
+          "expected": 4000,
+          "paid": 0,
+          "status": "Failed Debit",
+          "late_days": 31,
+          "failed_debit": "Yes"
+        },
+        {
+          "month": "2026-01",
+          "expected": 4000,
+          "paid": 2000,
+          "status": "Partial",
+          "late_days": 22,
+          "failed_debit": "No"
+        },
+        {
+          "month": "2026-02",
+          "expected": 4000,
+          "paid": 0,
+          "status": "Missed",
+          "late_days": 28,
+          "failed_debit": "Yes"
+        },
+        {
+          "month": "2026-03",
+          "expected": 4000,
+          "paid": 0,
+          "status": "Missed",
+          "late_days": 31,
+          "failed_debit": "Yes"
+        },
+        {
+          "month": "2026-04",
+          "expected": 4000,
+          "paid": 0,
+          "status": "Missed",
+          "late_days": 30,
+          "failed_debit": "Yes"
+        },
+        {
+          "month": "2026-05",
+          "expected": 4000,
+          "paid": 0,
+          "status": "Missed",
+          "late_days": 30,
+          "failed_debit": "Yes"
+        }
       ],
-      "documents": ["uae_pass_profile", "application_form", "salary_certificate", "income_statement", "medical_treatment_letter", "family_status_record", "direct_debit_proof", "moei_loan_statement", "arrears_statement", "payment_history", "final_recommendation_memo", "audit_trail_report"],
-      "active_request": {"exists": false},
+      "documents": [
+        "uae_pass_profile",
+        "application_form",
+        "salary_certificate",
+        "income_statement",
+        "medical_treatment_letter",
+        "family_status_record",
+        "direct_debit_proof",
+        "moei_loan_statement",
+        "arrears_statement",
+        "payment_history",
+        "final_recommendation_memo",
+        "audit_trail_report"
+      ],
+      "active_request": {
+        "exists": false
+      },
       "hardship": {
         "type": "medical",
-        "clinic_name": "Demo Specialist Clinic",
+        "clinic_name": "Specialist Medical Center",
         "patient_name": "Mariam Al Zaabi",
-        "treatment_reason": "Documented medical treatment abroad (synthetic)",
+        "treatment_reason": "Documented medical treatment abroad",
         "treatment_period_months": 6,
         "expected_end_date": "2026-11-30",
         "classification": "Temporary hardship",
-        "medical_reference": "DEMO-MED-1004",
+        "medical_reference": "MED-1004",
         "dependents": 3
       },
       "fraud_flags": [],
       "policy_results": {
-        "deduction_cap": {"result": "Pass", "proposed_deduction_rate_pct": 16.7, "proposed_installment": 4000, "detail": "Maintaining AED 4,000 = 16.7% of net income during hardship; well within the 20% cap."},
-        "period_constraint": {"result": "Pass", "detail": "Deferring arrears keeps the plan within the original 300-month period."},
-        "active_request": {"result": "Pass", "detail": "No existing active application."},
-        "document_completeness": {"result": "Pass", "detail": "Medical treatment letter and supporting documents present."},
-        "fraud_inconsistency": {"result": "Pass", "detail": "Missed payments align with the documented treatment period."}
+        "deduction_cap": {
+          "result": "Pass",
+          "proposed_deduction_rate_pct": 16.7,
+          "proposed_installment": 4000,
+          "detail": "Maintaining AED 4,000 = 16.7% of net income during hardship; well within the 20% cap."
+        },
+        "period_constraint": {
+          "result": "Pass",
+          "detail": "Deferring arrears keeps the plan within the original 300-month period."
+        },
+        "active_request": {
+          "result": "Pass",
+          "detail": "No existing active application."
+        },
+        "document_completeness": {
+          "result": "Pass",
+          "detail": "Medical treatment letter and supporting documents present."
+        },
+        "fraud_inconsistency": {
+          "result": "Pass",
+          "detail": "Missed payments align with the documented treatment period."
+        }
       },
       "proposed_plan": {
         "outcome": "TRANSFER_ARREARS",
@@ -498,25 +992,31 @@
         "nationality": "United Arab Emirates",
         "date_of_birth": "1980-09-30",
         "mobile": "+971-50-000-1005",
-        "email": "s.alnuaimi@demo-mail.ae",
+        "email": "s.alnuaimi@mail.ae",
         "family_book_number": "FB-AJ-100105",
         "marital_status": "Married",
         "dependents": 3,
         "employment_status": "Employed",
         "login_timestamp": "2026-06-10T13:33:02+04:00",
-        "data_source": "Synthetic UAE PASS Mock"
+        "data_source": "UAE PASS"
       },
       "application": {
         "application_id": "APP-2026-1005",
         "request_date": "2026-06-10",
         "reason": "Multiple existing loans straining cash flow; requesting manageable rescheduling.",
         "request_type": "Reschedule arrears",
-        "uploaded_documents": ["uae_pass_profile", "salary_certificate", "income_statement", "obligations_letter", "direct_debit_proof"],
+        "uploaded_documents": [
+          "uae_pass_profile",
+          "salary_certificate",
+          "income_statement",
+          "obligations_letter",
+          "direct_debit_proof"
+        ],
         "consent": true,
-        "consent_text": "I consent to retrieve my loan, arrears, payment, and financial information for this demo workflow."
+        "consent_text": "I consent to retrieve my loan, arrears, payment, and financial information for this rescheduling request."
       },
       "salary": {
-        "employer_name": "Demo Employer LLC",
+        "employer_name": "Emirates Employer Services LLC",
         "job_title": "Project Manager",
         "employment_start_date": "2011-05-01",
         "basic_salary": 18000,
@@ -525,23 +1025,59 @@
         "deductions": 3000,
         "net_salary": 27000,
         "issue_date": "2026-06-01",
-        "reference_number": "DEMO-SAL-1005-AE",
-        "qr_placeholder": "Demo QR Placeholder"
+        "reference_number": "REF-SAL-1005-AE",
+        "qr_placeholder": "Scan to verify"
       },
       "income_statement": {
         "average_monthly_income": 27000,
         "income_trend": "stable",
         "months": [
-          {"month": "2025-12", "gross": 30000, "net": 27000, "transfer_date": "2025-12-28", "notes": "Salary credit"},
-          {"month": "2026-01", "gross": 30000, "net": 27000, "transfer_date": "2026-01-28", "notes": "Salary credit"},
-          {"month": "2026-02", "gross": 30000, "net": 27000, "transfer_date": "2026-02-26", "notes": "Salary credit"},
-          {"month": "2026-03", "gross": 30000, "net": 27000, "transfer_date": "2026-03-28", "notes": "Salary credit"},
-          {"month": "2026-04", "gross": 30000, "net": 27000, "transfer_date": "2026-04-28", "notes": "Salary credit"},
-          {"month": "2026-05", "gross": 30000, "net": 27000, "transfer_date": "2026-05-28", "notes": "Salary credit"}
+          {
+            "month": "2025-12",
+            "gross": 30000,
+            "net": 27000,
+            "transfer_date": "2025-12-28",
+            "notes": "Salary credit"
+          },
+          {
+            "month": "2026-01",
+            "gross": 30000,
+            "net": 27000,
+            "transfer_date": "2026-01-28",
+            "notes": "Salary credit"
+          },
+          {
+            "month": "2026-02",
+            "gross": 30000,
+            "net": 27000,
+            "transfer_date": "2026-02-26",
+            "notes": "Salary credit"
+          },
+          {
+            "month": "2026-03",
+            "gross": 30000,
+            "net": 27000,
+            "transfer_date": "2026-03-28",
+            "notes": "Salary credit"
+          },
+          {
+            "month": "2026-04",
+            "gross": 30000,
+            "net": 27000,
+            "transfer_date": "2026-04-28",
+            "notes": "Salary credit"
+          },
+          {
+            "month": "2026-05",
+            "gross": 30000,
+            "net": 27000,
+            "transfer_date": "2026-05-28",
+            "notes": "Salary credit"
+          }
         ]
       },
       "obligations": {
-        "bank_name": "Demo Bank",
+        "bank_name": "Union Bank",
         "personal_loan": 9000,
         "car_loan": 5500,
         "credit_card_min": 3000,
@@ -549,13 +1085,18 @@
         "total_monthly_obligations": 19500,
         "obligation_to_income_ratio_pct": 65.0,
         "issue_date": "2026-06-01",
-        "reference_number": "DEMO-AECB-1005"
+        "reference_number": "AECB-1005"
       },
       "direct_debit": {
         "masked_account": "AE** **** **** **** **01 05",
         "mandate_status": "Active",
         "last_successful_debit": "2025-09-05",
-        "failed_debit_dates": ["2025-10-05", "2025-11-05", "2025-12-05", "2026-01-05"],
+        "failed_debit_dates": [
+          "2025-10-05",
+          "2025-11-05",
+          "2025-12-05",
+          "2026-01-05"
+        ],
         "failure_reason": "Insufficient funds — competing obligations",
         "mandate_expiry": "2029-09-30"
       },
@@ -577,27 +1118,130 @@
         "risk_stage": "Pre-legal collections"
       },
       "payment_history": [
-        {"month": "2025-08", "expected": 4200, "paid": 0, "status": "Missed", "late_days": 31, "failed_debit": "Yes"},
-        {"month": "2025-09", "expected": 4200, "paid": 4200, "status": "Paid", "late_days": 0, "failed_debit": "No"},
-        {"month": "2025-10", "expected": 4200, "paid": 0, "status": "Missed", "late_days": 31, "failed_debit": "Yes"},
-        {"month": "2025-11", "expected": 4200, "paid": 0, "status": "Missed", "late_days": 30, "failed_debit": "Yes"},
-        {"month": "2025-12", "expected": 4200, "paid": 2000, "status": "Partial", "late_days": 24, "failed_debit": "No"},
-        {"month": "2026-01", "expected": 4200, "paid": 0, "status": "Missed", "late_days": 31, "failed_debit": "Yes"},
-        {"month": "2026-02", "expected": 4200, "paid": 0, "status": "Missed", "late_days": 28, "failed_debit": "Yes"},
-        {"month": "2026-03", "expected": 4200, "paid": 0, "status": "Missed", "late_days": 31, "failed_debit": "Yes"},
-        {"month": "2026-04", "expected": 4200, "paid": 0, "status": "Missed", "late_days": 30, "failed_debit": "Yes"},
-        {"month": "2026-05", "expected": 4200, "paid": 0, "status": "Missed", "late_days": 30, "failed_debit": "Yes"}
+        {
+          "month": "2025-08",
+          "expected": 4200,
+          "paid": 0,
+          "status": "Missed",
+          "late_days": 31,
+          "failed_debit": "Yes"
+        },
+        {
+          "month": "2025-09",
+          "expected": 4200,
+          "paid": 4200,
+          "status": "Paid",
+          "late_days": 0,
+          "failed_debit": "No"
+        },
+        {
+          "month": "2025-10",
+          "expected": 4200,
+          "paid": 0,
+          "status": "Missed",
+          "late_days": 31,
+          "failed_debit": "Yes"
+        },
+        {
+          "month": "2025-11",
+          "expected": 4200,
+          "paid": 0,
+          "status": "Missed",
+          "late_days": 30,
+          "failed_debit": "Yes"
+        },
+        {
+          "month": "2025-12",
+          "expected": 4200,
+          "paid": 2000,
+          "status": "Partial",
+          "late_days": 24,
+          "failed_debit": "No"
+        },
+        {
+          "month": "2026-01",
+          "expected": 4200,
+          "paid": 0,
+          "status": "Missed",
+          "late_days": 31,
+          "failed_debit": "Yes"
+        },
+        {
+          "month": "2026-02",
+          "expected": 4200,
+          "paid": 0,
+          "status": "Missed",
+          "late_days": 28,
+          "failed_debit": "Yes"
+        },
+        {
+          "month": "2026-03",
+          "expected": 4200,
+          "paid": 0,
+          "status": "Missed",
+          "late_days": 31,
+          "failed_debit": "Yes"
+        },
+        {
+          "month": "2026-04",
+          "expected": 4200,
+          "paid": 0,
+          "status": "Missed",
+          "late_days": 30,
+          "failed_debit": "Yes"
+        },
+        {
+          "month": "2026-05",
+          "expected": 4200,
+          "paid": 0,
+          "status": "Missed",
+          "late_days": 30,
+          "failed_debit": "Yes"
+        }
       ],
-      "documents": ["uae_pass_profile", "application_form", "salary_certificate", "income_statement", "obligations_letter", "direct_debit_proof", "moei_loan_statement", "arrears_statement", "payment_history", "final_recommendation_memo", "audit_trail_report"],
-      "active_request": {"exists": false},
-      "hardship": {"type": "reduced_income"},
+      "documents": [
+        "uae_pass_profile",
+        "application_form",
+        "salary_certificate",
+        "income_statement",
+        "obligations_letter",
+        "direct_debit_proof",
+        "moei_loan_statement",
+        "arrears_statement",
+        "payment_history",
+        "final_recommendation_memo",
+        "audit_trail_report"
+      ],
+      "active_request": {
+        "exists": false
+      },
+      "hardship": {
+        "type": "reduced_income"
+      },
       "fraud_flags": [],
       "policy_results": {
-        "deduction_cap": {"result": "Warn", "proposed_deduction_rate_pct": 15.6, "proposed_installment": 4200, "detail": "Installment itself is 15.6% of income, but total obligations are 65% — disposable income is too thin to safely raise it."},
-        "period_constraint": {"result": "Pass", "detail": "Maintaining installment stays within the original 300-month period."},
-        "active_request": {"result": "Pass", "detail": "No existing active application."},
-        "document_completeness": {"result": "Pass", "detail": "All required documents present."},
-        "fraud_inconsistency": {"result": "Pass", "detail": "Declared income matches verified transfers."}
+        "deduction_cap": {
+          "result": "Warn",
+          "proposed_deduction_rate_pct": 15.6,
+          "proposed_installment": 4200,
+          "detail": "Installment itself is 15.6% of income, but total obligations are 65% — disposable income is too thin to safely raise it."
+        },
+        "period_constraint": {
+          "result": "Pass",
+          "detail": "Maintaining installment stays within the original 300-month period."
+        },
+        "active_request": {
+          "result": "Pass",
+          "detail": "No existing active application."
+        },
+        "document_completeness": {
+          "result": "Pass",
+          "detail": "All required documents present."
+        },
+        "fraud_inconsistency": {
+          "result": "Pass",
+          "detail": "Declared income matches verified transfers."
+        }
       },
       "proposed_plan": {
         "outcome": "MAINTAIN_INSTALLMENT",
@@ -627,25 +1271,27 @@
         "nationality": "United Arab Emirates",
         "date_of_birth": "1992-02-12",
         "mobile": "+971-50-000-1006",
-        "email": "n.alshamsi@demo-mail.ae",
+        "email": "n.alshamsi@mail.ae",
         "family_book_number": "FB-RK-100106",
         "marital_status": "Single",
         "dependents": 0,
         "employment_status": "Employed",
         "login_timestamp": "2026-06-10T14:05:17+04:00",
-        "data_source": "Synthetic UAE PASS Mock"
+        "data_source": "UAE PASS"
       },
       "application": {
         "application_id": "APP-2026-1006",
         "request_date": "2026-06-10",
         "reason": "Requesting rescheduling of arrears.",
         "request_type": "Reschedule arrears",
-        "uploaded_documents": ["uae_pass_profile"],
+        "uploaded_documents": [
+          "uae_pass_profile"
+        ],
         "consent": true,
-        "consent_text": "I consent to retrieve my loan, arrears, payment, and financial information for this demo workflow."
+        "consent_text": "I consent to retrieve my loan, arrears, payment, and financial information for this rescheduling request."
       },
       "salary": {
-        "employer_name": "Demo Employer LLC",
+        "employer_name": "Emirates Employer Services LLC",
         "job_title": "Marketing Coordinator",
         "employment_start_date": "2018-03-01",
         "basic_salary": 15000,
@@ -654,8 +1300,8 @@
         "deductions": 2000,
         "net_salary": 24000,
         "issue_date": "2026-06-01",
-        "reference_number": "DEMO-SAL-1006-AE",
-        "qr_placeholder": "Demo QR Placeholder"
+        "reference_number": "REF-SAL-1006-AE",
+        "qr_placeholder": "Scan to verify"
       },
       "income_statement": null,
       "obligations": null,
@@ -678,14 +1324,64 @@
         "risk_stage": "Early collections"
       },
       "payment_history": [
-        {"month": "2025-12", "expected": 4100, "paid": 4100, "status": "Paid", "late_days": 0, "failed_debit": "No"},
-        {"month": "2026-01", "expected": 4100, "paid": 4100, "status": "Paid", "late_days": 0, "failed_debit": "No"},
-        {"month": "2026-02", "expected": 4100, "paid": 0, "status": "Missed", "late_days": 28, "failed_debit": "Yes"},
-        {"month": "2026-03", "expected": 4100, "paid": 0, "status": "Missed", "late_days": 31, "failed_debit": "Yes"},
-        {"month": "2026-04", "expected": 4100, "paid": 0, "status": "Missed", "late_days": 30, "failed_debit": "Yes"},
-        {"month": "2026-05", "expected": 4100, "paid": 0, "status": "Missed", "late_days": 30, "failed_debit": "Yes"}
+        {
+          "month": "2025-12",
+          "expected": 4100,
+          "paid": 4100,
+          "status": "Paid",
+          "late_days": 0,
+          "failed_debit": "No"
+        },
+        {
+          "month": "2026-01",
+          "expected": 4100,
+          "paid": 4100,
+          "status": "Paid",
+          "late_days": 0,
+          "failed_debit": "No"
+        },
+        {
+          "month": "2026-02",
+          "expected": 4100,
+          "paid": 0,
+          "status": "Missed",
+          "late_days": 28,
+          "failed_debit": "Yes"
+        },
+        {
+          "month": "2026-03",
+          "expected": 4100,
+          "paid": 0,
+          "status": "Missed",
+          "late_days": 31,
+          "failed_debit": "Yes"
+        },
+        {
+          "month": "2026-04",
+          "expected": 4100,
+          "paid": 0,
+          "status": "Missed",
+          "late_days": 30,
+          "failed_debit": "Yes"
+        },
+        {
+          "month": "2026-05",
+          "expected": 4100,
+          "paid": 0,
+          "status": "Missed",
+          "late_days": 30,
+          "failed_debit": "Yes"
+        }
       ],
-      "documents": ["uae_pass_profile", "application_form", "active_request_record", "moei_loan_statement", "arrears_statement", "rejection_or_block_notice", "audit_trail_report"],
+      "documents": [
+        "uae_pass_profile",
+        "application_form",
+        "active_request_record",
+        "moei_loan_statement",
+        "arrears_statement",
+        "rejection_or_block_notice",
+        "audit_trail_report"
+      ],
       "active_request": {
         "exists": true,
         "existing_application_id": "APP-2026-4412",
@@ -694,16 +1390,35 @@
         "status": "Under Review",
         "assigned_unit": "Rescheduling Review Unit B"
       },
-      "hardship": {"type": "none"},
+      "hardship": {
+        "type": "none"
+      },
       "fraud_flags": [],
       "policy_results": {
-        "deduction_cap": {"result": "Not Applicable", "detail": "Blocked before affordability — active request conflict."},
-        "period_constraint": {"result": "Not Applicable", "detail": "Blocked before plan formation."},
-        "active_request": {"result": "Fail", "detail": "Existing active application APP-2026-4412 is Under Review since 2026-05-22. New request blocked."},
-        "document_completeness": {"result": "Not Applicable", "detail": "Not evaluated — early exit at conflict gate."},
-        "fraud_inconsistency": {"result": "Not Applicable", "detail": "Not evaluated — early exit at conflict gate."}
+        "deduction_cap": {
+          "result": "Not Applicable",
+          "detail": "Blocked before affordability — active request conflict."
+        },
+        "period_constraint": {
+          "result": "Not Applicable",
+          "detail": "Blocked before plan formation."
+        },
+        "active_request": {
+          "result": "Fail",
+          "detail": "Existing active application APP-2026-4412 is Under Review since 2026-05-22. New request blocked."
+        },
+        "document_completeness": {
+          "result": "Not Applicable",
+          "detail": "Not evaluated — early exit at conflict gate."
+        },
+        "fraud_inconsistency": {
+          "result": "Not Applicable",
+          "detail": "Not evaluated — early exit at conflict gate."
+        }
       },
-      "proposed_plan": {"outcome": "REJECT_ACTIVE_REQUEST"},
+      "proposed_plan": {
+        "outcome": "REJECT_ACTIVE_REQUEST"
+      },
       "confidence_score": 0.98,
       "human_review_required": false,
       "bilingual_summary": {
@@ -727,26 +1442,32 @@
         "nationality": "United Arab Emirates",
         "date_of_birth": "1986-06-08",
         "mobile": "+971-50-000-1007",
-        "email": "o.albalushi@demo-mail.ae",
+        "email": "o.albalushi@mail.ae",
         "family_book_number": "FB-FU-100107",
         "marital_status": "Married",
         "dependents": 2,
         "employment_status": "Employed",
         "login_timestamp": "2026-06-10T15:27:44+04:00",
-        "data_source": "Synthetic UAE PASS Mock"
+        "data_source": "UAE PASS"
       },
       "application": {
         "application_id": "APP-2026-1007",
         "request_date": "2026-06-10",
         "reason": "Requesting rescheduling; salary recently increased (claimed).",
         "request_type": "Reschedule arrears (update installment)",
-        "uploaded_documents": ["uae_pass_profile", "suspicious_salary_certificate", "income_statement_mismatch", "obligations_letter", "direct_debit_proof"],
+        "uploaded_documents": [
+          "uae_pass_profile",
+          "suspicious_salary_certificate",
+          "income_statement_mismatch",
+          "obligations_letter",
+          "direct_debit_proof"
+        ],
         "consent": true,
-        "consent_text": "I consent to retrieve my loan, arrears, payment, and financial information for this demo workflow."
+        "consent_text": "I consent to retrieve my loan, arrears, payment, and financial information for this rescheduling request."
       },
       "salary": {
-        "employer_name": "Demo Employer Trading LLC",
-        "employer_name_on_record": "Demo Employer LLC",
+        "employer_name": "Gulf Trading Services LLC",
+        "employer_name_on_record": "Emirates Employer Services LLC",
         "job_title": "Sales Manager",
         "employment_start_date": "2015-02-01",
         "basic_salary": 22000,
@@ -765,16 +1486,52 @@
         "income_trend": "mismatch",
         "label": "Bank-derived income statement (contradicts salary certificate)",
         "months": [
-          {"month": "2025-12", "gross": 25000, "net": 23000, "transfer_date": "2025-12-28", "notes": "Salary credit"},
-          {"month": "2026-01", "gross": 25000, "net": 23000, "transfer_date": "2026-01-28", "notes": "Salary credit"},
-          {"month": "2026-02", "gross": 25000, "net": 23000, "transfer_date": "2026-02-26", "notes": "Salary credit"},
-          {"month": "2026-03", "gross": 25000, "net": 23000, "transfer_date": "2026-03-28", "notes": "Salary credit"},
-          {"month": "2026-04", "gross": 25000, "net": 23000, "transfer_date": "2026-04-28", "notes": "Salary credit"},
-          {"month": "2026-05", "gross": 25000, "net": 23000, "transfer_date": "2026-05-28", "notes": "Salary credit"}
+          {
+            "month": "2025-12",
+            "gross": 25000,
+            "net": 23000,
+            "transfer_date": "2025-12-28",
+            "notes": "Salary credit"
+          },
+          {
+            "month": "2026-01",
+            "gross": 25000,
+            "net": 23000,
+            "transfer_date": "2026-01-28",
+            "notes": "Salary credit"
+          },
+          {
+            "month": "2026-02",
+            "gross": 25000,
+            "net": 23000,
+            "transfer_date": "2026-02-26",
+            "notes": "Salary credit"
+          },
+          {
+            "month": "2026-03",
+            "gross": 25000,
+            "net": 23000,
+            "transfer_date": "2026-03-28",
+            "notes": "Salary credit"
+          },
+          {
+            "month": "2026-04",
+            "gross": 25000,
+            "net": 23000,
+            "transfer_date": "2026-04-28",
+            "notes": "Salary credit"
+          },
+          {
+            "month": "2026-05",
+            "gross": 25000,
+            "net": 23000,
+            "transfer_date": "2026-05-28",
+            "notes": "Salary credit"
+          }
         ]
       },
       "obligations": {
-        "bank_name": "Demo Bank",
+        "bank_name": "Union Bank",
         "personal_loan": 4000,
         "car_loan": 3500,
         "credit_card_min": 1500,
@@ -782,13 +1539,19 @@
         "total_monthly_obligations": 10000,
         "obligation_to_income_ratio_pct": 43.5,
         "issue_date": "2026-06-01",
-        "reference_number": "DEMO-AECB-1007"
+        "reference_number": "AECB-1007"
       },
       "direct_debit": {
         "masked_account": "AE** **** **** **** **01 07",
         "mandate_status": "Active (failing)",
         "last_successful_debit": "2025-09-05",
-        "failed_debit_dates": ["2025-10-05", "2025-11-05", "2025-12-05", "2026-01-05", "2026-02-05"],
+        "failed_debit_dates": [
+          "2025-10-05",
+          "2025-11-05",
+          "2025-12-05",
+          "2026-01-05",
+          "2026-02-05"
+        ],
         "failure_reason": "Insufficient funds",
         "mandate_expiry": "2029-12-31"
       },
@@ -810,34 +1573,145 @@
         "risk_stage": "Pre-legal collections — flagged for fraud review"
       },
       "payment_history": [
-        {"month": "2025-09", "expected": 4300, "paid": 0, "status": "Missed", "late_days": 31, "failed_debit": "Yes"},
-        {"month": "2025-10", "expected": 4300, "paid": 0, "status": "Missed", "late_days": 31, "failed_debit": "Yes"},
-        {"month": "2025-11", "expected": 4300, "paid": 0, "status": "Missed", "late_days": 30, "failed_debit": "Yes"},
-        {"month": "2025-12", "expected": 4300, "paid": 1500, "status": "Partial", "late_days": 26, "failed_debit": "No"},
-        {"month": "2026-01", "expected": 4300, "paid": 0, "status": "Missed", "late_days": 31, "failed_debit": "Yes"},
-        {"month": "2026-02", "expected": 4300, "paid": 0, "status": "Missed", "late_days": 28, "failed_debit": "Yes"},
-        {"month": "2026-03", "expected": 4300, "paid": 0, "status": "Missed", "late_days": 31, "failed_debit": "Yes"},
-        {"month": "2026-04", "expected": 4300, "paid": 0, "status": "Missed", "late_days": 30, "failed_debit": "Yes"},
-        {"month": "2026-05", "expected": 4300, "paid": 0, "status": "Missed", "late_days": 30, "failed_debit": "Yes"}
+        {
+          "month": "2025-09",
+          "expected": 4300,
+          "paid": 0,
+          "status": "Missed",
+          "late_days": 31,
+          "failed_debit": "Yes"
+        },
+        {
+          "month": "2025-10",
+          "expected": 4300,
+          "paid": 0,
+          "status": "Missed",
+          "late_days": 31,
+          "failed_debit": "Yes"
+        },
+        {
+          "month": "2025-11",
+          "expected": 4300,
+          "paid": 0,
+          "status": "Missed",
+          "late_days": 30,
+          "failed_debit": "Yes"
+        },
+        {
+          "month": "2025-12",
+          "expected": 4300,
+          "paid": 1500,
+          "status": "Partial",
+          "late_days": 26,
+          "failed_debit": "No"
+        },
+        {
+          "month": "2026-01",
+          "expected": 4300,
+          "paid": 0,
+          "status": "Missed",
+          "late_days": 31,
+          "failed_debit": "Yes"
+        },
+        {
+          "month": "2026-02",
+          "expected": 4300,
+          "paid": 0,
+          "status": "Missed",
+          "late_days": 28,
+          "failed_debit": "Yes"
+        },
+        {
+          "month": "2026-03",
+          "expected": 4300,
+          "paid": 0,
+          "status": "Missed",
+          "late_days": 31,
+          "failed_debit": "Yes"
+        },
+        {
+          "month": "2026-04",
+          "expected": 4300,
+          "paid": 0,
+          "status": "Missed",
+          "late_days": 30,
+          "failed_debit": "Yes"
+        },
+        {
+          "month": "2026-05",
+          "expected": 4300,
+          "paid": 0,
+          "status": "Missed",
+          "late_days": 30,
+          "failed_debit": "Yes"
+        }
       ],
-      "documents": ["uae_pass_profile", "application_form", "suspicious_salary_certificate", "income_statement_mismatch", "obligations_letter", "direct_debit_proof", "moei_loan_statement", "arrears_statement", "payment_history", "human_review_notice", "audit_trail_report"],
-      "active_request": {"exists": false},
-      "hardship": {"type": "none"},
+      "documents": [
+        "uae_pass_profile",
+        "application_form",
+        "suspicious_salary_certificate",
+        "income_statement_mismatch",
+        "obligations_letter",
+        "direct_debit_proof",
+        "moei_loan_statement",
+        "arrears_statement",
+        "payment_history",
+        "human_review_notice",
+        "audit_trail_report"
+      ],
+      "active_request": {
+        "exists": false
+      },
+      "hardship": {
+        "type": "none"
+      },
       "fraud_flags": [
-        {"flag": "salary_mismatch", "detail": "Salary certificate claims AED 35,000 gross; bank income statement averages AED 23,000 net (~AED 25,000 gross) — a ~40% overstatement."},
-        {"flag": "missing_reference_qr", "detail": "Salary certificate has no reference number and no QR code."},
-        {"flag": "stale_issue_date", "detail": "Certificate issued 2026-02-20 — older than the 90-day freshness window (as of 2026-06-10, 110 days)."},
-        {"flag": "employer_name_mismatch", "detail": "Certificate employer 'Demo Employer Trading LLC' does not match record 'Demo Employer LLC'."},
-        {"flag": "emirates_id_mismatch", "detail": "Emirates ID on certificate 784-1986-1000108-7 differs by one digit from UAE PASS 784-1986-1000107-7."}
+        {
+          "flag": "salary_mismatch",
+          "detail": "Salary certificate claims AED 35,000 gross; bank income statement averages AED 23,000 net (~AED 25,000 gross) — a ~40% overstatement."
+        },
+        {
+          "flag": "missing_reference_qr",
+          "detail": "Salary certificate has no reference number and no QR code."
+        },
+        {
+          "flag": "stale_issue_date",
+          "detail": "Certificate issued 2026-02-20 — older than the 90-day freshness window (as of 2026-06-10, 110 days)."
+        },
+        {
+          "flag": "employer_name_mismatch",
+          "detail": "Certificate employer 'Gulf Trading Services LLC' does not match record 'Emirates Employer Services LLC'."
+        },
+        {
+          "flag": "emirates_id_mismatch",
+          "detail": "Emirates ID on certificate 784-1986-1000108-7 differs by one digit from UAE PASS 784-1986-1000107-7."
+        }
       ],
       "policy_results": {
-        "deduction_cap": {"result": "Not Applicable", "detail": "Income figure cannot be trusted — assessment paused for fraud review."},
-        "period_constraint": {"result": "Not Applicable", "detail": "No reliable plan can be formed pending verification."},
-        "active_request": {"result": "Pass", "detail": "No existing active application."},
-        "document_completeness": {"result": "Warn", "detail": "Documents present but salary certificate fails authenticity checks."},
-        "fraud_inconsistency": {"result": "Fail", "detail": "5 red flags: salary mismatch, missing reference/QR, stale issue date, employer mismatch, Emirates ID one-digit mismatch."}
+        "deduction_cap": {
+          "result": "Not Applicable",
+          "detail": "Income figure cannot be trusted — assessment paused for fraud review."
+        },
+        "period_constraint": {
+          "result": "Not Applicable",
+          "detail": "No reliable plan can be formed pending verification."
+        },
+        "active_request": {
+          "result": "Pass",
+          "detail": "No existing active application."
+        },
+        "document_completeness": {
+          "result": "Warn",
+          "detail": "Documents present but salary certificate fails authenticity checks."
+        },
+        "fraud_inconsistency": {
+          "result": "Fail",
+          "detail": "5 red flags: salary mismatch, missing reference/QR, stale issue date, employer mismatch, Emirates ID one-digit mismatch."
+        }
       },
-      "proposed_plan": {"outcome": "REFER_TO_OFFICER"},
+      "proposed_plan": {
+        "outcome": "REFER_TO_OFFICER"
+      },
       "confidence_score": 0.46,
       "human_review_required": true,
       "bilingual_summary": {
