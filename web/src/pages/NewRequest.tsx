@@ -245,14 +245,10 @@ export default function NewRequest() {
         />
       )}
 
-      <div
-        className="section-title"
-        style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}
-      >
+      <div className="section-title section-title--action">
         <span>2 · {t("documents")}</span>
         <button
           className="btn ghost"
-          style={{ padding: "6px 12px", fontSize: 13 }}
           onClick={startNew}
           disabled={uploading || busy}
           title="Discard uploads and begin a fresh application"

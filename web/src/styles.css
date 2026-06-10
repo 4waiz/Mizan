@@ -551,15 +551,37 @@ code,
   height: 1px;
   background: var(--line);
 }
+/* section title with a trailing action button (e.g. "Start new application").
+   Replaces the hairline rule with a spacer so the button sits flush right. */
+.section-title--action {
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+.section-title--action::after {
+  display: none;
+}
+.section-title--action .btn {
+  font-size: 13px;
+  padding: 8px 14px;
+}
 
 .muted {
   color: var(--muted);
   font-size: var(--fs-sm);
+  overflow-wrap: anywhere;
+}
+/* long unbroken tokens (case IDs, file names, status codes) wrap instead of
+   pushing a card wider than a phone viewport */
+.mono,
+code {
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 .caption {
   color: var(--muted);
   font-size: var(--fs-sm);
   margin-top: var(--s1);
+  overflow-wrap: anywhere;
 }
 .lead {
   font-family: var(--sans);
@@ -776,6 +798,7 @@ textarea {
 .kv {
   font-size: var(--fs-sm);
   line-height: 1.6;
+  overflow-wrap: anywhere;
 }
 .kv b {
   color: var(--ink);
@@ -880,6 +903,7 @@ table.tbl td {
   text-align: left;
   padding: 13px 16px;
   border-bottom: 1px solid var(--line);
+  white-space: nowrap;
 }
 [dir="rtl"] table.tbl th,
 [dir="rtl"] table.tbl td {
@@ -1016,6 +1040,8 @@ pre.raw {
   font-size: 12px;
   line-height: 1.6;
   white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-break: break-word;
   overflow-x: auto;
   color: var(--ink-soft);
 }
@@ -1228,14 +1254,25 @@ ul.ticks li::before {
   .determination {
     padding: var(--s6);
   }
-  /* keep the decision stamp from overlapping the verdict text */
+  /* float the decision stamp into normal flow above the verdict instead of
+     absolutely positioning it over the heading (long labels would overlap). */
+  .determination .stamp-slot {
+    position: static;
+    display: block;
+    margin-bottom: var(--s3);
+  }
+  [dir="rtl"] .determination .stamp-slot {
+    left: auto;
+    right: auto;
+  }
   .determination .verdict {
     max-width: none;
-    padding-right: 96px;
   }
-  [dir="rtl"] .determination .verdict {
-    padding-right: 0;
-    padding-left: 96px;
+  /* space-between flex rows wrap so a trailing stamp/pill drops below the
+     title instead of colliding with it (ProfileCard, ConfidenceBlock,
+     PlanCards, Proactive cards, pipeline header). */
+  .spread {
+    flex-wrap: wrap;
   }
   /* mobile-friendly skip-intro button position (respects safe areas) */
   .intro-skip {
@@ -1268,9 +1305,42 @@ ul.ticks li::before {
   .brand .seal {
     height: 56px;
   }
+  /* the topbar actions cluster wraps and spreads across its own row so the
+     status chip + user pill + language toggle never overflow the viewport */
+  .topbar-actions {
+    flex-wrap: wrap;
+    width: 100%;
+    margin-left: 0;
+    justify-content: space-between;
+  }
+  [dir="rtl"] .topbar-actions {
+    margin-right: 0;
+  }
   /* full-width usermenu so the identity pill + sign-out don't overflow */
   .usermenu {
     flex-wrap: wrap;
+  }
+  /* keep a long beneficiary/officer name from blowing out the identity pill */
+  .usermenu .who-name {
+    max-width: 16ch;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  /* smaller hero floor so a long title doesn't crowd a 320px screen */
+  .masthead h1 {
+    font-size: clamp(26px, 8vw, 34px);
+  }
+  /* finger-friendly tap targets in the chrome (≥ ~40px) */
+  .seg button {
+    padding: 9px 16px;
+    font-size: 13px;
+  }
+  .usermenu .signout {
+    padding: 9px 14px;
+  }
+  .btn {
+    min-height: 40px;
   }
   /* large display numbers scale down so they don't overflow a tile */
   .metric .v {
