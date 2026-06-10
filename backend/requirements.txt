@@ -13,8 +13,10 @@ pypdf==5.1.0
 langgraph==0.2.50
 langchain-core==0.3.21
 
-# Optional model provider (MockLLM used when absent / no API key) ------------
+# Optional model providers (MockLLM used when absent / no API key) -----------
+# Groq is the live inference provider (set LLM_PROVIDER=groq + GROQ_API_KEY).
 langchain-anthropic==0.3.0
+langchain-groq==0.2.1
 
 # Lightweight risk scoring (deterministic heuristic fallback if absent) ------
 scikit-learn==1.5.2
