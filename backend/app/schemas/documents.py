@@ -26,7 +26,12 @@ class DocumentInventory(BaseModel):
 
     @property
     def present_types(self) -> set[DocumentType]:
-        return {d.doc_type for d in self.documents if d.status == DocumentStatus.PRESENT}
+        present = {d.doc_type for d in self.documents if d.status == DocumentStatus.PRESENT}
+        # The Emirates ID is always available: identity is authenticated through
+        # UAE PASS, whose profile carries the Emirates ID. It is never something
+        # the beneficiary has to upload, so it always counts as present.
+        present.add(DocumentType.EMIRATES_ID)
+        return present
 
     @property
     def missing_required(self) -> list[DocumentType]:

@@ -109,6 +109,58 @@ def _meta(node_name: str) -> dict[str, str]:
     )
 
 
+def _missing_documents_reason(state: CaseState) -> str | None:
+    """If the case is still missing required documents, describe what's needed.
+
+    The document audit runs first; an incomplete file can never produce a
+    decision, so the pipeline stops here rather than burning affordability/risk
+    analysis on a case that will only bounce back for more documents.
+    """
+    from ..policies import rules
+
+    inv = state.document_inventory
+    inv.required = rules.required_documents_for(state)
+    missing = inv.missing_required
+    if not missing:
+        return None
+    labels = {
+        "emirates_id": "Emirates ID",
+        "salary_certificate": "Salary certificate",
+        "bank_statement": "Bank statement",
+        "liability_letter": "Financial obligations letter",
+        "termination_letter": "Termination / unemployment letter",
+        "medical_report": "Medical report",
+    }
+    names = ", ".join(labels.get(m.value, m.value) for m in missing)
+    return (
+        "The application is incomplete — no decision is made on an incomplete "
+        f"file. Missing required document(s): {names}. Please upload them and "
+        "resubmit (SZHP-R4)."
+    )
+
+
+def _reject_for_missing_documents(state: CaseState, reason: str) -> CaseState:
+    """Short-circuit the pipeline when required documents are missing.
+
+    Mirrors the conflict exit: no plan is produced, the case is parked pending
+    more information rather than rejected on its merits.
+    """
+    state.candidate_plans = []
+    state.needs_human_review = True
+    state.escalation_reason = reason
+    state.status = CaseStatus.INFO_REQUESTED
+    audit.record(
+        state,
+        AuditEventType.NODE_COMPLETED,
+        "Stopped during document audit — required documents missing. "
+        "Affordability and risk analysis skipped. " + reason,
+        node="document_audit",
+        rule_ids=["SZHP-R4"],
+        evidence_ids=["document_inventory"],
+    )
+    return state
+
+
 def _conflict_reason(state: CaseState) -> str | None:
     """If the case has a hard duplicate/active-application conflict, describe it."""
     ff = state.fraud_flags
@@ -221,6 +273,40 @@ def run_stream(case: CaseState) -> Iterator[dict]:
             time.sleep(dwell)
 
         case = node_module.run(case)
+
+        # ── Early exit: document audit found missing required documents. ──
+        # The decision can't be made on an incomplete file, so stop here and
+        # ask for the rest rather than running affordability/risk/solver.
+        if name == "document_audit":
+            reason = _missing_documents_reason(case)
+            if reason is not None:
+                yield {
+                    "type": "done",
+                    "key": name,
+                    "index": index,
+                    "total": total,
+                    "status": "conflict",
+                    "message": reason,
+                }
+                for skipped in pipeline[index + 1 :]:
+                    skip_name = skipped.NODE
+                    if skip_name in ("rationale_generator", "finalize_case"):
+                        continue  # we still seal the case below
+                    smeta = _meta(skip_name)
+                    if speed:
+                        time.sleep(0.6 * speed)
+                    yield {
+                        "type": "skipped",
+                        "key": skip_name,
+                        "label": smeta["label"],
+                        "reason": "Not required — application incomplete.",
+                    }
+
+                case = _reject_for_missing_documents(case, reason)
+                case = nodes.finalize_case.run(case)
+                yield {"type": "failed", "reason": reason, "case": case.model_dump(mode="json")}
+                yield {"type": "complete", "case": case.model_dump(mode="json")}
+                return
 
         # ── Early exit: a duplicate / active-application conflict is terminal. ──
         if name == "fraud_and_dedupe_check":

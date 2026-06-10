@@ -105,21 +105,15 @@ export default function NewRequest() {
     );
 
   const doRun = async () => {
-    // Block assessment until all required documents are uploaded — no verdict
-    // is produced for an incomplete file.
+    // The assessment always runs. If documents are still missing, the governed
+    // pipeline detects it at the document-audit step and stops there with an
+    // "additional information required" result — no verdict on an incomplete
+    // file, but the citizen still sees the pipeline work through that far.
     const caseId = getSession().activeCaseId!;
     try {
-      const latest = await api.requiredDocuments(caseId);
-      setReqDocs(latest);
-      if (latest.missing.length > 0) {
-        setErr(null);
-        setRun(null);
-        setFailure(null);
-        setUploadMsg(null);
-        return; // the "Additional information required" banner handles the rest
-      }
+      setReqDocs(await api.requiredDocuments(caseId));
     } catch {
-      /* if the check fails, fall through and let the pipeline decide */
+      /* the pipeline is the source of truth; the banner is just a heads-up */
     }
 
     setBusy(true);
@@ -353,13 +347,15 @@ export default function NewRequest() {
         active application is rejected immediately at the fraud/dedupe step.
       </p>
 
-      {/* Block submission until all required documents are uploaded */}
+      {/* Heads-up only — the assessment still runs and stops at the document
+          audit step if anything below is still missing. */}
       {hasMissing && (
         <Alert kind="warn">
-          <b>Additional information required.</b>
+          <b>Some documents still appear to be missing.</b>
           <br />
-          Please upload the following before submitting — no decision is made on an
-          incomplete application:
+          You can still run the assessment — it will work through the document
+          audit and stop there, asking for the items below. No decision is made
+          on an incomplete application:
           <ul style={{ margin: "8px 0 0 18px" }}>
             {missing.map((m) => (
               <li key={m}>{DOC_LABELS[m] ?? m}</li>
@@ -371,8 +367,7 @@ export default function NewRequest() {
       <button
         className="btn primary"
         onClick={doRun}
-        disabled={busy || !caseData || hasMissing || uploading}
-        title={hasMissing ? "Upload all required documents first" : undefined}
+        disabled={busy || !caseData || uploading}
       >
         {busy ? <span className="spinner" /> : "▶"} {t("run")}
       </button>
@@ -382,19 +377,32 @@ export default function NewRequest() {
         <PipelineProgress steps={steps} caption={activeLabel} failed={!!failure} />
       )}
 
-      {/* Hard rejection (early exit on conflict) */}
-      {failure && (
-        <Alert kind="err">
-          <b>Assessment failed — request rejected.</b>
-          <br />
-          {failure}
-          <br />
-          <span className="muted">
-            Affordability and risk analysis were skipped: there is no point assessing a
-            duplicate request.
-          </span>
-        </Alert>
-      )}
+      {/* Early exit — either an incomplete file (stopped at document audit) or a
+          duplicate/active-application conflict (stopped at fraud/dedupe). */}
+      {failure &&
+        (/incomplete|document|SZHP-R4/i.test(failure) ? (
+          <Alert kind="warn">
+            <b>Additional information required.</b>
+            <br />
+            {failure}
+            <br />
+            <span className="muted">
+              Affordability and risk analysis were skipped: no decision is made on an
+              incomplete application until the missing documents are provided.
+            </span>
+          </Alert>
+        ) : (
+          <Alert kind="err">
+            <b>Assessment failed — request rejected.</b>
+            <br />
+            {failure}
+            <br />
+            <span className="muted">
+              Affordability and risk analysis were skipped: there is no point assessing a
+              duplicate request.
+            </span>
+          </Alert>
+        ))}
 
       {run && !failure && (
         <div style={{ marginTop: 24 }}>
