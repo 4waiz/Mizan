@@ -182,22 +182,6 @@ export default function NewRequest() {
     unknown: "Document",
   };
 
-  // Infer a document type from a file name (matches the generated pack names).
-  const inferType = (name: string): string => {
-    const n = name.toLowerCase();
-    if (n.includes("emirates") || n.includes("eid")) return "emirates_id";
-    if (n.includes("salary")) return "salary_certificate";
-    if (n.includes("income") || n.includes("bank") || n.includes("statement") || n.includes("direct_debit"))
-      return "bank_statement";
-    if (n.includes("obligation") || n.includes("liability") || n.includes("aecb"))
-      return "liability_letter";
-    if (n.includes("termination") || n.includes("unemploy") || n.includes("separation"))
-      return "termination_letter";
-    if (n.includes("medical") || n.includes("treatment")) return "medical_report";
-    if (n.includes("hardship") || n.includes("family")) return "hardship_letter";
-    return "unknown";
-  };
-
   const onUploadFiles = async (files: FileList | File[] | null | undefined) => {
     const list = files ? Array.from(files) : [];
     if (!list.length) return;
@@ -207,9 +191,8 @@ export default function NewRequest() {
     setUploadMsg(null);
     setErr(null);
     try {
-      const doc_types = list.map((f) => inferType(f.name));
-      const file_names = list.map((f) => f.name);
-      const updated = await api.uploadDocumentTypes(caseId, doc_types, file_names);
+      // Send the real file bytes; the backend reads the text + figures off them.
+      const updated = await api.uploadFiles(caseId, list);
       setCaseData(updated);
       await refreshRequired(caseId);
       setUploadMsg(
@@ -357,11 +340,7 @@ export default function NewRequest() {
           audit step if anything below is still missing. */}
       {hasMissing && (
         <Alert kind="warn">
-          <b>Some documents still appear to be missing.</b>
-          <br />
-          You can still run the assessment — it will work through the document
-          audit and stop there, asking for the items below. No decision is made
-          on an incomplete application:
+          <b>Some documents still appear to be missing:</b>
           <ul style={{ margin: "8px 0 0 18px" }}>
             {missing.map((m) => (
               <li key={m}>{DOC_LABELS[m] ?? m}</li>

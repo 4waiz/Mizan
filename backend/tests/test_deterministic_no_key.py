@@ -31,4 +31,7 @@ def test_decisions_are_deterministic(run_fixture):
 def test_mock_extraction_present(run_fixture):
     case = run_fixture("clean_approval")
     assert case.extracted_fields is not None
-    assert case.extracted_fields.declared_monthly_income_aed == 20000
+    # Income is read off the salary certificate (net salary), and that figure
+    # drives the case — matching what the citizen sees on the uploaded PDF.
+    assert case.extracted_fields.declared_monthly_income_aed == 29500
+    assert case.beneficiary.monthly_income_aed == 29500

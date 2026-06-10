@@ -9,7 +9,7 @@ from __future__ import annotations
 import json
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, File, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 
@@ -41,7 +41,7 @@ from .schemas.api import (
     RunResponse,
 )
 from .policies import rules
-from .services import audit, case_factory
+from .services import audit, case_factory, pdf_extract
 from .services.mocks import mock_document_store, registry
 from .services.replay import replay_summary
 
@@ -191,6 +191,48 @@ def upload_documents_by_type(case_id: str, req: DocumentTypeUploadRequest) -> Ca
         case,
         AuditEventType.DOCUMENT_RECEIVED,
         f"Beneficiary uploaded {len(attached)} document(s): {', '.join(attached)}.",
+        node="api",
+        evidence_ids=[d for d in existing],
+    )
+    _repo().save(case)
+    return case
+
+
+@app.post("/api/cases/{case_id}/documents/upload", response_model=CaseState)
+async def upload_documents(case_id: str, files: list[UploadFile] = File(...)) -> CaseState:
+    """Citizen portal upload — the *real* path. The browser sends the actual file
+    bytes; we extract the readable text from each (pypdf for text PDFs), classify
+    the document type from its name + content, and attach a Document whose
+    raw_text is what was genuinely read off the file. The assessment then reads
+    income and other figures from the uploaded document itself."""
+    case = _load(case_id)
+    existing = {d.document_id: d for d in case.document_inventory.documents}
+    attached: list[str] = []
+
+    for i, up in enumerate(files):
+        data = await up.read()
+        name = up.filename or f"document_{i}.pdf"
+        text = pdf_extract.extract_text(data, name)
+        dtype = pdf_extract.infer_doc_type(name, text)
+        # No text layer (image/scanned/PNG) → mark unreadable so the confidence
+        # node and the citizen both see that nothing could be parsed.
+        status = "present" if text else "unreadable"
+        doc = Document(
+            document_id=f"UPL-{dtype.value}-{len(existing) + i}",
+            doc_type=dtype,
+            status=status,
+            file_name=name,
+            uploaded_on=audit.now_iso()[:10],
+            raw_text=text or None,
+        )
+        existing[doc.document_id] = doc
+        attached.append(f"{name} → {dtype.value}" + ("" if text else " (no text layer)"))
+
+    case.document_inventory.documents = list(existing.values())
+    audit.record(
+        case,
+        AuditEventType.DOCUMENT_RECEIVED,
+        f"Beneficiary uploaded {len(attached)} file(s): {', '.join(attached)}.",
         node="api",
         evidence_ids=[d for d in existing],
     )

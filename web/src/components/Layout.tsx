@@ -48,9 +48,17 @@ const FOOTER_GROUPS = [
   },
 ] as const;
 
-function Brand({ footer }: { footer?: boolean }) {
+function Brand({ footer, onClick }: { footer?: boolean; onClick?: () => void }) {
   return (
-    <div className={`brand${footer ? " f-brand" : ""}`}>
+    <div
+      className={`brand${footer ? " f-brand" : ""}`}
+      onClick={onClick}
+      role={onClick ? "button" : undefined}
+      tabIndex={onClick ? 0 : undefined}
+      onKeyDown={onClick ? (e) => (e.key === "Enter" || e.key === " ") && onClick() : undefined}
+      style={onClick ? { cursor: "pointer" } : undefined}
+      title={onClick ? "Go to home" : undefined}
+    >
       <img className="seal" src={footer ? "/light.png" : "/logo.png"} alt="Mizan ميزان" />
     </div>
   );
@@ -87,7 +95,7 @@ export default function Layout({ children }: { children: ReactNode }) {
   return (
     <div className="shell">
       <header className={`topbar${scrolled ? " scrolled" : ""}`}>
-        <Brand />
+        <Brand onClick={() => nav("/")} />
 
         <nav className="topnav">
           {navItems.map((item) => (

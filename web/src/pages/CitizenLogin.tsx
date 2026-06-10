@@ -38,7 +38,7 @@ export default function CitizenLogin() {
   const completeLogin = (fixtureId: string, uname?: string) => {
     const fx = fixtures.find((f) => f.fixture_id === fixtureId);
     if (!fx) {
-      setErr("That identity is not available on the backend.");
+      setErr(t("identity_unavailable"));
       return;
     }
     setSession({
@@ -58,7 +58,7 @@ export default function CitizenLogin() {
     const u = username.trim().toLowerCase();
     const match = CITIZEN_USERS.find((c) => c.username === u);
     if (!match || match.password !== password) {
-      setErr("Invalid username or password.");
+      setErr(t("invalid_credentials"));
       return;
     }
     completeLogin(match.fixture, match.username);
@@ -72,17 +72,13 @@ export default function CitizenLogin() {
 
   return (
     <>
-      <Band title="Citizen Portal" subtitle="Sheikh Zayed Housing Programme · MOEI" fileRef="CITIZEN · بوابة المستفيد" />
+      <Band title={t("citizen_portal")} subtitle={t("subtitle")} fileRef="CITIZEN · بوابة المستفيد" />
 
-      <p className="lead">
-        Sign in to request an arrears rescheduling and track your case. Use your{" "}
-        <b>account</b> or your <b>UAE PASS</b> identity.
-      </p>
+      <p className="lead">{t("citizen_login_lead")}</p>
 
       {loadErr && (
         <Alert kind="err">
-          Cannot reach the backend. Start it with{" "}
-          <code>uvicorn app.main:app --port 8000</code> from <code>backend/</code>.
+          {t("backend_unreachable")}
           <br />
           {loadErr}
         </Alert>
@@ -91,7 +87,7 @@ export default function CitizenLogin() {
       <div className="card tab" style={{ marginTop: 24, maxWidth: 560 }}>
         <div className="seg" role="group" aria-label="Login method" style={{ marginBottom: 20 }}>
           <button className={mode === "password" ? "on" : ""} onClick={() => setMode("password")}>
-            Account
+            {t("account")}
           </button>
           <button className={mode === "uaepass" ? "on" : ""} onClick={() => setMode("uaepass")}>
             UAE PASS
@@ -102,55 +98,32 @@ export default function CitizenLogin() {
 
         {mode === "password" ? (
           <form onSubmit={signInPassword}>
-            <label className="field">Username</label>
+            <label className="field">{t("username")}</label>
             <input
               value={username}
               autoFocus
               autoComplete="username"
               onChange={(e) => setUsername(e.target.value)}
-              placeholder="e.g. ahmed"
             />
             <div style={{ height: 14 }} />
-            <label className="field">Password</label>
+            <label className="field">{t("password")}</label>
             <input
               type="password"
               value={password}
               autoComplete="current-password"
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="123"
             />
             <button className="btn primary block" type="submit" style={{ marginTop: 18 }}>
-              Sign in
+              {t("sign_in")}
             </button>
-
-            <div className="caption" style={{ marginTop: 16, lineHeight: 1.9 }}>
-              <b>Accounts</b> (password <code>123</code> for all):
-              <br />
-              {CITIZEN_USERS.map((c) => (
-                <span key={c.username}>
-                  <code
-                    style={{ cursor: "pointer" }}
-                    title="Use this account"
-                    onClick={() => {
-                      setUsername(c.username);
-                      setPassword("123");
-                    }}
-                  >
-                    {c.username}
-                  </code>
-                  {c.dup ? " (duplicate request)" : ""}
-                  {"  ·  "}
-                </span>
-              ))}
-            </div>
           </form>
         ) : (
           <div>
             <div className="spread" style={{ alignItems: "center", marginBottom: 16 }}>
-              <div className="eyebrow">Authentication</div>
+              <div className="eyebrow">{t("authentication")}</div>
               <img src="/uaepass.png" alt="UAE PASS" style={{ height: 34 }} />
             </div>
-            <label className="field">Citizen identity · UAE PASS</label>
+            <label className="field">{t("citizen_identity_uaepass")}</label>
             <select value={choice} onChange={(e) => setChoice(e.target.value)}>
               {applicants.map((f) => (
                 <option key={f.fixture_id} value={f.fixture_id}>
@@ -167,7 +140,7 @@ export default function CitizenLogin() {
       </div>
 
       <div className="caption" style={{ marginTop: 18 }}>
-        Are you an officer?{" "}
+        {t("are_you_officer")}{" "}
         <a
           href="/officer/login"
           onClick={(e) => {
@@ -175,7 +148,7 @@ export default function CitizenLogin() {
             nav("/officer/login");
           }}
         >
-          Officer dashboard sign-in →
+          {t("officer_dashboard_signin")} →
         </a>
       </div>
     </>

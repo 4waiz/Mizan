@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useI18n } from "../i18n";
 import { setSession, OFFICER_CREDENTIALS } from "../session";
 import { Band, Alert } from "../components/ui";
 
 export default function OfficerLogin() {
+  const { t } = useI18n();
   const nav = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -16,7 +18,7 @@ export default function OfficerLogin() {
       username.trim() !== OFFICER_CREDENTIALS.username ||
       password !== OFFICER_CREDENTIALS.password
     ) {
-      setErr("Invalid officer credentials.");
+      setErr(t("invalid_officer_credentials"));
       return;
     }
     setSession({
@@ -29,45 +31,37 @@ export default function OfficerLogin() {
 
   return (
     <>
-      <Band title="Officer Dashboard" subtitle="Sheikh Zayed Housing Programme · MOEI" fileRef="OFFICER · لوحة الموظف" />
+      <Band title={t("officer_dashboard")} subtitle={t("subtitle")} fileRef="OFFICER · لوحة الموظف" />
 
-      <p className="lead">
-        Restricted access. Sign in to review escalated cases, approve, override or
-        reject determinations.
-      </p>
+      <p className="lead">{t("officer_login_lead")}</p>
 
       <div className="card tab" style={{ marginTop: 24, maxWidth: 480 }}>
-        <div className="eyebrow" style={{ marginBottom: 16 }}>Officer authentication</div>
+        <div className="eyebrow" style={{ marginBottom: 16 }}>{t("officer_authentication")}</div>
         {err && <Alert kind="err">{err}</Alert>}
         <form onSubmit={signIn}>
-          <label className="field">Username</label>
+          <label className="field">{t("username")}</label>
           <input
             value={username}
             autoFocus
             autoComplete="username"
             onChange={(e) => setUsername(e.target.value)}
-            placeholder="OfficerAwaiz"
           />
           <div style={{ height: 14 }} />
-          <label className="field">Password</label>
+          <label className="field">{t("password")}</label>
           <input
             type="password"
             value={password}
             autoComplete="current-password"
             onChange={(e) => setPassword(e.target.value)}
-            placeholder="••••••••"
           />
           <button className="btn primary block" type="submit" style={{ marginTop: 18 }}>
-            Sign in to dashboard
+            {t("sign_in_dashboard")}
           </button>
         </form>
-        <div className="caption" style={{ marginTop: 16 }}>
-          Officer · <code>OfficerAwaiz</code> / <code>Officer123</code>
-        </div>
       </div>
 
       <div className="caption" style={{ marginTop: 18 }}>
-        Not an officer?{" "}
+        {t("not_an_officer")}{" "}
         <a
           href="/login"
           onClick={(e) => {
@@ -75,7 +69,7 @@ export default function OfficerLogin() {
             nav("/login");
           }}
         >
-          ← Citizen portal sign-in
+          ← {t("citizen_portal_signin")}
         </a>
       </div>
     </>

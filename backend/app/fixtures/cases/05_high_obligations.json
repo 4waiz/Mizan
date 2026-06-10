@@ -11,7 +11,7 @@
     "emirate": "Ajman",
     "employment_status": "employed",
     "employer_name": "Ajman Ports",
-    "monthly_income_aed": 18000,
+    "monthly_income_aed": 27000,
     "income_verified": true,
     "hardship_type": "none"
   },
@@ -29,10 +29,12 @@
   "payment_history": {"total_installments_due": 80, "installments_paid_on_time": 68, "installments_late": 9, "installments_missed": 3, "longest_on_time_streak": 28},
   "active_application": {"exists": false},
   "obligations": {"items": [
-    {"creditor": "Emirates NBD Personal Loan", "monthly_payment_aed": 6000, "outstanding_aed": 180000, "kind": "loan"},
-    {"creditor": "ADCB Credit Card", "monthly_payment_aed": 3500, "outstanding_aed": 60000, "kind": "credit_card"}
+    {"creditor": "Union Bank Personal Loan", "monthly_payment_aed": 9000, "outstanding_aed": 280000, "kind": "loan"},
+    {"creditor": "Union Bank Car Loan", "monthly_payment_aed": 5500, "outstanding_aed": 150000, "kind": "loan"},
+    {"creditor": "Union Bank Credit Card", "monthly_payment_aed": 3000, "outstanding_aed": 60000, "kind": "credit_card"},
+    {"creditor": "Other obligations", "monthly_payment_aed": 2000, "outstanding_aed": 30000, "kind": "other"}
   ]},
-  "salary_verification": {"verified": true, "verified_income_aed": 18000, "employer_name": "Ajman Ports"},
+  "salary_verification": {"verified": true, "verified_income_aed": 27000, "employer_name": "Emirates Employer Services LLC"},
   "documents": [
     {"document_id": "DOC-1005-EID", "doc_type": "emirates_id", "status": "present", "file_name": "eid.pdf", "issued_on": "2023-07-01", "uploaded_on": "2026-06-08", "raw_text": "Emirates ID 784-****-1005"},
     {"document_id": "DOC-1005-SAL", "doc_type": "salary_certificate", "status": "present", "file_name": "salary.pdf", "issued_on": "2026-05-12", "uploaded_on": "2026-06-08", "raw_text": "Employee Name: Saeed Al Nuaimi\nEmployer: Emirates Employer Services LLC\nBasic Salary: AED 18,000\nAllowances: AED 12,000\nGross Monthly Salary: AED 30,000\nDeductions: AED 3,000\nNet Salary: AED 27,000\nIssued: 2026-05-12"},

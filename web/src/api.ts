@@ -79,6 +79,15 @@ export const api = {
     post<any>(`/api/cases/${id}/documents`, { documents }),
   uploadDocumentTypes: (id: string, doc_types: string[], file_names: string[]) =>
     post<any>(`/api/cases/${id}/documents/by-type`, { doc_types, file_names }),
+  // Send the actual file bytes; the backend extracts text + figures from them.
+  uploadFiles: (id: string, files: File[]) => {
+    const form = new FormData();
+    for (const f of files) form.append("files", f, f.name);
+    return fetch(`${BASE}/api/cases/${id}/documents/upload`, {
+      method: "POST",
+      body: form, // browser sets multipart/form-data boundary
+    }).then((r) => handle<any>(r));
+  },
   requiredDocuments: (id: string) =>
     get<{ required: string[]; present: string[]; missing: string[] }>(
       `/api/cases/${id}/documents/required`,

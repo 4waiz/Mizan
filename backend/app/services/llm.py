@@ -26,6 +26,41 @@ from ..schemas import (
 _MONEY_RE = re.compile(r"(?:AED|aed)?\s*([\d,]{3,})")
 
 
+def _amount_for_label(text: str, label: str) -> float | None:
+    """Pull the AED amount associated with a labelled field in document text.
+
+    Handles both inline ("Net Salary: AED 29,500") and the two-line table layout
+    produced by the document generator, where the label is on one line and the
+    value on the next ("Net Salary\\nAED 29,500").
+    """
+    # Same line as the label.
+    m = re.search(rf"{re.escape(label)}\s*[:\-]?\s*(?:AED|aed)?\s*([\d,]{{3,}})", text, re.IGNORECASE)
+    if not m:
+        # Label line, then the amount on the following line.
+        m = re.search(
+            rf"{re.escape(label)}\s*[:\-]?\s*\n\s*(?:AED|aed)?\s*([\d,]{{3,}})",
+            text,
+            re.IGNORECASE,
+        )
+    if m:
+        try:
+            return float(m.group(1).replace(",", ""))
+        except ValueError:
+            return None
+    return None
+
+
+def _parse_salary_income(text: str) -> float | None:
+    """The income a salary certificate evidences: prefer net, then gross, then
+    basic, then any first money figure as a last resort."""
+    for label in ("Net Salary", "Net Monthly Salary", "Gross Monthly Salary", "Monthly Salary", "Basic Salary"):
+        amt = _amount_for_label(text, label)
+        if amt:
+            return amt
+    m = _MONEY_RE.search(text)
+    return float(m.group(1).replace(",", "")) if m else None
+
+
 # ── Deterministic mock extractor ─────────────────────────────────────────────
 def _mock_extract(state: CaseState) -> ExtractedDocumentFields:
     inv = state.document_inventory
@@ -35,13 +70,18 @@ def _mock_extract(state: CaseState) -> ExtractedDocumentFields:
 
     salary = inv.by_type(DocumentType.SALARY_CERTIFICATE)
     if salary and salary.raw_text:
-        m = _MONEY_RE.search(salary.raw_text)
-        if m:
-            fields.declared_monthly_income_aed = float(m.group(1).replace(",", ""))
+        income = _parse_salary_income(salary.raw_text)
+        if income:
+            fields.declared_monthly_income_aed = income
         fields.salary_certificate_date = salary.issued_on
-        emp = re.search(r"Employer:\s*(.+)", salary.raw_text)
-        if emp:
+        # Employer on the same line ("Employer: X") or the next ("Employer Name\nX").
+        emp = re.search(r"Employer(?:\s*Name)?\s*[:\-]?\s*(.+)", salary.raw_text)
+        if emp and emp.group(1).strip():
             fields.employer_name = emp.group(1).strip()
+        else:
+            emp2 = re.search(r"Employer(?:\s*Name)?\s*[:\-]?\s*\n\s*(.+)", salary.raw_text)
+            if emp2:
+                fields.employer_name = emp2.group(1).strip()
 
     bank = inv.by_type(DocumentType.BANK_STATEMENT)
     if bank and bank.raw_text:
