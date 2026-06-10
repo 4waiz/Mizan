@@ -64,7 +64,7 @@ export default function OfficerCase() {
   const approve = async () => {
     try {
       await api.approve(caseId, officerId, notes || null);
-      after("Approved. Logged to the audit trail.");
+      after(t("approved_logged"));
     } catch (e) {
       after(String(e), "err");
     }
@@ -72,7 +72,7 @@ export default function OfficerCase() {
   const reject = async () => {
     try {
       await api.reject(caseId, officerId, notes || null);
-      after("Rejected. Logged to the audit trail.", "info");
+      after(t("rejected_logged"), "info");
     } catch (e) {
       after(String(e), "err");
     }
@@ -80,7 +80,7 @@ export default function OfficerCase() {
   const doOverride = async () => {
     try {
       await api.override(caseId, officerId, oc, inst || null, term || null, notes || null);
-      after("Override applied.");
+      after(t("override_applied"));
     } catch (e) {
       after(String(e), "err");
     }
@@ -93,23 +93,23 @@ export default function OfficerCase() {
 
   return (
     <>
-      <Band title="Case Review" subtitle="Officer · evidence, policy & determination" />
+      <Band title={t("case_review")} subtitle={t("case_review_subtitle")} />
 
       <div className="grid form-toolbar" style={{ gridTemplateColumns: "1fr auto auto", alignItems: "end" }}>
         <div>
-          <label className="field">Case ID</label>
+          <label className="field">{t("case_id")}</label>
           <input value={caseId} onChange={(e) => setCaseId(e.target.value)} />
         </div>
         <div>
-          <label className="field">Officer ID</label>
+          <label className="field">{t("officer_id")}</label>
           <input value={officerId} onChange={(e) => setOfficerId(e.target.value)} />
         </div>
         <button className="btn" onClick={() => load(caseId)}>
-          Load
+          {t("load")}
         </button>
       </div>
 
-      {!caseId && <Alert kind="info">Open a case from the Review Queue.</Alert>}
+      {!caseId && <Alert kind="info">{t("open_from_queue")}</Alert>}
       {err && <Alert kind="err">{err}</Alert>}
       {msg && <Alert kind={msg.kind}>{msg.text}</Alert>}
 
@@ -134,7 +134,7 @@ export default function OfficerCase() {
             <div className="section-title">{t("evidence")}</div>
             {docs.map((d: any) => (
               <Expander key={d.document_id} summary={`📎 ${d.doc_type} · ${d.file_name ?? ""}`}>
-                <pre className="raw">{d.raw_text || "(no extracted text)"}</pre>
+                <pre className="raw">{d.raw_text || t("no_extracted_text")}</pre>
                 <DocumentPreview
                   beneficiaryId={caseData.beneficiary?.beneficiary_id}
                   docType={d.doc_type}
@@ -142,12 +142,12 @@ export default function OfficerCase() {
               </Expander>
             ))}
             <div className="caption">
-              Extracted: income={ef.declared_monthly_income_aed} · employer=
+              {t("extracted_prefix")} income={ef.declared_monthly_income_aed} · employer=
               {ef.employer_name} · confidence={ef.extraction_confidence}
             </div>
             {flags.length > 0 && (
               <Alert kind="err">
-                Fraud flags:{" "}
+                {t("fraud_flags_prefix")}{" "}
                 {flags.map((f: any) => `${f.code} (${f.severity})`).join(", ")}
               </Alert>
             )}
@@ -158,13 +158,13 @@ export default function OfficerCase() {
             <ConfidenceBlock case={caseData} />
             <div className="card">
               <div className="section-title" style={{ marginTop: 0 }}>
-                Decision
+                {t("decision")}
               </div>
               <label className="field">{t("notes")}</label>
               <textarea
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
-                placeholder="Rationale for your decision…"
+                placeholder={t("rationale_placeholder")}
               />
 
               <button
@@ -176,7 +176,7 @@ export default function OfficerCase() {
               </button>
 
               <Expander summary={`✏️ ${t("override")}`}>
-                <label className="field">New outcome</label>
+                <label className="field">{t("new_outcome")}</label>
                 <select value={oc} onChange={(e) => setOc(e.target.value)}>
                   {OUTCOMES.map((o) => (
                     <option key={o} value={o}>
@@ -186,7 +186,7 @@ export default function OfficerCase() {
                 </select>
                 <div className="grid grid-2" style={{ marginTop: 8 }}>
                   <div>
-                    <label className="field">New installment (AED)</label>
+                    <label className="field">{t("new_installment_aed")}</label>
                     <input
                       type="number"
                       value={inst}
@@ -194,7 +194,7 @@ export default function OfficerCase() {
                     />
                   </div>
                   <div>
-                    <label className="field">New term (months)</label>
+                    <label className="field">{t("new_term_months")}</label>
                     <input
                       type="number"
                       value={term}
@@ -203,7 +203,7 @@ export default function OfficerCase() {
                   </div>
                 </div>
                 <button className="btn block" style={{ marginTop: 10 }} onClick={doOverride}>
-                  Apply override
+                  {t("apply_override")}
                 </button>
               </Expander>
 
@@ -213,7 +213,7 @@ export default function OfficerCase() {
 
               {od && (
                 <Alert kind="info">
-                  Last action: <b>{od.action}</b> by {od.officer_id} · {od.notes ?? ""}
+                  {t("last_action")} <b>{od.action}</b> · {od.officer_id} · {od.notes ?? ""}
                 </Alert>
               )}
             </div>

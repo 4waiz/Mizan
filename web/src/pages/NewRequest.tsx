@@ -99,7 +99,8 @@ export default function NewRequest() {
       <>
         <Band title={t("new_request")} subtitle={t("subtitle")} />
         <Alert kind="warn">
-          Please <Link to="/login">sign in to the Citizen Portal</Link> first.
+          {t("please_signin_citizen_pre")}{" "}
+          <Link to="/login">{t("please_signin_citizen_link")}</Link> {t("please_signin_citizen_post")}
         </Alert>
       </>
     );
@@ -170,16 +171,16 @@ export default function NewRequest() {
     }
   };
 
-  // Human-readable labels for the known document types.
+  // Human-readable labels for the known document types (translated via i18n).
   const DOC_LABELS: Record<string, string> = {
-    emirates_id: "Emirates ID",
-    salary_certificate: "Salary certificate",
-    bank_statement: "Bank statement",
-    liability_letter: "Financial obligations letter",
-    termination_letter: "Termination / unemployment letter",
-    medical_report: "Medical report",
-    hardship_letter: "Hardship letter",
-    unknown: "Document",
+    emirates_id: t("doc_emirates_id"),
+    salary_certificate: t("doc_salary_certificate"),
+    bank_statement: t("doc_bank_statement"),
+    liability_letter: t("doc_liability_letter"),
+    termination_letter: t("doc_termination_letter"),
+    medical_report: t("doc_medical_report"),
+    hardship_letter: t("doc_hardship_letter"),
+    unknown: t("doc_unknown"),
   };
 
   const onUploadFiles = async (files: FileList | File[] | null | undefined) => {
@@ -217,10 +218,7 @@ export default function NewRequest() {
       {err && <Alert kind="err">{err}</Alert>}
 
       <div className="section-title">1 · {t("profile")}</div>
-      <div className="caption">
-        Identity auto-filled from UAE PASS. Financial figures are revealed once your
-        supporting documents are uploaded and verified below.
-      </div>
+      <div className="caption">{t("identity_autofill_note")}</div>
       {caseData && (
         <ProfileCard
           case={caseData}
@@ -234,9 +232,9 @@ export default function NewRequest() {
           className="btn ghost"
           onClick={startNew}
           disabled={uploading || busy}
-          title="Discard uploads and begin a fresh application"
+          title={t("start_new_application_title")}
         >
-          ↺ Start new application
+          {t("start_new_application")}
         </button>
       </div>
 
@@ -244,14 +242,14 @@ export default function NewRequest() {
       {reqDocs && (
         <div className="card" style={{ marginBottom: 12 }}>
           <div className="eyebrow" style={{ marginBottom: 8 }}>
-            Required documents
+            {t("required_documents")}
           </div>
           {reqDocs.required.map((rt) => {
             const have = reqDocs.present.includes(rt);
             return (
               <div key={rt} className="kv" style={{ color: have ? "var(--ok, #1e7d43)" : "#9aa0a6" }}>
                 {have ? "✓" : "○"} <b>{DOC_LABELS[rt] ?? rt}</b>
-                {have ? "" : " · not uploaded"}
+                {have ? "" : t("not_uploaded")}
               </div>
             );
           })}
@@ -303,10 +301,10 @@ export default function NewRequest() {
           )}
         </div>
         <div style={{ fontWeight: 600 }}>
-          {uploading ? "Uploading…" : "Drag & drop all your documents here"}
+          {uploading ? t("uploading") : t("dragdrop_documents")}
         </div>
         <div className="caption" style={{ marginTop: 4 }}>
-          or click to browse — you can select multiple files at once (PDF, PNG, JPG)
+          {t("dragdrop_hint")}
         </div>
       </label>
 
@@ -320,7 +318,7 @@ export default function NewRequest() {
             </div>
           ))
         ) : (
-          <span className="muted">No documents uploaded yet.</span>
+          <span className="muted">{t("no_documents_yet")}</span>
         )}
         {uploadMsg && (
           <div className="caption" style={{ marginTop: 8, color: "var(--ok, #1e7d43)" }}>
@@ -329,18 +327,14 @@ export default function NewRequest() {
         )}
       </div>
 
-      <div className="section-title">3 · Submit &amp; assess</div>
-      <p className="muted">
-        Submitting runs the governed pipeline: document audit → fraud/dedupe →
-        affordability → risk → policy solver → human-review gate. A duplicate or
-        active application is rejected immediately at the fraud/dedupe step.
-      </p>
+      <div className="section-title">3 · {t("submit_and_assess")}</div>
+      <p className="muted">{t("pipeline_explainer")}</p>
 
       {/* Heads-up only — the assessment still runs and stops at the document
           audit step if anything below is still missing. */}
       {hasMissing && (
         <Alert kind="warn">
-          <b>Some documents still appear to be missing:</b>
+          <b>{t("some_documents_missing")}</b>
           <ul style={{ margin: "8px 0 0 18px" }}>
             {missing.map((m) => (
               <li key={m}>{DOC_LABELS[m] ?? m}</li>
@@ -367,34 +361,28 @@ export default function NewRequest() {
       {failure &&
         (/incomplete|document|SZHP-R4/i.test(failure) ? (
           <Alert kind="warn">
-            <b>Additional information required.</b>
+            <b>{t("additional_info_required")}</b>
             <br />
             {failure}
             <br />
-            <span className="muted">
-              Affordability and risk analysis were skipped: no decision is made on an
-              incomplete application until the missing documents are provided.
-            </span>
+            <span className="muted">{t("skipped_incomplete_note")}</span>
           </Alert>
         ) : (
           <Alert kind="err">
-            <b>Assessment failed — request rejected.</b>
+            <b>{t("assessment_failed_rejected")}</b>
             <br />
             {failure}
             <br />
-            <span className="muted">
-              Affordability and risk analysis were skipped: there is no point assessing a
-              duplicate request.
-            </span>
+            <span className="muted">{t("skipped_duplicate_note")}</span>
           </Alert>
         ))}
 
       {run && !failure && (
         <div style={{ marginTop: 24 }}>
-          <Alert kind="ok">Assessment complete.</Alert>
+          <Alert kind="ok">{t("assessment_complete")}</Alert>
           <div className="grid grid-3">
             <Metric
-              k="Processing time"
+              k={t("processing_time")}
               v={proc != null ? formatProcessing(proc) : "-"}
             />
           </div>
@@ -404,7 +392,7 @@ export default function NewRequest() {
           <div className="section-title">{t("validation")}</div>
           <PolicyTable case={run.case} />
           <Link className="btn" to="/my-case">
-            ➡ View full result on My Case
+            {t("view_full_result")}
           </Link>
         </div>
       )}
@@ -414,7 +402,7 @@ export default function NewRequest() {
         <div style={{ marginTop: 16 }}>
           <DecisionBadge case={run.case} />
           <Link className="btn" to="/my-case" style={{ marginTop: 12 }}>
-            ➡ View full result on My Case
+            {t("view_full_result")}
           </Link>
         </div>
       )}

@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
+import { useI18n } from "../i18n";
 import { api } from "../api";
 import { Band, Alert, Metric, pct } from "../components/ui";
 
 export default function Replay() {
+  const { t } = useI18n();
   const [s, setS] = useState<any>(null);
   const [err, setErr] = useState<string | null>(null);
 
@@ -12,11 +14,11 @@ export default function Replay() {
 
   if (err) return (
     <>
-      <Band title="Replay Dashboard" subtitle="Consistency & impact across all cases" />
+      <Band title={t("replay_dashboard")} subtitle={t("replay_subtitle")} />
       <Alert kind="err">{err}</Alert>
     </>
   );
-  if (!s) return <Band title="Replay Dashboard" subtitle="Loading…" />;
+  if (!s) return <Band title={t("replay_dashboard")} subtitle={t("loading")} />;
 
   const byOutcome: Record<string, number> = s.by_outcome ?? {};
   const max = Math.max(1, ...Object.values(byOutcome));
@@ -24,21 +26,21 @@ export default function Replay() {
 
   return (
     <>
-      <Band title="Replay Dashboard" subtitle="Consistency & impact across all cases" />
+      <Band title={t("replay_dashboard")} subtitle={t("replay_subtitle")} />
 
       <div className="grid grid-4">
-        <Metric k="Total cases" v={s.total_cases} />
-        <Metric k="Straight-through" v={s.straight_through} delta={pct(s.straight_through_rate)} />
-        <Metric k="Human review" v={s.human_review} />
-        <Metric k="Manual days saved" v={s.estimated_manual_working_days_saved} />
+        <Metric k={t("total_cases")} v={s.total_cases} />
+        <Metric k={t("straight_through")} v={s.straight_through} delta={pct(s.straight_through_rate)} />
+        <Metric k={t("human_review")} v={s.human_review} />
+        <Metric k={t("manual_days_saved")} v={s.estimated_manual_working_days_saved} />
       </div>
 
       <div className="caption" style={{ marginTop: 8 }}>
-        Average automated processing time: {Math.round(s.avg_processing_ms)} ms · legacy SLA:{" "}
-        {s.legacy_sla_working_days} working days per case.
+        {t("avg_processing_pre")} {Math.round(s.avg_processing_ms)} ms · {t("avg_processing_sla")}{" "}
+        {s.legacy_sla_working_days} {t("per_case")}
       </div>
 
-      <div className="section-title">Outcomes</div>
+      <div className="section-title">{t("outcomes")}</div>
       <div className="card bars">
         {Object.entries(byOutcome).map(([k, v]) => (
           <div key={k} className="bar-row">
@@ -51,7 +53,7 @@ export default function Replay() {
         ))}
       </div>
 
-      <div className="section-title">Cases</div>
+      <div className="section-title">{t("cases")}</div>
       <div className="table-scroll">
         <table className="tbl">
           <thead>

@@ -48,13 +48,13 @@ export default function Proactive() {
               </span>
             </div>
             <div className="muted" style={{ marginTop: 8 }}>
-              Drivers: {(a.drivers ?? []).join(", ")}
+              {t("drivers_prefix")} {(a.drivers ?? []).join(", ")}
             </div>
             <div className="kv" style={{ marginTop: 4 }}>
-              Suggested action: <b>{a.suggested_action}</b>
+              {t("suggested_action_prefix")} <b>{a.suggested_action}</b>
             </div>
             <button className="btn ghost" style={{ marginTop: 12 }} onClick={() => open(a.case_id)}>
-              Open case →
+              {t("open_case_arrow")}
             </button>
           </div>
         );

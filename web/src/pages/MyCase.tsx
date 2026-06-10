@@ -65,23 +65,21 @@ export default function MyCase() {
 
       <div className="grid form-toolbar" style={{ gridTemplateColumns: "1fr auto", alignItems: "end" }}>
         <div>
-          <label className="field">Case ID</label>
+          <label className="field">{t("case_id")}</label>
           <input value={caseId} onChange={(e) => setCaseId(e.target.value)} />
         </div>
         <button className="btn" onClick={() => load(caseId)}>
-          Load
+          {t("load")}
         </button>
       </div>
 
-      {!caseId && <Alert kind="info">Submit a request first, or paste a case ID.</Alert>}
+      {!caseId && <Alert kind="info">{t("submit_or_paste_case")}</Alert>}
       {err && <Alert kind="err">{err}</Alert>}
 
       {caseData && !assessed && (
         <Alert kind="info">
-          This application hasn’t been assessed yet. Upload your documents and run
-          the assessment on <Link to="/new-request">New Request</Link> — the decision,
-          plans and financials appear here once the AI pipeline has read your
-          documents.
+          {t("not_assessed_pre")} <Link to="/new-request">{t("new_request")}</Link>{" "}
+          {t("not_assessed_post")}
         </Alert>
       )}
 
@@ -104,8 +102,8 @@ export default function MyCase() {
               </div>
               {sla.processing_ms != null && (
                 <div className="caption">
-                  Decided in {Math.round(sla.processing_ms)} ms (legacy SLA:{" "}
-                  {sla.legacy_sla_working_days ?? 5} working days).
+                  {t("decided_in")} {Math.round(sla.processing_ms)} ms ({t("legacy_sla_label")}{" "}
+                  {sla.legacy_sla_working_days ?? 5} {t("working_days")}).
                 </div>
               )}
             </div>

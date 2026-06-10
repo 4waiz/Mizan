@@ -22,19 +22,15 @@ export default function OfficerQueue() {
 
   return (
     <>
-      <Band title={t("queue")} subtitle="Officer · cases escalated for human review" />
+      <Band title={t("queue")} subtitle={t("queue_subtitle")} />
       {err && <Alert kind="err">{err}</Alert>}
       {queue && (
         <div className="eyebrow" style={{ marginBottom: 16 }}>
-          {queue.length} case(s) escalated · awaiting determination
+          {queue.length} {t("queue_count_suffix")}
         </div>
       )}
 
-      {queue?.length === 0 && (
-        <Alert kind="ok">
-          Queue is empty - all recent cases were handled straight-through.
-        </Alert>
-      )}
+      {queue?.length === 0 && <Alert kind="ok">{t("queue_empty")}</Alert>}
 
       {queue?.map((item) => (
         <div key={item.case_id} className="card" style={{ borderLeft: "4px solid var(--gold)" }}>
@@ -51,7 +47,7 @@ export default function OfficerQueue() {
             <Metric k={t("arrears")} v={aed(item.arrears_amount_aed)} />
             <Metric k={t("confidence")} v={pct(item.confidence)} />
             <button className="btn primary" onClick={() => open(item.case_id)}>
-              Open →
+              {t("open_arrow")}
             </button>
           </div>
           <div className="caption" style={{ marginTop: 12, paddingTop: 12, borderTop: "1px solid var(--line)" }}>
