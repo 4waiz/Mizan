@@ -1112,35 +1112,203 @@ ul.ticks li::before {
   /* no-op */
 }
 
+/* ── Table scroll wrapper ──────────────────────────────────────────────────── */
+/* Wide tables (Replay) scroll horizontally instead of overflowing the page.
+   On small screens the wrapper bleeds to the viewport edge so the table can
+   use the full width, with momentum scrolling on touch. */
+.table-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
 /* ── Responsive ────────────────────────────────────────────────────────────── */
-@media (max-width: 1040px) {
+/* Breakpoint ladder:  1024px tablet · 720px large phone · 480px small phone.
+   The Paper aesthetic is preserved — only layout (stacking, scaling, scroll)
+   changes. RTL behaviour is kept intact throughout. */
+
+/* ── Tablet (≤ 1024px) ─────────────────────────────────────────────────────── */
+@media (max-width: 1024px) {
   .topbar {
     flex-wrap: wrap;
     gap: var(--s3);
+    padding: 12px clamp(16px, 4vw, 32px);
   }
+  /* nav drops to its own full-width row under the brand + actions */
   .topnav {
     order: 3;
     width: 100%;
     margin: 0;
     justify-content: flex-start;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    flex-wrap: nowrap;
+    padding-bottom: 2px;
+  }
+  .topnav a {
+    flex: none;
+  }
+  /* push the actions to the right of the brand on the first row */
+  .topbar-actions {
+    margin-left: auto;
+  }
+  [dir="rtl"] .topbar-actions {
+    margin-left: 0;
+    margin-right: auto;
+  }
+  /* smaller seal so the header row stays compact */
+  .brand .seal {
+    height: 64px;
   }
   .footer-inner {
     grid-template-columns: 1fr 1fr;
   }
+  /* officer review two-column → single column */
+  .split-3-2,
+  .split-2-1 {
+    grid-template-columns: 1fr !important;
+  }
 }
-@media (max-width: 900px) {
+
+/* ── Large phone (≤ 720px) ─────────────────────────────────────────────────── */
+@media (max-width: 720px) {
+  /* every multi-column content grid collapses to one column */
   .grid-2,
   .grid-3,
   .grid-4 {
     grid-template-columns: 1fr;
   }
+  /* inline-styled page grids (collapsed via their hook classes) */
+  .queue-row,
+  .form-toolbar {
+    grid-template-columns: 1fr !important;
+  }
+  .form-toolbar .btn {
+    width: 100%;
+  }
+  /* masthead title + file-ref stack instead of competing for width */
+  .masthead .top {
+    flex-direction: column;
+    gap: var(--s2);
+  }
+  .masthead .ref {
+    text-align: left;
+    white-space: normal;
+    word-break: break-word;
+  }
+  [dir="rtl"] .masthead .ref {
+    text-align: right;
+  }
+  /* bar rows: label above the track so long outcome labels don't squeeze it */
   .bar-row {
-    grid-template-columns: 130px 1fr 32px;
+    grid-template-columns: 1fr 36px;
+    grid-template-areas:
+      "lbl lbl"
+      "track num";
+    row-gap: 4px;
+  }
+  .bar-row .lbl {
+    grid-area: lbl;
+  }
+  .bar-track {
+    grid-area: track;
+  }
+  .bar-row .num {
+    grid-area: num;
+  }
+  /* tighter cards / determination padding on phones */
+  .card {
+    padding: var(--s4);
+  }
+  .main {
+    padding-bottom: 56px;
+  }
+  .section-title {
+    margin: var(--s6) 0 var(--s3);
+  }
+  .determination {
+    padding: var(--s6);
+  }
+  /* keep the decision stamp from overlapping the verdict text */
+  .determination .verdict {
+    max-width: none;
+    padding-right: 96px;
+  }
+  [dir="rtl"] .determination .verdict {
+    padding-right: 0;
+    padding-left: 96px;
+  }
+  /* mobile-friendly skip-intro button position (respects safe areas) */
+  .intro-skip {
+    bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+    right: calc(16px + env(safe-area-inset-right, 0px));
   }
 }
-@media (max-width: 600px) {
+
+/* ── Small phone (≤ 480px) ─────────────────────────────────────────────────── */
+@media (max-width: 480px) {
   .footer-inner {
     grid-template-columns: 1fr;
     gap: var(--s6);
+  }
+  /* footer base row stacks; logos shrink and wrap */
+  .footer .f-base {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--s4);
+  }
+  .footer .f-logos {
+    gap: var(--s4);
+    flex-wrap: wrap;
+  }
+  .footer .f-logos img {
+    height: 56px;
+    padding: 8px 14px;
+  }
+  .footer .f-brand .seal,
+  .brand .seal {
+    height: 56px;
+  }
+  /* full-width usermenu so the identity pill + sign-out don't overflow */
+  .usermenu {
+    flex-wrap: wrap;
+  }
+  /* large display numbers scale down so they don't overflow a tile */
+  .metric .v {
+    font-size: var(--fs-lg);
+  }
+  /* mono blocks and tables never push the page wider than the viewport */
+  pre.raw {
+    font-size: 11px;
+  }
+  /* let the cases table bleed to the screen edges for max usable width
+     (offset matches .main's 20px side-padding floor) */
+  .table-scroll {
+    margin-left: -20px;
+    margin-right: -20px;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  /* comfortable tap targets for nav pills */
+  .topnav a {
+    padding: 9px 12px;
+  }
+}
+
+/* Guard against any stray wide child causing horizontal scroll */
+@media (max-width: 720px) {
+  html,
+  body {
+    overflow-x: hidden;
+  }
+  .determination,
+  .card,
+  pre.raw {
+    max-width: 100%;
+  }
+  img,
+  video,
+  object,
+  iframe {
+    max-width: 100%;
   }
 }
