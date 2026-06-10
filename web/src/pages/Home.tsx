@@ -11,10 +11,14 @@ export default function Home() {
   const citizen = isCitizen(s);
   const officer = isOfficer(s);
   const [showIntro, setShowIntro] = useState(() => !sessionStorage.getItem("introSeen"));
+  const [introFading, setIntroFading] = useState(false);
 
   const dismissIntro = () => {
+    if (introFading) return; // already fading out
     sessionStorage.setItem("introSeen", "1");
-    setShowIntro(false);
+    // Trigger the fade-out, then unmount once the transition finishes.
+    setIntroFading(true);
+    setTimeout(() => setShowIntro(false), 800);
   };
 
   return (
@@ -30,6 +34,9 @@ export default function Home() {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
+            opacity: introFading ? 0 : 1,
+            transition: "opacity 0.8s ease",
+            pointerEvents: introFading ? "none" : "auto",
           }}
         >
           <video
