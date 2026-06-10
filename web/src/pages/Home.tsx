@@ -50,7 +50,7 @@ export default function Home() {
           <button
             onClick={dismissIntro}
             className="btn intro-skip"
-            style={{ position: "absolute", zIndex: 1001 }}
+            style={{ position: "absolute", bottom: 20, right: 16, zIndex: 1001 }}
           >
             Skip intro →
           </button>

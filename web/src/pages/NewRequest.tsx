@@ -308,7 +308,17 @@ export default function NewRequest() {
             e.currentTarget.value = "";
           }}
         />
-        <div style={{ fontSize: 26, marginBottom: 6 }}>{uploading ? "⏳" : "⬆"}</div>
+        <div style={{ marginBottom: 6 }}>
+          {uploading ? (
+            <span style={{ fontSize: 26 }}>⏳</span>
+          ) : (
+            <img
+              src="/upload-icon.png"
+              alt="Upload"
+              style={{ height: 40, width: "auto", display: "inline-block" }}
+            />
+          )}
+        </div>
         <div style={{ fontWeight: 600 }}>
           {uploading ? "Uploading…" : "Drag & drop all your documents here"}
         </div>
