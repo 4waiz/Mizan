@@ -32,12 +32,25 @@ export default function NewRequest() {
   const [activeLabel, setActiveLabel] = useState<string>("");
   const [failure, setFailure] = useState<string | null>(null);
 
-  // manual document upload (citizen portal)
-  const [docType, setDocType] = useState<string>("salary_certificate");
+  // citizen document upload
   const [uploading, setUploading] = useState(false);
   const [uploadMsg, setUploadMsg] = useState<string | null>(null);
+  const [dragOver, setDragOver] = useState(false);
+  const [reqDocs, setReqDocs] = useState<{
+    required: string[];
+    present: string[];
+    missing: string[];
+  } | null>(null);
 
   const s = getSession();
+
+  const refreshRequired = async (caseId: string) => {
+    try {
+      setReqDocs(await api.requiredDocuments(caseId));
+    } catch {
+      /* non-fatal */
+    }
+  };
 
   useEffect(() => {
     if (!s.fixture) return;
@@ -50,6 +63,7 @@ export default function NewRequest() {
           setSession({ activeCaseId: caseId });
         }
         setCaseData(await api.getCase(caseId!));
+        await refreshRequired(caseId!);
       } catch (e) {
         setErr(String(e));
       }
@@ -68,6 +82,23 @@ export default function NewRequest() {
     );
 
   const doRun = async () => {
+    // Block assessment until all required documents are uploaded — no verdict
+    // is produced for an incomplete file.
+    const caseId = getSession().activeCaseId!;
+    try {
+      const latest = await api.requiredDocuments(caseId);
+      setReqDocs(latest);
+      if (latest.missing.length > 0) {
+        setErr(null);
+        setRun(null);
+        setFailure(null);
+        setUploadMsg(null);
+        return; // the "Additional information required" banner handles the rest
+      }
+    } catch {
+      /* if the check fails, fall through and let the pipeline decide */
+    }
+
     setBusy(true);
     setErr(null);
     setRun(null);
@@ -75,7 +106,6 @@ export default function NewRequest() {
     setActiveLabel("");
     setSteps([]);
 
-    const caseId = getSession().activeCaseId!;
     try {
       await api.runCaseStream(caseId, (ev) => {
         switch (ev.type) {
@@ -123,36 +153,52 @@ export default function NewRequest() {
     }
   };
 
-  const DOC_TYPES: { value: string; label: string }[] = [
-    { value: "emirates_id", label: "Emirates ID" },
-    { value: "salary_certificate", label: "Salary certificate" },
-    { value: "bank_statement", label: "Bank statement" },
-    { value: "liability_letter", label: "Financial obligations letter" },
-    { value: "termination_letter", label: "Termination / unemployment letter" },
-    { value: "medical_report", label: "Medical report" },
-    { value: "hardship_letter", label: "Hardship letter" },
-  ];
+  // Human-readable labels for the known document types.
+  const DOC_LABELS: Record<string, string> = {
+    emirates_id: "Emirates ID",
+    salary_certificate: "Salary certificate",
+    bank_statement: "Bank statement",
+    liability_letter: "Financial obligations letter",
+    termination_letter: "Termination / unemployment letter",
+    medical_report: "Medical report",
+    hardship_letter: "Hardship letter",
+    unknown: "Document",
+  };
 
-  const onUpload = async (file: File | undefined) => {
-    if (!file) return;
+  // Infer a document type from a file name (matches the generated pack names).
+  const inferType = (name: string): string => {
+    const n = name.toLowerCase();
+    if (n.includes("emirates") || n.includes("eid")) return "emirates_id";
+    if (n.includes("salary")) return "salary_certificate";
+    if (n.includes("income") || n.includes("bank") || n.includes("statement") || n.includes("direct_debit"))
+      return "bank_statement";
+    if (n.includes("obligation") || n.includes("liability") || n.includes("aecb"))
+      return "liability_letter";
+    if (n.includes("termination") || n.includes("unemploy") || n.includes("separation"))
+      return "termination_letter";
+    if (n.includes("medical") || n.includes("treatment")) return "medical_report";
+    if (n.includes("hardship") || n.includes("family")) return "hardship_letter";
+    return "unknown";
+  };
+
+  const onUploadFiles = async (files: FileList | File[] | null | undefined) => {
+    const list = files ? Array.from(files) : [];
+    if (!list.length) return;
     const caseId = getSession().activeCaseId;
     if (!caseId) return;
     setUploading(true);
     setUploadMsg(null);
     setErr(null);
     try {
-      const today = new Date().toISOString().slice(0, 10);
-      const doc = {
-        document_id: `UPL-${docType}-${Date.now()}`,
-        doc_type: docType,
-        status: "present",
-        file_name: file.name,
-        issued_on: today,
-        uploaded_on: today,
-      };
-      const updated = await api.uploadDocuments(caseId, [doc]);
+      const doc_types = list.map((f) => inferType(f.name));
+      const file_names = list.map((f) => f.name);
+      const updated = await api.uploadDocumentTypes(caseId, doc_types, file_names);
       setCaseData(updated);
-      setUploadMsg(`Uploaded ${file.name}.`);
+      await refreshRequired(caseId);
+      setUploadMsg(
+        `Uploaded ${list.length} document${list.length > 1 ? "s" : ""}: ` +
+          list.map((f) => f.name).join(", "),
+      );
     } catch (e) {
       setErr(String(e));
     } finally {
@@ -162,6 +208,8 @@ export default function NewRequest() {
 
   const docs = caseData?.document_inventory?.documents ?? [];
   const proc = run?.case?.sla?.processing_ms;
+  const missing = reqDocs?.missing ?? [];
+  const hasMissing = missing.length > 0;
 
   return (
     <>
@@ -173,65 +221,84 @@ export default function NewRequest() {
       {caseData && <ProfileCard case={caseData} />}
 
       <div className="section-title">2 · {t("documents")}</div>
-      <div className="card">
+
+      {/* Required-documents checklist */}
+      {reqDocs && (
+        <div className="card" style={{ marginBottom: 12 }}>
+          <div className="eyebrow" style={{ marginBottom: 8 }}>
+            Required documents
+          </div>
+          {reqDocs.required.map((rt) => {
+            const have = reqDocs.present.includes(rt);
+            return (
+              <div key={rt} className="kv" style={{ color: have ? "var(--ok, #1e7d43)" : "#9aa0a6" }}>
+                {have ? "✓" : "○"} <b>{DOC_LABELS[rt] ?? rt}</b>
+                {have ? "" : " · not uploaded"}
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {/* Drag-and-drop upload zone */}
+      <label
+        onDragOver={(e) => {
+          e.preventDefault();
+          setDragOver(true);
+        }}
+        onDragLeave={() => setDragOver(false)}
+        onDrop={(e) => {
+          e.preventDefault();
+          setDragOver(false);
+          onUploadFiles(e.dataTransfer.files);
+        }}
+        style={{
+          display: "block",
+          border: `2px dashed ${dragOver ? "var(--accent, #0e8a8a)" : "#cdd3da"}`,
+          background: dragOver ? "rgba(14,138,138,0.06)" : "var(--card, #fff)",
+          borderRadius: 12,
+          padding: "26px 18px",
+          textAlign: "center",
+          cursor: uploading ? "default" : "pointer",
+        }}
+      >
+        <input
+          type="file"
+          multiple
+          accept=".pdf,.png,.jpg,.jpeg"
+          style={{ display: "none" }}
+          disabled={uploading}
+          onChange={(e) => {
+            onUploadFiles(e.target.files);
+            e.currentTarget.value = "";
+          }}
+        />
+        <div style={{ fontSize: 26, marginBottom: 6 }}>{uploading ? "⏳" : "⬆"}</div>
+        <div style={{ fontWeight: 600 }}>
+          {uploading ? "Uploading…" : "Drag & drop all your documents here"}
+        </div>
+        <div className="caption" style={{ marginTop: 4 }}>
+          or click to browse — you can select multiple files at once (PDF, PNG, JPG)
+        </div>
+      </label>
+
+      {/* Uploaded files */}
+      <div className="card" style={{ marginTop: 12 }}>
         {docs.length ? (
           docs.map((d: any) => (
             <div key={d.document_id} className="kv">
-              📎 <b>{d.doc_type}</b> · {d.file_name ?? ""} · issued {d.issued_on ?? "-"} ·{" "}
+              📎 <b>{DOC_LABELS[d.doc_type] ?? d.doc_type}</b> · {d.file_name ?? ""} ·{" "}
               <code>{d.status}</code>
             </div>
           ))
         ) : (
-          <span className="muted">No documents on file yet.</span>
+          <span className="muted">No documents uploaded yet.</span>
         )}
-
-        <div
-          style={{
-            marginTop: 14,
-            paddingTop: 14,
-            borderTop: "1px solid var(--line, #e3e7ec)",
-            display: "flex",
-            flexWrap: "wrap",
-            gap: 8,
-            alignItems: "center",
-          }}
-        >
-          <select
-            value={docType}
-            onChange={(e) => setDocType(e.target.value)}
-            disabled={uploading}
-            style={{ padding: "6px 8px" }}
-          >
-            {DOC_TYPES.map((d) => (
-              <option key={d.value} value={d.value}>
-                {d.label}
-              </option>
-            ))}
-          </select>
-
-          <label className="btn" style={{ cursor: uploading ? "default" : "pointer" }}>
-            {uploading ? <span className="spinner" /> : "⬆"} Upload document
-            <input
-              type="file"
-              accept=".pdf,.png,.jpg,.jpeg"
-              style={{ display: "none" }}
-              disabled={uploading}
-              onChange={(e) => {
-                onUpload(e.target.files?.[0]);
-                e.currentTarget.value = "";
-              }}
-            />
-          </label>
-        </div>
         {uploadMsg && (
-          <div className="caption" style={{ marginTop: 6, color: "var(--ok, #1e7d43)" }}>
+          <div className="caption" style={{ marginTop: 8, color: "var(--ok, #1e7d43)" }}>
             ✓ {uploadMsg}
           </div>
         )}
-      </div>
-      <div className="caption">
-        Upload your supporting documents (salary certificate, bank statement,
-        obligations letter, and any hardship evidence) before submitting.
       </div>
 
       <div className="section-title">3 · Submit &amp; assess</div>
@@ -241,7 +308,27 @@ export default function NewRequest() {
         active application is rejected immediately at the fraud/dedupe step.
       </p>
 
-      <button className="btn primary" onClick={doRun} disabled={busy || !caseData}>
+      {/* Block submission until all required documents are uploaded */}
+      {hasMissing && (
+        <Alert kind="warn">
+          <b>Additional information required.</b>
+          <br />
+          Please upload the following before submitting — no decision is made on an
+          incomplete application:
+          <ul style={{ margin: "8px 0 0 18px" }}>
+            {missing.map((m) => (
+              <li key={m}>{DOC_LABELS[m] ?? m}</li>
+            ))}
+          </ul>
+        </Alert>
+      )}
+
+      <button
+        className="btn primary"
+        onClick={doRun}
+        disabled={busy || !caseData || hasMissing || uploading}
+        title={hasMissing ? "Upload all required documents first" : undefined}
+      >
         {busy ? <span className="spinner" /> : "▶"} {t("run")}
       </button>
 

@@ -77,6 +77,12 @@ export const api = {
   getCase: (id: string) => get<any>(`/api/cases/${id}`),
   uploadDocuments: (id: string, documents: any[]) =>
     post<any>(`/api/cases/${id}/documents`, { documents }),
+  uploadDocumentTypes: (id: string, doc_types: string[], file_names: string[]) =>
+    post<any>(`/api/cases/${id}/documents/by-type`, { doc_types, file_names }),
+  requiredDocuments: (id: string) =>
+    get<{ required: string[]; present: string[]; missing: string[] }>(
+      `/api/cases/${id}/documents/required`,
+    ),
   listCases: () => get<any[]>("/api/cases"),
   runCase: (id: string) => post<any>(`/api/cases/${id}/run`),
   runCaseStream: (id: string, onEvent: (e: any) => void) =>
