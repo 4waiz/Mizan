@@ -25,3 +25,4 @@ mizan.db
 Thumbs.db
 .idea/
 .vscode/
+/node_modules
