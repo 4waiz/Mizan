@@ -24,6 +24,7 @@ const NAV_OFFICER = [
   { to: "/officer/case", num: "04", key: "nav_case_review" },
   { to: "/proactive", num: "05", key: "proactive" },
   { to: "/replay", num: "06", key: "replay" },
+  { to: "/telemetry", num: "08", key: "telemetry" },
 ] as const;
 
 const FOOTER_GROUPS = [

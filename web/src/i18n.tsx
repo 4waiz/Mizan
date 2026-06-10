@@ -45,6 +45,7 @@ const T: Record<string, { en: string; ar: string }> = {
   audit: { en: "Audit trail", ar: "سجل التدقيق" },
   proactive: { en: "Proactive Alerts", ar: "التنبيهات الاستباقية" },
   replay: { en: "Replay Dashboard", ar: "لوحة الإعادة" },
+  telemetry: { en: "AI Telemetry", ar: "قياس الذكاء الاصطناعي" },
   language: { en: "Language", ar: "اللغة" },
   high_contrast: { en: "High-contrast mode", ar: "وضع التباين العالي" },
   signed_in_as: { en: "Signed in as", ar: "تم تسجيل الدخول باسم" },

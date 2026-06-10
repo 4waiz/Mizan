@@ -1382,3 +1382,193 @@ ul.ticks li::before {
     max-width: 100%;
   }
 }
+
+/* ── AI Telemetry / Proof-of-Work dashboard ─────────────────────────────────
+   A deliberately "developer console" aesthetic — dark surfaces + monospace —
+   so it reads as a live engineering dashboard against the paper-toned app. */
+.telem-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  margin: 16px 0;
+}
+.telem-pill {
+  background: #0c0f14;
+  border: 1px solid #1e2530;
+  border-radius: 10px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.telem-k {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: #5b6473;
+}
+.telem-v {
+  font-size: 15px;
+  font-weight: 600;
+  color: #e6edf3;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.telem-v.mono {
+  font-family: var(--mono);
+  font-size: 13px;
+}
+.telem-v.live {
+  color: #3fb950;
+}
+.telem-v.idle {
+  color: #8b949e;
+}
+.telem-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #6b7280;
+  display: inline-block;
+}
+.telem-dot.on {
+  background: #3fb950;
+  box-shadow: 0 0 0 3px rgba(63, 185, 80, 0.25);
+  animation: telem-pulse 1.4s ease-in-out infinite;
+}
+@keyframes telem-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+
+.telem-counters {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.telem-counter {
+  background: linear-gradient(180deg, #0d1117 0%, #11161f 100%);
+  border: 1px solid #1e2530;
+  border-radius: 12px;
+  padding: 18px 20px;
+  text-align: center;
+}
+.telem-counter.big {
+  border-color: #2d6a3a;
+  box-shadow: inset 0 0 40px rgba(63, 185, 80, 0.08);
+}
+.telem-counter-v {
+  font-size: 30px;
+  font-weight: 700;
+  color: #e6edf3;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.1;
+}
+.telem-counter.big .telem-counter-v {
+  font-size: 48px;
+  color: #3fb950;
+}
+.telem-counter-k {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  color: #5b6473;
+  margin-top: 6px;
+}
+
+.telem-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+.telem-select {
+  flex: 1;
+  min-width: 220px;
+  padding: 9px 12px;
+  border: 1px solid var(--line-2);
+  border-radius: 8px;
+  background: var(--card);
+  font-size: 13px;
+}
+
+.telem-term {
+  background: #0a0d12;
+  border: 1px solid #1e2530;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+}
+.telem-term-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  background: #11161f;
+  border-bottom: 1px solid #1e2530;
+}
+.telem-term-head .dot {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+}
+.telem-term-head .dot.r { background: #ff5f56; }
+.telem-term-head .dot.y { background: #ffbd2e; }
+.telem-term-head .dot.g { background: #27c93f; }
+.telem-term-title {
+  margin-left: 10px;
+  font-size: 12px;
+  color: #6b7480;
+}
+.telem-term-body {
+  padding: 16px;
+  max-height: 460px;
+  overflow-y: auto;
+  font-size: 12.5px;
+  line-height: 1.7;
+}
+.telem-row {
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.telem-row.sys {
+  color: #6b7480;
+}
+.telem-row.call {
+  color: #c9d1d9;
+  padding: 2px 0;
+  border-bottom: 1px dashed #161c26;
+}
+.telem-row.call.live {
+  border-left: 2px solid #3fb950;
+  padding-left: 8px;
+}
+.telem-row.call.mock {
+  border-left: 2px solid #6b7280;
+  padding-left: 8px;
+  opacity: 0.8;
+}
+.telem-seq { color: #6b7480; }
+.telem-node { color: #58a6ff; font-weight: 700; }
+.telem-task { color: #8b949e; }
+.telem-model { color: #d2a8ff; }
+.telem-tokens { color: #c9d1d9; }
+.telem-tokens b { color: #3fb950; }
+.telem-meta { color: #6b7480; }
+.telem-row.cursor {
+  color: #3fb950;
+  animation: telem-blink 1s steps(2) infinite;
+}
+@keyframes telem-blink {
+  0%, 50% { opacity: 1; }
+  50.01%, 100% { opacity: 0; }
+}
+
+@media (max-width: 720px) {
+  .telem-counters {
+    grid-template-columns: 1fr;
+  }
+}

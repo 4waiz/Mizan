@@ -11,6 +11,7 @@ import OfficerCase from "./pages/OfficerCase";
 import Proactive from "./pages/Proactive";
 import Replay from "./pages/Replay";
 import Insights from "./pages/Insights";
+import Telemetry from "./pages/Telemetry";
 import { isCitizen, isOfficer } from "./session";
 
 function RequireCitizen({ children }: { children: ReactNode }) {
@@ -44,6 +45,7 @@ export default function App() {
         <Route path="/officer/case" element={<RequireOfficer><OfficerCase /></RequireOfficer>} />
         <Route path="/proactive" element={<RequireOfficer><Proactive /></RequireOfficer>} />
         <Route path="/replay" element={<RequireOfficer><Replay /></RequireOfficer>} />
+        <Route path="/telemetry" element={<RequireOfficer><Telemetry /></RequireOfficer>} />
 
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
