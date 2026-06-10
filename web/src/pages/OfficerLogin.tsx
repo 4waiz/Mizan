@@ -29,7 +29,7 @@ export default function OfficerLogin() {
 
   return (
     <>
-      <Band title="Officer Dashboard" subtitle="Sheikh Zayed Housing Programme · MOEI" ref="OFFICER · لوحة الموظف" />
+      <Band title="Officer Dashboard" subtitle="Sheikh Zayed Housing Programme · MOEI" fileRef="OFFICER · لوحة الموظف" />
 
       <p className="lead">
         Restricted access. Sign in to review escalated cases, approve, override or

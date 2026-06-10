@@ -72,7 +72,7 @@ export default function CitizenLogin() {
 
   return (
     <>
-      <Band title="Citizen Portal" subtitle="Sheikh Zayed Housing Programme · MOEI" ref="CITIZEN · بوابة المستفيد" />
+      <Band title="Citizen Portal" subtitle="Sheikh Zayed Housing Programme · MOEI" fileRef="CITIZEN · بوابة المستفيد" />
 
       <p className="lead">
         Sign in to request an arrears rescheduling and track your case. Use a{" "}

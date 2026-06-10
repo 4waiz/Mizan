@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useI18n } from "../i18n";
 import { getSession, isCitizen, isOfficer } from "../session";
@@ -9,9 +10,46 @@ export default function Home() {
   const s = getSession();
   const citizen = isCitizen(s);
   const officer = isOfficer(s);
+  const [showIntro, setShowIntro] = useState(() => !sessionStorage.getItem("introSeen"));
+
+  const dismissIntro = () => {
+    sessionStorage.setItem("introSeen", "1");
+    setShowIntro(false);
+  };
 
   return (
     <>
+      {showIntro && (
+        <div
+          onClick={dismissIntro}
+          style={{
+            position: "fixed",
+            inset: 0,
+            zIndex: 1000,
+            background: "#000",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <video
+            src="/intro.mp4"
+            autoPlay
+            muted
+            playsInline
+            onEnded={dismissIntro}
+            style={{ width: "100%", height: "100%", objectFit: "cover" }}
+          />
+          <button
+            onClick={dismissIntro}
+            className="btn"
+            style={{ position: "absolute", bottom: 32, right: 32, zIndex: 1001 }}
+          >
+            Skip intro →
+          </button>
+        </div>
+      )}
+
       <Band title="An autonomous case officer" subtitle="Sheikh Zayed Housing Programme · MOEI" />
 
       <p className="lead">

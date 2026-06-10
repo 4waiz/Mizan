@@ -10,11 +10,11 @@ export const pct = (v: number | null | undefined) =>
 export function Band({
   title,
   subtitle,
-  ref: fileRef,
+  fileRef,
 }: {
   title: ReactNode;
   subtitle?: string;
-  ref?: string;
+  fileRef?: string;
 }) {
   return (
     <header className="masthead">
