@@ -229,11 +229,13 @@ def _clean(df):
     # Unified request type: prefer the explicit request, fall back to approved.
     df["request_type_effective"] = df["request_type"].fillna(df["approved_request_type"])
 
-    # Derived year: explicit start_year, else the created_date year, else sheet.
-    derived_year = df["start_year"]
+    # Derived year: the worksheet the row came from is authoritative (the
+    # organizers split the workbook by year). start_year / created_date are noisy
+    # (stray 1900 / 2026 artefacts) so they are only a last-resort fallback.
+    derived_year = pd.to_numeric(df["source_year"], errors="coerce")
+    derived_year = derived_year.fillna(df["start_year"])
     if "created_date" in df.columns:
         derived_year = derived_year.fillna(df["created_date"].dt.year)
-    derived_year = derived_year.fillna(pd.to_numeric(df["source_year"], errors="coerce"))
     df["year"] = pd.to_numeric(derived_year, errors="coerce").astype("Int64")
 
     # Approval duration in days (created -> approved), when both are present.

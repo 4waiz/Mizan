@@ -41,7 +41,7 @@ from .schemas.api import (
     RunResponse,
 )
 from .policies import rules
-from .services import audit, case_factory, pdf_extract
+from .services import audit, case_factory, historical_insights_service, pdf_extract, risk_forecaster
 from .services.mocks import mock_document_store, registry
 from .services.replay import replay_summary
 
@@ -432,6 +432,42 @@ def officer_reject(case_id: str, req: OfficerActionRequest) -> CaseState:
 @app.get("/api/replay/summary")
 def replay() -> dict:
     return replay_summary()
+
+
+# ── organizer historical intelligence ────────────────────────────────────────
+# Aggregated, anonymized insights over the organizer-provided historical dataset
+# (data/RescheduleArrears.xlsx, 2023–2025). These endpoints never return raw
+# identifiable records — only medians, counts, percentages, risk buckets, and
+# anonymized bucketed patterns. Final policy decisions remain rule-based.
+@app.get("/api/organizer-insights")
+def organizer_insights() -> dict:
+    """Full aggregated insight object for the Historical Intelligence dashboard."""
+    return historical_insights_service.compute_insights()
+
+
+@app.get("/api/organizer-insights/risk-buckets")
+def organizer_risk_buckets() -> dict:
+    """Overdue-month risk bucket counts and percentages."""
+    return historical_insights_service.risk_buckets()
+
+
+@app.get("/api/organizer-insights/policy-edge-cases")
+def organizer_policy_edge_cases() -> dict:
+    """Anonymized aggregate stats about 20%-deduction-cap edge cases."""
+    return historical_insights_service.policy_edge_cases()
+
+
+@app.get("/api/organizer-insights/sample-patterns")
+def organizer_sample_patterns() -> dict:
+    """Anonymized example patterns — never raw personal records."""
+    return historical_insights_service.sample_patterns()
+
+
+@app.get("/api/proactive-scan")
+def proactive_scan() -> dict:
+    """Run the organizer-calibrated risk scoring across the cleaned historical
+    data and return top anonymized high-risk patterns."""
+    return risk_forecaster.proactive_scan()
 
 
 @app.get("/api/proactive/alerts", response_model=list[ProactiveAlert])
