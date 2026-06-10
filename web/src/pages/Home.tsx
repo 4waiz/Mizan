@@ -12,6 +12,12 @@ export default function Home() {
   const officer = isOfficer(s);
   const [showIntro, setShowIntro] = useState(() => !sessionStorage.getItem("introSeen"));
   const [introFading, setIntroFading] = useState(false);
+  // Phones get the portrait, watermark-free clip; tablets and laptops get the landscape intro.
+  const [introSrc] = useState(() =>
+    typeof window !== "undefined" && window.matchMedia("(max-width: 767px)").matches
+      ? "/mobile-intro.mp4"
+      : "/intro.mp4"
+  );
 
   const dismissIntro = () => {
     if (introFading) return; // already fading out
@@ -40,7 +46,7 @@ export default function Home() {
           }}
         >
           <video
-            src="/intro.mp4"
+            src={introSrc}
             autoPlay
             muted
             playsInline
