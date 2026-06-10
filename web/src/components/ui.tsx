@@ -6,6 +6,91 @@ export const aed = (n: number | null | undefined) =>
 export const pct = (v: number | null | undefined) =>
   v == null ? "-" : `${Math.round(v * 100)}%`;
 
+// ── Document preview ─────────────────────────────────────────────────────────
+// Beneficiary id → generated-pack folder (served from /demo_documents/…).
+const CASE_FOLDER: Record<string, string> = {
+  "SZHP-1001": "ahmed_clean_approval",
+  "SZHP-1002": "fatima_missing_documents",
+  "SZHP-1003": "khalid_unemployment_hardship",
+  "SZHP-1004": "mariam_medical_hardship",
+  "SZHP-1005": "saeed_high_obligations",
+  "SZHP-1006": "noura_active_request_conflict",
+  "SZHP-1007": "omar_suspicious_document",
+};
+
+// Inventory doc_type → best-matching PDF file name in the generated pack.
+function previewFile(folder: string, docType: string): string | null {
+  const has = (n: string) => `${n}.pdf`;
+  const suspicious = folder.includes("suspicious");
+  switch (docType) {
+    case "emirates_id":
+      return has("uae_pass_profile");
+    case "salary_certificate":
+      return has(suspicious ? "suspicious_salary_certificate" : "salary_certificate");
+    case "bank_statement":
+      return has("income_statement");
+    case "liability_letter":
+      return has("obligations_letter");
+    case "termination_letter":
+      return has("unemployment_letter");
+    case "medical_report":
+      return has("medical_treatment_letter");
+    case "hardship_letter":
+      return has("family_status_record");
+    default:
+      return null;
+  }
+}
+
+/** Resolve a public URL for a document's PDF preview, or null if none exists. */
+export function previewUrl(beneficiaryId: string | undefined, docType: string): string | null {
+  if (!beneficiaryId) return null;
+  const folder = CASE_FOLDER[beneficiaryId];
+  if (!folder) return null;
+  const file = previewFile(folder, docType);
+  if (!file) return null;
+  return `/demo_documents/${folder}/${file}`;
+}
+
+/** Inline embedded PDF preview (with a fallback link). */
+export function DocumentPreview({
+  beneficiaryId,
+  docType,
+  height = 360,
+}: {
+  beneficiaryId: string | undefined;
+  docType: string;
+  height?: number;
+}) {
+  const url = previewUrl(beneficiaryId, docType);
+  if (!url) {
+    return (
+      <div className="caption muted" style={{ marginTop: 8 }}>
+        No document preview available.
+      </div>
+    );
+  }
+  return (
+    <div style={{ marginTop: 10 }}>
+      <div className="caption" style={{ marginBottom: 6 }}>
+        Document preview ·{" "}
+        <a href={url} target="_blank" rel="noreferrer">
+          open in new tab ↗
+        </a>
+      </div>
+      <object
+        data={url}
+        type="application/pdf"
+        width="100%"
+        height={height}
+        style={{ border: "1px solid var(--line-2, #dcd8c9)", borderRadius: 8 }}
+      >
+        <iframe src={url} title={`${docType} preview`} width="100%" height={height} style={{ border: 0 }} />
+      </object>
+    </div>
+  );
+}
+
 /* Letterhead masthead - eyebrow (org) · serif title · double rule · file ref. */
 export function Band({
   title,

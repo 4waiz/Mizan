@@ -12,6 +12,7 @@ import {
   ConfidenceBlock,
   AuditTimeline,
   Expander,
+  DocumentPreview,
 } from "../components/ui";
 
 const OUTCOMES = [
@@ -134,6 +135,10 @@ export default function OfficerCase() {
             {docs.map((d: any) => (
               <Expander key={d.document_id} summary={`📎 ${d.doc_type} · ${d.file_name ?? ""}`}>
                 <pre className="raw">{d.raw_text || "(no extracted text)"}</pre>
+                <DocumentPreview
+                  beneficiaryId={caseData.beneficiary?.beneficiary_id}
+                  docType={d.doc_type}
+                />
               </Expander>
             ))}
             <div className="caption">

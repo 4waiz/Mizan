@@ -1,0 +1,450 @@
+{
+  "_meta": {
+    "disclaimer": "All beneficiary records, identifiers and references in this pack are fictional and created for this prototype. Entity names (employer, bank, clinic) are generic placeholders, not real institutions.",
+    "policy_rules": {
+      "deduction_cap_pct": 20,
+      "period_constraint": "Proposed repayment schedule must not exceed the original approved loan repayment period.",
+      "active_request_rule": "An existing active application blocks or auto-rejects a new request.",
+      "document_validation": true,
+      "explainability": true,
+      "human_review": "Reserved for complex, suspicious, low-confidence, or policy-ambiguous cases."
+    },
+    "generated_count": 70
+  },
+  "cases": {
+    "SZHP-1001": {
+      "name": "Ahmed Al Mansoori",
+      "name_ar": "أحمد المنصوري",
+      "scenario": "clean_approval",
+      "expected_status": "Approved",
+      "expected_recommendation": "Approve revised repayment plan (UPDATE_INSTALLMENT). Re-spread arrears across the remaining approved term; new installment AED 5,800 (18.1% of net income, within the 20% cap and within the original approved period).",
+      "confidence_score": 0.94,
+      "human_review_required": false,
+      "folder": "demo_documents/ahmed_clean_approval",
+      "documents": [
+        {
+          "key": "uae_pass_profile",
+          "file": "uae_pass_profile.pdf",
+          "path": "demo_documents/ahmed_clean_approval/uae_pass_profile.pdf"
+        },
+        {
+          "key": "application_form",
+          "file": "application_form.pdf",
+          "path": "demo_documents/ahmed_clean_approval/application_form.pdf"
+        },
+        {
+          "key": "salary_certificate",
+          "file": "salary_certificate.pdf",
+          "path": "demo_documents/ahmed_clean_approval/salary_certificate.pdf"
+        },
+        {
+          "key": "income_statement",
+          "file": "income_statement.pdf",
+          "path": "demo_documents/ahmed_clean_approval/income_statement.pdf"
+        },
+        {
+          "key": "obligations_letter",
+          "file": "obligations_letter.pdf",
+          "path": "demo_documents/ahmed_clean_approval/obligations_letter.pdf"
+        },
+        {
+          "key": "direct_debit_proof",
+          "file": "direct_debit_proof.pdf",
+          "path": "demo_documents/ahmed_clean_approval/direct_debit_proof.pdf"
+        },
+        {
+          "key": "moei_loan_statement",
+          "file": "moei_loan_statement.pdf",
+          "path": "demo_documents/ahmed_clean_approval/moei_loan_statement.pdf"
+        },
+        {
+          "key": "arrears_statement",
+          "file": "arrears_statement.pdf",
+          "path": "demo_documents/ahmed_clean_approval/arrears_statement.pdf"
+        },
+        {
+          "key": "payment_history",
+          "file": "payment_history.pdf",
+          "path": "demo_documents/ahmed_clean_approval/payment_history.pdf"
+        },
+        {
+          "key": "final_recommendation_memo",
+          "file": "final_recommendation_memo.pdf",
+          "path": "demo_documents/ahmed_clean_approval/final_recommendation_memo.pdf"
+        },
+        {
+          "key": "audit_trail_report",
+          "file": "audit_trail_report.pdf",
+          "path": "demo_documents/ahmed_clean_approval/audit_trail_report.pdf"
+        }
+      ]
+    },
+    "SZHP-1002": {
+      "name": "Fatima Al Suwaidi",
+      "name_ar": "فاطمة السويدي",
+      "scenario": "missing_documents",
+      "expected_status": "Additional Information Required",
+      "expected_recommendation": "Request missing documents (REQUEST_MORE_INFO). Cannot assess affordability without salary certificate, income statement, and obligations letter.",
+      "confidence_score": 0.41,
+      "human_review_required": false,
+      "folder": "demo_documents/fatima_missing_documents",
+      "documents": [
+        {
+          "key": "uae_pass_profile",
+          "file": "uae_pass_profile.pdf",
+          "path": "demo_documents/fatima_missing_documents/uae_pass_profile.pdf"
+        },
+        {
+          "key": "application_form",
+          "file": "application_form.pdf",
+          "path": "demo_documents/fatima_missing_documents/application_form.pdf"
+        },
+        {
+          "key": "moei_loan_statement",
+          "file": "moei_loan_statement.pdf",
+          "path": "demo_documents/fatima_missing_documents/moei_loan_statement.pdf"
+        },
+        {
+          "key": "arrears_statement",
+          "file": "arrears_statement.pdf",
+          "path": "demo_documents/fatima_missing_documents/arrears_statement.pdf"
+        },
+        {
+          "key": "payment_history",
+          "file": "payment_history.pdf",
+          "path": "demo_documents/fatima_missing_documents/payment_history.pdf"
+        },
+        {
+          "key": "missing_documents_notice",
+          "file": "missing_documents_notice.pdf",
+          "path": "demo_documents/fatima_missing_documents/missing_documents_notice.pdf"
+        },
+        {
+          "key": "audit_trail_report",
+          "file": "audit_trail_report.pdf",
+          "path": "demo_documents/fatima_missing_documents/audit_trail_report.pdf"
+        }
+      ]
+    },
+    "SZHP-1003": {
+      "name": "Khalid Al Hosani",
+      "name_ar": "خالد الحوسني",
+      "scenario": "unemployment_hardship",
+      "expected_status": "Hardship Plan — Conditional Officer Review",
+      "expected_recommendation": "Move arrears to end of term / maintain current installment (TRANSFER_ARREARS). Do not increase the monthly burden while income is unverified.",
+      "confidence_score": 0.82,
+      "human_review_required": true,
+      "folder": "demo_documents/khalid_unemployment_hardship",
+      "documents": [
+        {
+          "key": "uae_pass_profile",
+          "file": "uae_pass_profile.pdf",
+          "path": "demo_documents/khalid_unemployment_hardship/uae_pass_profile.pdf"
+        },
+        {
+          "key": "application_form",
+          "file": "application_form.pdf",
+          "path": "demo_documents/khalid_unemployment_hardship/application_form.pdf"
+        },
+        {
+          "key": "unemployment_letter",
+          "file": "unemployment_letter.pdf",
+          "path": "demo_documents/khalid_unemployment_hardship/unemployment_letter.pdf"
+        },
+        {
+          "key": "last_income_statement",
+          "file": "last_income_statement.pdf",
+          "path": "demo_documents/khalid_unemployment_hardship/last_income_statement.pdf"
+        },
+        {
+          "key": "family_status_record",
+          "file": "family_status_record.pdf",
+          "path": "demo_documents/khalid_unemployment_hardship/family_status_record.pdf"
+        },
+        {
+          "key": "direct_debit_proof",
+          "file": "direct_debit_proof.pdf",
+          "path": "demo_documents/khalid_unemployment_hardship/direct_debit_proof.pdf"
+        },
+        {
+          "key": "moei_loan_statement",
+          "file": "moei_loan_statement.pdf",
+          "path": "demo_documents/khalid_unemployment_hardship/moei_loan_statement.pdf"
+        },
+        {
+          "key": "arrears_statement",
+          "file": "arrears_statement.pdf",
+          "path": "demo_documents/khalid_unemployment_hardship/arrears_statement.pdf"
+        },
+        {
+          "key": "payment_history",
+          "file": "payment_history.pdf",
+          "path": "demo_documents/khalid_unemployment_hardship/payment_history.pdf"
+        },
+        {
+          "key": "final_recommendation_memo",
+          "file": "final_recommendation_memo.pdf",
+          "path": "demo_documents/khalid_unemployment_hardship/final_recommendation_memo.pdf"
+        },
+        {
+          "key": "audit_trail_report",
+          "file": "audit_trail_report.pdf",
+          "path": "demo_documents/khalid_unemployment_hardship/audit_trail_report.pdf"
+        }
+      ]
+    },
+    "SZHP-1004": {
+      "name": "Mariam Al Zaabi",
+      "name_ar": "مريم الزعابي",
+      "scenario": "medical_hardship",
+      "expected_status": "Temporary Hardship Plan — Officer Approval Recommended",
+      "expected_recommendation": "Temporary hardship plan (TRANSFER_ARREARS). Postpone any increase, defer arrears, hold installment during the 6-month treatment period, then reassess.",
+      "confidence_score": 0.86,
+      "human_review_required": true,
+      "folder": "demo_documents/mariam_medical_hardship",
+      "documents": [
+        {
+          "key": "uae_pass_profile",
+          "file": "uae_pass_profile.pdf",
+          "path": "demo_documents/mariam_medical_hardship/uae_pass_profile.pdf"
+        },
+        {
+          "key": "application_form",
+          "file": "application_form.pdf",
+          "path": "demo_documents/mariam_medical_hardship/application_form.pdf"
+        },
+        {
+          "key": "salary_certificate",
+          "file": "salary_certificate.pdf",
+          "path": "demo_documents/mariam_medical_hardship/salary_certificate.pdf"
+        },
+        {
+          "key": "income_statement",
+          "file": "income_statement.pdf",
+          "path": "demo_documents/mariam_medical_hardship/income_statement.pdf"
+        },
+        {
+          "key": "medical_treatment_letter",
+          "file": "medical_treatment_letter.pdf",
+          "path": "demo_documents/mariam_medical_hardship/medical_treatment_letter.pdf"
+        },
+        {
+          "key": "family_status_record",
+          "file": "family_status_record.pdf",
+          "path": "demo_documents/mariam_medical_hardship/family_status_record.pdf"
+        },
+        {
+          "key": "direct_debit_proof",
+          "file": "direct_debit_proof.pdf",
+          "path": "demo_documents/mariam_medical_hardship/direct_debit_proof.pdf"
+        },
+        {
+          "key": "moei_loan_statement",
+          "file": "moei_loan_statement.pdf",
+          "path": "demo_documents/mariam_medical_hardship/moei_loan_statement.pdf"
+        },
+        {
+          "key": "arrears_statement",
+          "file": "arrears_statement.pdf",
+          "path": "demo_documents/mariam_medical_hardship/arrears_statement.pdf"
+        },
+        {
+          "key": "payment_history",
+          "file": "payment_history.pdf",
+          "path": "demo_documents/mariam_medical_hardship/payment_history.pdf"
+        },
+        {
+          "key": "final_recommendation_memo",
+          "file": "final_recommendation_memo.pdf",
+          "path": "demo_documents/mariam_medical_hardship/final_recommendation_memo.pdf"
+        },
+        {
+          "key": "audit_trail_report",
+          "file": "audit_trail_report.pdf",
+          "path": "demo_documents/mariam_medical_hardship/audit_trail_report.pdf"
+        }
+      ]
+    },
+    "SZHP-1005": {
+      "name": "Saeed Al Nuaimi",
+      "name_ar": "سعيد النعيمي",
+      "scenario": "high_obligations",
+      "expected_status": "Maintain Installment — Refer to Human Officer",
+      "expected_recommendation": "Maintain installment or small increase only if policy allows (MAINTAIN_INSTALLMENT); refer to human officer. Obligations exceed 60% of income, so the system must not aggressively raise the installment.",
+      "confidence_score": 0.73,
+      "human_review_required": true,
+      "folder": "demo_documents/saeed_high_obligations",
+      "documents": [
+        {
+          "key": "uae_pass_profile",
+          "file": "uae_pass_profile.pdf",
+          "path": "demo_documents/saeed_high_obligations/uae_pass_profile.pdf"
+        },
+        {
+          "key": "application_form",
+          "file": "application_form.pdf",
+          "path": "demo_documents/saeed_high_obligations/application_form.pdf"
+        },
+        {
+          "key": "salary_certificate",
+          "file": "salary_certificate.pdf",
+          "path": "demo_documents/saeed_high_obligations/salary_certificate.pdf"
+        },
+        {
+          "key": "income_statement",
+          "file": "income_statement.pdf",
+          "path": "demo_documents/saeed_high_obligations/income_statement.pdf"
+        },
+        {
+          "key": "obligations_letter",
+          "file": "obligations_letter.pdf",
+          "path": "demo_documents/saeed_high_obligations/obligations_letter.pdf"
+        },
+        {
+          "key": "direct_debit_proof",
+          "file": "direct_debit_proof.pdf",
+          "path": "demo_documents/saeed_high_obligations/direct_debit_proof.pdf"
+        },
+        {
+          "key": "moei_loan_statement",
+          "file": "moei_loan_statement.pdf",
+          "path": "demo_documents/saeed_high_obligations/moei_loan_statement.pdf"
+        },
+        {
+          "key": "arrears_statement",
+          "file": "arrears_statement.pdf",
+          "path": "demo_documents/saeed_high_obligations/arrears_statement.pdf"
+        },
+        {
+          "key": "payment_history",
+          "file": "payment_history.pdf",
+          "path": "demo_documents/saeed_high_obligations/payment_history.pdf"
+        },
+        {
+          "key": "final_recommendation_memo",
+          "file": "final_recommendation_memo.pdf",
+          "path": "demo_documents/saeed_high_obligations/final_recommendation_memo.pdf"
+        },
+        {
+          "key": "audit_trail_report",
+          "file": "audit_trail_report.pdf",
+          "path": "demo_documents/saeed_high_obligations/audit_trail_report.pdf"
+        }
+      ]
+    },
+    "SZHP-1006": {
+      "name": "Noura Al Shamsi",
+      "name_ar": "نورة الشامسي",
+      "scenario": "active_request_conflict",
+      "expected_status": "Blocked / Rejected",
+      "expected_recommendation": "Reject / block (REJECT_ACTIVE_REQUEST). An existing active rescheduling request (APP-2026-4412) is already under review.",
+      "confidence_score": 0.98,
+      "human_review_required": false,
+      "folder": "demo_documents/noura_active_request_conflict",
+      "documents": [
+        {
+          "key": "uae_pass_profile",
+          "file": "uae_pass_profile.pdf",
+          "path": "demo_documents/noura_active_request_conflict/uae_pass_profile.pdf"
+        },
+        {
+          "key": "application_form",
+          "file": "application_form.pdf",
+          "path": "demo_documents/noura_active_request_conflict/application_form.pdf"
+        },
+        {
+          "key": "active_request_record",
+          "file": "active_request_record.pdf",
+          "path": "demo_documents/noura_active_request_conflict/active_request_record.pdf"
+        },
+        {
+          "key": "moei_loan_statement",
+          "file": "moei_loan_statement.pdf",
+          "path": "demo_documents/noura_active_request_conflict/moei_loan_statement.pdf"
+        },
+        {
+          "key": "arrears_statement",
+          "file": "arrears_statement.pdf",
+          "path": "demo_documents/noura_active_request_conflict/arrears_statement.pdf"
+        },
+        {
+          "key": "rejection_or_block_notice",
+          "file": "rejection_or_block_notice.pdf",
+          "path": "demo_documents/noura_active_request_conflict/rejection_or_block_notice.pdf"
+        },
+        {
+          "key": "audit_trail_report",
+          "file": "audit_trail_report.pdf",
+          "path": "demo_documents/noura_active_request_conflict/audit_trail_report.pdf"
+        }
+      ]
+    },
+    "SZHP-1007": {
+      "name": "Omar Al Balushi",
+      "name_ar": "عمر البلوشي",
+      "scenario": "suspicious_document",
+      "expected_status": "Human Review Required",
+      "expected_recommendation": "Refer to human officer (REFER_TO_OFFICER). Salary certificate and income statement mismatch, stale issue date, missing reference/QR, employer-name mismatch, and a one-digit Emirates ID mismatch.",
+      "confidence_score": 0.46,
+      "human_review_required": true,
+      "folder": "demo_documents/omar_suspicious_document",
+      "documents": [
+        {
+          "key": "uae_pass_profile",
+          "file": "uae_pass_profile.pdf",
+          "path": "demo_documents/omar_suspicious_document/uae_pass_profile.pdf"
+        },
+        {
+          "key": "application_form",
+          "file": "application_form.pdf",
+          "path": "demo_documents/omar_suspicious_document/application_form.pdf"
+        },
+        {
+          "key": "suspicious_salary_certificate",
+          "file": "suspicious_salary_certificate.pdf",
+          "path": "demo_documents/omar_suspicious_document/suspicious_salary_certificate.pdf"
+        },
+        {
+          "key": "income_statement_mismatch",
+          "file": "income_statement_mismatch.pdf",
+          "path": "demo_documents/omar_suspicious_document/income_statement_mismatch.pdf"
+        },
+        {
+          "key": "obligations_letter",
+          "file": "obligations_letter.pdf",
+          "path": "demo_documents/omar_suspicious_document/obligations_letter.pdf"
+        },
+        {
+          "key": "direct_debit_proof",
+          "file": "direct_debit_proof.pdf",
+          "path": "demo_documents/omar_suspicious_document/direct_debit_proof.pdf"
+        },
+        {
+          "key": "moei_loan_statement",
+          "file": "moei_loan_statement.pdf",
+          "path": "demo_documents/omar_suspicious_document/moei_loan_statement.pdf"
+        },
+        {
+          "key": "arrears_statement",
+          "file": "arrears_statement.pdf",
+          "path": "demo_documents/omar_suspicious_document/arrears_statement.pdf"
+        },
+        {
+          "key": "payment_history",
+          "file": "payment_history.pdf",
+          "path": "demo_documents/omar_suspicious_document/payment_history.pdf"
+        },
+        {
+          "key": "human_review_notice",
+          "file": "human_review_notice.pdf",
+          "path": "demo_documents/omar_suspicious_document/human_review_notice.pdf"
+        },
+        {
+          "key": "audit_trail_report",
+          "file": "audit_trail_report.pdf",
+          "path": "demo_documents/omar_suspicious_document/audit_trail_report.pdf"
+        }
+      ]
+    }
+  }
+}
