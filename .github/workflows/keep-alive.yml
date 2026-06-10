@@ -1,0 +1,43 @@
+name: Keep Render backend warm
+
+# Render's free tier spins the backend down after ~15 min of inactivity, which
+# causes a 30–60s cold start on the first request from the Vercel frontend.
+# This workflow pings the health endpoint every 10 minutes so the instance never
+# goes to sleep during the day. GitHub may throttle/skip runs on free repos under
+# heavy load, but in practice it keeps the demo backend responsive.
+
+on:
+  schedule:
+    # Every 10 minutes. (GitHub cron is UTC; interval-based so timezone is moot.)
+    - cron: "*/10 * * * *"
+  # Allow manually warming it from the Actions tab right before a demo.
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping backend health endpoint
+        env:
+          # Set this once: repo Settings → Secrets and variables → Actions →
+          # Variables → New variable, name BACKEND_URL, value your Render URL
+          # (e.g. https://mizan-backend-76d4.onrender.com). No trailing slash.
+          # Falls back to the known backend URL if the variable is unset.
+          BACKEND_URL: ${{ vars.BACKEND_URL || 'https://mizan-backend-76d4.onrender.com' }}
+        run: |
+          echo "Pinging $BACKEND_URL/api/health"
+          # Retry a few times: the very first hit after sleep may itself be the
+          # cold start, so we give it up to ~90s to wake before reporting status.
+          for i in 1 2 3 4 5; do
+            code=$(curl -s -o /dev/null -w "%{http_code}" --max-time 90 "$BACKEND_URL/api/health" || echo "000")
+            echo "Attempt $i -> HTTP $code"
+            if [ "$code" = "200" ]; then
+              echo "Backend is awake."
+              exit 0
+            fi
+            sleep 10
+          done
+          echo "Backend did not return 200 after retries (it may still be waking)."
+          # Don't fail the workflow — a transient miss shouldn't spam failure
+          # emails; the next scheduled run will try again.
+          exit 0

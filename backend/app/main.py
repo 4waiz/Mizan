@@ -144,12 +144,16 @@ def demo_scenarios_endpoint() -> dict:
 # ── beneficiary flow ─────────────────────────────────────────────────────────
 @app.post("/api/cases/intake", response_model=IntakeResponse)
 def intake(req: IntakeRequest) -> IntakeResponse:
+    # Demo convenience: Ahmed Al Mansoori (the clean-approval walkthrough) arrives
+    # with his documents already on file, so the judges can go straight to
+    # "Start assessment". Every other beneficiary still uploads via the portal.
+    preseeded = req.fixture_id == "clean_approval"
     try:
         case = case_factory.create_case(
             fixture_id=req.fixture_id,
             beneficiary_id=req.beneficiary_id,
             trigger_type=req.trigger_type,
-            seed_documents=False,  # citizen uploads documents via the portal
+            seed_documents=preseeded,  # citizen uploads documents via the portal
         )
     except (ValueError, PermissionError) as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
