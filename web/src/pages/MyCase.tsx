@@ -97,6 +97,24 @@ export default function MyCase() {
 
           <MemoBlock case={caseData} />
 
+          {(caseData.document_inventory?.documents ?? []).length > 0 && (
+            <>
+              <div className="section-title">{t("evidence")}</div>
+              {(caseData.document_inventory?.documents ?? []).map((d: any) => (
+                <Expander
+                  key={d.document_id}
+                  summary={`📎 ${d.doc_type} · ${d.file_name ?? ""}`}
+                >
+                  {d.raw_text && <pre className="raw">{d.raw_text}</pre>}
+                  <DocumentPreview
+                    beneficiaryId={caseData.beneficiary?.beneficiary_id}
+                    docType={d.doc_type}
+                  />
+                </Expander>
+              ))}
+            </>
+          )}
+
           <Expander summary={`🧾 ${t("audit")}`}>
             {audit && <AuditTimeline events={audit.events} />}
           </Expander>
