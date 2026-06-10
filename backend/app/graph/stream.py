@@ -236,12 +236,35 @@ def run_stream(case: CaseState) -> Iterator[dict]:
       {"type": "step",    "key, label, active, index, total"}        # before a node runs
       {"type": "done",    "key, index, total, status, message?"}     # after a node runs
       {"type": "skipped", "key, label, reason"}                      # node not run (early exit)
+      {"type": "telemetry","provider, model, live, total_calls, cumulative_usage, new_entries}
       {"type": "failed",  "reason, case}                             # hard conflict reject
       {"type": "complete","case}                                     # final state
     """
     pipeline = nodes.PIPELINE
     total = len(pipeline)
     speed = _step_speed()
+
+    # Track how many telemetry log entries we've already streamed so each
+    # "telemetry" event carries only the newly-appended LLM computation(s).
+    streamed_calls = 0
+
+    def telemetry_event(case: CaseState) -> dict | None:
+        """Build a telemetry event for any log entries not yet streamed."""
+        nonlocal streamed_calls
+        log = case.telemetry.computation_log
+        if len(log) <= streamed_calls:
+            return None
+        new_entries = [e.model_dump(mode="json") for e in log[streamed_calls:]]
+        streamed_calls = len(log)
+        return {
+            "type": "telemetry",
+            "provider": case.telemetry.provider,
+            "model": case.telemetry.model,
+            "live": case.telemetry.live,
+            "total_calls": case.telemetry.total_calls,
+            "cumulative_usage": case.telemetry.cumulative_usage.model_dump(mode="json"),
+            "new_entries": new_entries,
+        }
 
     # Start the processing clock when the assessment actually begins, so the
     # reported processing time reflects this run (not the gap since intake).
@@ -274,6 +297,12 @@ def run_stream(case: CaseState) -> Iterator[dict]:
 
         case = node_module.run(case)
 
+        # Stream any LLM telemetry this node produced (document_audit and
+        # rationale_generator are the calls that actually burn tokens).
+        tev = telemetry_event(case)
+        if tev is not None:
+            yield tev
+
         # ── Early exit: document audit found missing required documents. ──
         # The decision can't be made on an incomplete file, so stop here and
         # ask for the rest rather than running affordability/risk/solver.
@@ -304,6 +333,9 @@ def run_stream(case: CaseState) -> Iterator[dict]:
 
                 case = _reject_for_missing_documents(case, reason)
                 case = nodes.finalize_case.run(case)
+                final_tev = telemetry_event(case)
+                if final_tev is not None:
+                    yield final_tev
                 yield {"type": "failed", "reason": reason, "case": case.model_dump(mode="json")}
                 yield {"type": "complete", "case": case.model_dump(mode="json")}
                 return
@@ -338,6 +370,9 @@ def run_stream(case: CaseState) -> Iterator[dict]:
                 case = _reject_for_conflict(case, reason)
                 # Seal the SLA clock without a rationale memo (rejection is final).
                 case = nodes.finalize_case.run(case)
+                final_tev = telemetry_event(case)
+                if final_tev is not None:
+                    yield final_tev
                 yield {"type": "failed", "reason": reason, "case": case.model_dump(mode="json")}
                 yield {"type": "complete", "case": case.model_dump(mode="json")}
                 return
@@ -349,5 +384,10 @@ def run_stream(case: CaseState) -> Iterator[dict]:
             "total": total,
             "status": "ok",
         }
+
+    # Flush any trailing telemetry (e.g. the rationale memo call) before sealing.
+    final_tev = telemetry_event(case)
+    if final_tev is not None:
+        yield final_tev
 
     yield {"type": "complete", "case": case.model_dump(mode="json")}

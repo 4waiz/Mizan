@@ -22,6 +22,7 @@ from ..schemas import (
     RationaleMemo,
     Recommendation,
 )
+from . import telemetry
 
 _MONEY_RE = re.compile(r"(?:AED|aed)?\s*([\d,]{3,})")
 
@@ -161,23 +162,32 @@ def _mock_memo(state: CaseState, rec: Recommendation) -> RationaleMemo:
 
 
 # ── Public API (real model path falls back to mock on any error) ─────────────
+# Each public call records LLM telemetry onto the CaseState as a side effect:
+# real calls log the live token usage extracted from the provider response;
+# mock fallbacks log a zero-token entry so the proof-of-work feed still shows
+# the node ran. Telemetry capture NEVER changes the returned value.
 def extract_document_fields(state: CaseState) -> ExtractedDocumentFields:
     settings = get_settings()
     if not settings.use_real_llm:
+        telemetry.record_mock(state, node="document_audit", task="document_extraction")
         return _mock_extract(state)
     try:
         return _real_extract(state)
     except Exception:
+        # Any provider/parse error → deterministic fallback, logged as mock.
+        telemetry.record_mock(state, node="document_audit", task="document_extraction")
         return _mock_extract(state)
 
 
 def generate_rationale_memo(state: CaseState, rec: Recommendation) -> RationaleMemo:
     settings = get_settings()
     if not settings.use_real_llm:
+        telemetry.record_mock(state, node="rationale_generator", task="rationale_memo")
         return _mock_memo(state, rec)
     try:
         return _real_memo(state, rec)
     except Exception:
+        telemetry.record_mock(state, node="rationale_generator", task="rationale_memo")
         return _mock_memo(state, rec)
 
 
@@ -191,16 +201,55 @@ def summarize_exception(state: CaseState) -> str:
     return "Low confidence or ambiguous case — manual review required."
 
 
-# ── Real (Anthropic via LangChain) — structured output only ─────────────────
+# ── Real model (Groq or Anthropic via LangChain) — structured output only ────
 def _get_chat_model():
+    """Instantiate the configured provider's chat model.
+
+    Groq is the live token-burning provider; Anthropic is also supported. The
+    caller only reaches here when `settings.use_real_llm` is True.
+    """
+    settings = get_settings()
+    if settings.llm_provider == "groq":
+        from langchain_groq import ChatGroq
+
+        return ChatGroq(
+            model=settings.groq_model,
+            api_key=settings.groq_api_key,
+            temperature=0,
+        )
     from langchain_anthropic import ChatAnthropic
 
-    settings = get_settings()
-    return ChatAnthropic(model=settings.llm_model, api_key=settings.anthropic_api_key, temperature=0)
+    return ChatAnthropic(
+        model=settings.llm_model, api_key=settings.anthropic_api_key, temperature=0
+    )
+
+
+def _invoke_structured(prompt: str, schema: type, *, state: CaseState, node: str, task: str):
+    """Invoke the model for a structured result while capturing live token usage.
+
+    `include_raw=True` makes LangChain return both the parsed Pydantic object and
+    the underlying AIMessage, so we can read the exact prompt/completion/total
+    tokens and the served model name off the SAME response that produced the
+    structured output — for Groq this is the OpenAI-style `token_usage` block.
+    Returns the parsed object; raises on parse failure so the caller falls back.
+    """
+    model = _get_chat_model().with_structured_output(schema, include_raw=True)
+    with telemetry.timed() as elapsed:
+        result = model.invoke(prompt)
+    # result == {"raw": AIMessage, "parsed": <schema instance | None>, "parsing_error": ...}
+    raw = result.get("raw") if isinstance(result, dict) else None
+    parsed = result.get("parsed") if isinstance(result, dict) else result
+    # Record telemetry from the raw message regardless of parse outcome — the
+    # tokens were genuinely consumed even if structured parsing later fails.
+    telemetry.record_call(
+        state, node=node, task=task, message=raw, duration_ms=elapsed(), live=True
+    )
+    if parsed is None:
+        raise ValueError("structured output parsing returned no object")
+    return parsed
 
 
 def _real_extract(state: CaseState) -> ExtractedDocumentFields:
-    model = _get_chat_model().with_structured_output(ExtractedDocumentFields)
     docs = "\n\n".join(
         f"[{d.doc_type.value}] issued {d.issued_on}:\n{d.raw_text or '(no text)'}"
         for d in state.document_inventory.documents
@@ -210,11 +259,16 @@ def _real_extract(state: CaseState) -> ExtractedDocumentFields:
         "Only return values you can support from the text; set extraction_confidence "
         "honestly in [0,1]. Documents:\n\n" + docs
     )
-    return model.invoke(prompt)  # type: ignore[return-value]
+    return _invoke_structured(
+        prompt,
+        ExtractedDocumentFields,
+        state=state,
+        node="document_audit",
+        task="document_extraction",
+    )
 
 
 def _real_memo(state: CaseState, rec: Recommendation) -> RationaleMemo:
-    model = _get_chat_model().with_structured_output(RationaleMemo)
     prompt = (
         "Write a concise bilingual (English + Arabic) recommendation memo for a "
         "Sheikh Zayed Housing Programme arrears case. Do NOT change the decision; "
@@ -223,4 +277,10 @@ def _real_memo(state: CaseState, rec: Recommendation) -> RationaleMemo:
         + "\nCase id: "
         + state.case_id
     )
-    return model.invoke(prompt)  # type: ignore[return-value]
+    return _invoke_structured(
+        prompt,
+        RationaleMemo,
+        state=state,
+        node="rationale_generator",
+        task="rationale_memo",
+    )

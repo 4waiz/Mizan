@@ -138,3 +138,56 @@ class SLAClock(BaseModel):
     decided_at: str | None = None
     processing_ms: float | None = None
     deadline_at: str | None = None         # legacy deadline, for the "instant vs 5 days" story
+
+
+# ── LLM telemetry (proof-of-work) ────────────────────────────────────────────
+# Captured live from every real inference call. Purely observational — it never
+# influences the deterministic decision. Always present (zeroed) so the frontend
+# can render unconditionally even when the run used the MockLLM (no tokens).
+class TokenUsage(BaseModel):
+    """Token counts for a single inference call (or a cumulative total)."""
+
+    prompt_tokens: int = Field(default=0, ge=0)
+    completion_tokens: int = Field(default=0, ge=0)
+    total_tokens: int = Field(default=0, ge=0)
+
+    def add(self, other: "TokenUsage") -> None:
+        self.prompt_tokens += other.prompt_tokens
+        self.completion_tokens += other.completion_tokens
+        self.total_tokens += other.total_tokens
+
+
+class ComputationLogEntry(BaseModel):
+    """One live LLM computation, appended in execution order. Together these
+    prove the multi-agent pipeline did real per-node inference work."""
+
+    seq: int = Field(..., ge=0)                  # 0-based order of the call
+    node: str                                    # LangGraph node that made the call
+    task: str                                    # what the call did (e.g. "document_extraction")
+    provider: str                                # groq | anthropic | mock
+    model: str                                   # exact model id used
+    usage: TokenUsage = Field(default_factory=TokenUsage)
+    finish_reason: str | None = None
+    live: bool = False                           # True = real API call, False = mock fallback
+    duration_ms: float | None = None
+    timestamp: str
+
+
+class Telemetry(BaseModel):
+    """Cumulative LLM telemetry across the whole LangGraph lifecycle."""
+
+    provider: str = "mock"                       # active provider for this run
+    model: str = "mock-deterministic"            # active model for this run
+    live: bool = False                           # did this run touch a real API?
+    total_calls: int = 0                         # number of inference calls made
+    cumulative_usage: TokenUsage = Field(default_factory=TokenUsage)
+    computation_log: list[ComputationLogEntry] = Field(default_factory=list)
+
+    def record(self, entry: ComputationLogEntry) -> None:
+        """Append one call's usage and roll it into the cumulative totals."""
+        self.provider = entry.provider
+        self.model = entry.model
+        self.live = self.live or entry.live
+        self.total_calls += 1
+        self.cumulative_usage.add(entry.usage)
+        self.computation_log.append(entry)

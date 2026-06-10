@@ -9,6 +9,7 @@ from .analysis import (
     AffordabilityFeatures,
     AuditEvent,
     CandidatePlan,
+    ComputationLogEntry,
     ConfidenceScore,
     Explanation,
     FraudFlag,
@@ -18,6 +19,8 @@ from .analysis import (
     Recommendation,
     RiskScore,
     SLAClock,
+    Telemetry,
+    TokenUsage,
 )
 from .beneficiary import (
     BeneficiaryProfile,
@@ -72,6 +75,9 @@ __all__ = [
     "Recommendation",
     "AuditEvent",
     "SLAClock",
+    "TokenUsage",
+    "ComputationLogEntry",
+    "Telemetry",
     # enums
     "TriggerType",
     "EmploymentStatus",

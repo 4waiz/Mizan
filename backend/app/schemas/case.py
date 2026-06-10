@@ -15,6 +15,7 @@ from .analysis import (
     Recommendation,
     RiskScore,
     SLAClock,
+    Telemetry,
 )
 from .beneficiary import BeneficiaryProfile, FamilySnapshot, ObligationSummary
 from .documents import DocumentInventory, ExtractedDocumentFields
@@ -78,6 +79,9 @@ class CaseState(BaseModel):
     # --- governance ---
     audit_events: list[AuditEvent] = Field(default_factory=list)
     sla: SLAClock | None = None
+
+    # --- LLM telemetry (proof-of-work; observational, never affects decisions) ---
+    telemetry: Telemetry = Field(default_factory=Telemetry)
 
     # convenience -------------------------------------------------------------
     def add_audit(self, event: AuditEvent) -> None:
