@@ -23,10 +23,13 @@ from .schemas import (
     CandidatePlan,
     CaseState,
     CaseStatus,
+    Document,
+    DocumentType,
     OfficerDecision,
     OutcomeType,
 )
 from .schemas.api import (
+    DocumentTypeUploadRequest,
     DocumentUploadRequest,
     IntakeRequest,
     IntakeResponse,
@@ -34,10 +37,12 @@ from .schemas.api import (
     OverrideRequest,
     ProactiveAlert,
     QueueItem,
+    RequiredDocumentsResponse,
     RunResponse,
 )
+from .policies import rules
 from .services import audit, case_factory
-from .services.mocks import registry
+from .services.mocks import mock_document_store, registry
 from .services.replay import replay_summary
 
 
@@ -122,6 +127,7 @@ def intake(req: IntakeRequest) -> IntakeResponse:
             fixture_id=req.fixture_id,
             beneficiary_id=req.beneficiary_id,
             trigger_type=req.trigger_type,
+            seed_documents=False,  # citizen uploads documents via the portal
         )
     except (ValueError, PermissionError) as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
@@ -145,6 +151,65 @@ def add_documents(case_id: str, req: DocumentUploadRequest) -> CaseState:
     )
     _repo().save(case)
     return case
+
+
+@app.post("/api/cases/{case_id}/documents/by-type", response_model=CaseState)
+def upload_documents_by_type(case_id: str, req: DocumentTypeUploadRequest) -> CaseState:
+    """Citizen portal upload. For each requested document type, attach the
+    matching record on file from the source fixture (with its readable content)
+    so the assessment has data to read. Unknown types are attached as present
+    but empty (they will simply not contribute extracted fields)."""
+    case = _load(case_id)
+    record = registry.get_by_fixture_id(case.source_fixture_id) if case.source_fixture_id else None
+    on_file = {d.doc_type.value: d for d in mock_document_store.get_documents(record or {})}
+
+    existing = {d.document_id: d for d in case.document_inventory.documents}
+    attached: list[str] = []
+    file_names = req.file_names or []
+    for i, dtype in enumerate(req.doc_types):
+        src = on_file.get(dtype)
+        if src is not None:
+            doc = src.model_copy(deep=True)
+            if i < len(file_names) and file_names[i]:
+                doc.file_name = file_names[i]
+            doc.uploaded_on = audit.now_iso()[:10]
+        else:
+            # type not on this beneficiary's record — still register the upload
+            valid = dtype in {t.value for t in DocumentType}
+            doc = Document(
+                document_id=f"UPL-{dtype}-{len(existing) + i}",
+                doc_type=dtype if valid else DocumentType.UNKNOWN.value,
+                status="present",
+                file_name=(file_names[i] if i < len(file_names) else f"{dtype}.pdf"),
+                uploaded_on=audit.now_iso()[:10],
+            )
+        existing[doc.document_id] = doc
+        attached.append(doc.doc_type.value)
+
+    case.document_inventory.documents = list(existing.values())
+    audit.record(
+        case,
+        AuditEventType.DOCUMENT_RECEIVED,
+        f"Beneficiary uploaded {len(attached)} document(s): {', '.join(attached)}.",
+        node="api",
+        evidence_ids=[d for d in existing],
+    )
+    _repo().save(case)
+    return case
+
+
+@app.get("/api/cases/{case_id}/documents/required", response_model=RequiredDocumentsResponse)
+def required_documents(case_id: str) -> RequiredDocumentsResponse:
+    """What documents this case requires, plus what's present and still missing."""
+    case = _load(case_id)
+    required = rules.required_documents_for(case)
+    present = case.document_inventory.present_types
+    missing = [t for t in required if t not in present]
+    return RequiredDocumentsResponse(
+        required=[t.value for t in required],
+        present=[t.value for t in present],
+        missing=[t.value for t in missing],
+    )
 
 
 @app.post("/api/cases/{case_id}/run", response_model=RunResponse)

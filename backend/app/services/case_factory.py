@@ -12,6 +12,7 @@ from ..schemas import (
     AuditEventType,
     CaseState,
     CaseStatus,
+    DocumentInventory,
     SLAClock,
     TriggerType,
 )
@@ -29,6 +30,7 @@ def create_case(
     beneficiary_id: str | None = None,
     trigger_type: TriggerType | None = None,
     case_id: str | None = None,
+    seed_documents: bool = True,
 ) -> CaseState:
     record = registry.resolve(fixture_id, beneficiary_id)
     if record is None:
@@ -43,12 +45,21 @@ def create_case(
     profile = mock_uae_pass.get_profile(record)
     trigger = trigger_type or TriggerType(record.get("trigger_type", "application"))
 
+    # Live citizen cases start with NO documents on file — the beneficiary must
+    # upload them through the portal. The seeder/tests keep documents seeded.
+    inventory = (
+        mock_document_store.build_inventory(record)
+        if seed_documents
+        else DocumentInventory()
+    )
+
     case = CaseState(
         case_id=case_id or new_case_id(),
         trigger_type=trigger,
         status=CaseStatus.INTAKE,
         beneficiary=profile,
-        document_inventory=mock_document_store.build_inventory(record),
+        source_fixture_id=record.get("fixture_id"),
+        document_inventory=inventory,
         sla=SLAClock(legacy_sla_working_days=5, created_at=audit.now_iso()),
     )
     audit.record(

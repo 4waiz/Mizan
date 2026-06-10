@@ -42,6 +42,10 @@ class CaseState(BaseModel):
     case_id: str
     trigger_type: TriggerType = TriggerType.APPLICATION
     status: CaseStatus = CaseStatus.INTAKE
+    # Source fixture this case was built from; lets the citizen portal "upload"
+    # a document type and attach the matching record on file. None for cases
+    # created outside the fixture flow.
+    source_fixture_id: str | None = None
 
     # --- retrieved raw facts (intake_and_retrieve) ---
     beneficiary: BeneficiaryProfile | None = None

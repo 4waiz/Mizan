@@ -29,6 +29,21 @@ class DocumentUploadRequest(BaseModel):
     documents: list[Document]
 
 
+class DocumentTypeUploadRequest(BaseModel):
+    """Citizen-portal upload: the beneficiary 'uploads' one or more document
+    types. The matching record on file (with its readable content) is attached,
+    so the gesture is real while the assessment still has data to read."""
+
+    doc_types: list[str]
+    file_names: list[str] | None = None  # optional, parallel to doc_types
+
+
+class RequiredDocumentsResponse(BaseModel):
+    required: list[str]
+    present: list[str]
+    missing: list[str]
+
+
 class RunResponse(BaseModel):
     case_id: str
     status: CaseStatus
