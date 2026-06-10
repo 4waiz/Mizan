@@ -7,13 +7,10 @@ import ErrorBoundary from "./components/ErrorBoundary";
 import "./styles.css";
 
 // Demo: start signed OUT on every fresh page load so the login flow is always
-// explicit (portal chooser → citizen/officer sign-in). A full reload runs this
-// once; in-app navigation keeps the session set during this load. We clear only
-// if it wasn't set this same load (guarded by a per-load sessionStorage flag).
-if (!sessionStorage.getItem("mz_loaded")) {
-  localStorage.removeItem("mz_session");
-  sessionStorage.setItem("mz_loaded", "1");
-}
+// explicit (portal chooser → citizen/officer sign-in). A full page reload re-runs
+// this module and wipes the session; in-app SPA navigation does NOT re-run it, so
+// the session set right after login survives while you move between pages.
+localStorage.removeItem("mz_session");
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
