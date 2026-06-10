@@ -23,6 +23,49 @@ const post = <T>(path: string, body?: unknown) =>
     body: body === undefined ? undefined : JSON.stringify(body),
   }).then((r) => handle<T>(r));
 
+/**
+ * POST + consume a Server-Sent Events stream, invoking `onEvent` for each
+ * `data:` line (parsed JSON). Resolves once the stream closes. Used for the live
+ * "auditing documents → checking fraud → …" run progress.
+ */
+async function streamSSE(path: string, onEvent: (e: any) => void): Promise<void> {
+  const resp = await fetch(`${BASE}${path}`, {
+    method: "POST",
+    headers: { Accept: "text/event-stream" },
+  });
+  if (!resp.ok || !resp.body) {
+    await handle(resp); // throws with a useful message
+    return;
+  }
+  const reader = resp.body.getReader();
+  const decoder = new TextDecoder();
+  let buffer = "";
+  for (;;) {
+    const { value, done } = await reader.read();
+    if (done) break;
+    buffer += decoder.decode(value, { stream: true });
+    // SSE events are separated by a blank line.
+    let sep: number;
+    while ((sep = buffer.indexOf("\n\n")) !== -1) {
+      const chunk = buffer.slice(0, sep);
+      buffer = buffer.slice(sep + 2);
+      for (const line of chunk.split("\n")) {
+        const trimmed = line.trimStart();
+        if (trimmed.startsWith("data:")) {
+          const payload = trimmed.slice(5).trim();
+          if (payload) {
+            try {
+              onEvent(JSON.parse(payload));
+            } catch {
+              /* ignore malformed frame */
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
 export const api = {
   health: () => get<any>("/api/health"),
   fixtures: () => get<any[]>("/api/fixtures"),
@@ -34,6 +77,8 @@ export const api = {
   getCase: (id: string) => get<any>(`/api/cases/${id}`),
   listCases: () => get<any[]>("/api/cases"),
   runCase: (id: string) => post<any>(`/api/cases/${id}/run`),
+  runCaseStream: (id: string, onEvent: (e: any) => void) =>
+    streamSSE(`/api/cases/${id}/run/stream`, onEvent),
   audit: (id: string) => get<any>(`/api/cases/${id}/audit`),
   officerQueue: () => get<any[]>("/api/officer/queue"),
   approve: (id: string, officer_id: string, notes: string | null) =>

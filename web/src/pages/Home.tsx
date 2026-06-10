@@ -1,41 +1,14 @@
-import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useI18n } from "../i18n";
-import { api } from "../api";
-import { getSession, setSession } from "../session";
+import { getSession, isCitizen, isOfficer } from "../session";
 import { Band, Alert } from "../components/ui";
 
 export default function Home() {
   const { t } = useI18n();
   const nav = useNavigate();
-  const [fixtures, setFixtures] = useState<any[]>([]);
-  const [choice, setChoice] = useState("");
-  const [err, setErr] = useState<string | null>(null);
-  const [signed, setSigned] = useState<string | null>(getSession().name ?? null);
-
-  useEffect(() => {
-    api
-      .fixtures()
-      .then((f) => {
-        const apps = f.filter((x) => x.trigger_type === "application");
-        setFixtures(f);
-        setChoice(apps[0]?.fixture_id ?? f[0]?.fixture_id ?? "");
-      })
-      .catch((e) => setErr(String(e)));
-  }, []);
-
-  const applicants = fixtures.filter((f) => f.trigger_type === "application");
-  const selected = fixtures.find((f) => f.fixture_id === choice);
-
-  const signIn = () => {
-    if (!selected) return;
-    setSession({
-      fixture: selected.fixture_id,
-      beneficiaryId: selected.beneficiary_id,
-      name: selected.name_en,
-    });
-    setSigned(selected.name_en);
-  };
+  const s = getSession();
+  const citizen = isCitizen(s);
+  const officer = isOfficer(s);
 
   return (
     <>
@@ -47,69 +20,53 @@ export default function Home() {
         cases to a human.
       </p>
 
-      <div className="row" style={{ gap: 12, marginTop: 24 }}>
-        <button className="btn primary" onClick={() => nav("/new-request")}>
-          Start a request
-        </button>
-        <button className="btn ghost" onClick={() => nav("/replay")}>
-          View Replay Dashboard
-        </button>
-      </div>
-
-      {err && (
-        <Alert kind="err">
-          Cannot reach the backend. Start it with{" "}
-          <code>uvicorn app.main:app --port 8000</code> from <code>backend/</code>.
-          <br />
-          {err}
-        </Alert>
-      )}
-
-      {/* Sign-in slip */}
-      <div className="card tab" style={{ marginTop: 28, maxWidth: 820 }}>
-        <div className="spread" style={{ alignItems: "center", marginBottom: 18 }}>
-          <div>
-            <div className="eyebrow">Authentication</div>
-            <h3 style={{ fontSize: 24, marginTop: 2 }}>{t("login")}</h3>
-          </div>
-          <img src="/uaepass.png" alt="UAE PASS" style={{ height: 40 }} />
-        </div>
-
-        <div
-          className="grid"
-          style={{ gridTemplateColumns: "1fr auto", alignItems: "end", gap: 16 }}
-        >
-          <div>
-            <label className="field">Citizen identity · synthetic UAE PASS</label>
-            <select value={choice} onChange={(e) => setChoice(e.target.value)}>
-              {applicants.map((f) => (
-                <option key={f.fixture_id} value={f.fixture_id}>
-                  {f.name_en} · {f.beneficiary_id} ({f.fixture_id})
-                </option>
-              ))}
-            </select>
-            {selected?.note && <div className="caption">{selected.note}</div>}
-          </div>
-          <button className="btn btn-uaepass" onClick={signIn}>
-            {t("login")}
-          </button>
-        </div>
-      </div>
-
-      {signed && (
+      {(citizen || officer) && (
         <Alert kind="info">
-          Signed in as <b>{signed}</b>.{" "}
+          Signed in as <b>{citizen ? s.name : s.officerName}</b> ({citizen ? "Citizen" : "Officer"}).{" "}
           <a
-            href="/new-request"
+            href={citizen ? "/new-request" : "/officer/queue"}
             onClick={(e) => {
               e.preventDefault();
-              nav("/new-request");
+              nav(citizen ? "/new-request" : "/officer/queue");
             }}
           >
-            Open New Request →
+            Go to your {citizen ? "portal" : "dashboard"} →
           </a>
         </Alert>
       )}
+
+      <div className="section-title">Choose your portal</div>
+      <div className="grid grid-2">
+        {/* Citizen */}
+        <div className="card">
+          <span className="chip">👤</span>
+          <h4 style={{ fontSize: 22, marginTop: 16 }}>Citizen Portal</h4>
+          <ul className="ticks">
+            <li>Sign in with a demo account or UAE PASS</li>
+            <li>Submit a rescheduling request</li>
+            <li>Watch the assessment run, step by step</li>
+            <li>Track the decision on My Case</li>
+          </ul>
+          <button className="btn primary" style={{ marginTop: 16 }} onClick={() => nav("/login")}>
+            {citizen ? "Open Citizen Portal →" : "Citizen sign-in →"}
+          </button>
+        </div>
+
+        {/* Officer */}
+        <div className="card">
+          <span className="chip">⚖</span>
+          <h4 style={{ fontSize: 22, marginTop: 16 }}>Officer Dashboard</h4>
+          <ul className="ticks">
+            <li>Review the escalation queue</li>
+            <li>Approve, override or reject determinations</li>
+            <li>Proactive risk alerts</li>
+            <li>Replay & audit dashboard</li>
+          </ul>
+          <button className="btn" style={{ marginTop: 16 }} onClick={() => nav("/officer/login")}>
+            {officer ? "Open Officer Dashboard →" : "Officer sign-in →"}
+          </button>
+        </div>
+      </div>
 
       <div className="section-title">How it works</div>
       <div className="grid grid-3">

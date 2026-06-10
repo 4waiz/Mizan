@@ -1,0 +1,39 @@
+{
+  "fixture_id": "duplicate_application",
+  "trigger_type": "application",
+  "expected_outcome": "REJECT_ACTIVE_REQUEST",
+  "scenario_note": "DEMO — duplicate request. A rescheduling application is already open for this beneficiary, so the new request is rejected immediately at the fraud/dedupe step (SZHP-R3) — affordability and risk analysis are skipped.",
+  "beneficiary": {
+    "beneficiary_id": "SZHP-1009",
+    "full_name_en": "Saeed Al Marri",
+    "full_name_ar": "سعيد المرّي",
+    "emirates_id_masked": "784-****-****-1009",
+    "emirate": "Dubai",
+    "employment_status": "employed",
+    "employer_name": "Dubai Holding",
+    "monthly_income_aed": 19000,
+    "income_verified": true,
+    "hardship_type": "none"
+  },
+  "family": {"household_size": 4, "dependents": 2, "is_sole_earner": true, "other_household_income_aed": 0},
+  "loan": {
+    "loan_id": "LN-1009",
+    "principal_aed": 720000,
+    "outstanding_principal_aed": 510000,
+    "original_term_months": 240,
+    "months_elapsed": 64,
+    "current_installment_aed": 3000,
+    "disbursed_on": "2021-02-01"
+  },
+  "arrears": {"arrears_amount_aed": 6000, "months_in_arrears": 2, "days_past_due": 58},
+  "payment_history": {"total_installments_due": 64, "installments_paid_on_time": 58, "installments_late": 4, "installments_missed": 2, "longest_on_time_streak": 24},
+  "active_application": {"exists": true, "application_id": "APP-2026-0912", "application_type": "arrears_rescheduling", "opened_on": "2026-06-01", "status": "under_review"},
+  "duplicate_application": true,
+  "obligations": {"items": [{"creditor": "Emirates NBD Auto Loan", "monthly_payment_aed": 1100, "outstanding_aed": 26000, "kind": "auto_loan"}]},
+  "salary_verification": {"verified": true, "verified_income_aed": 19000, "employer_name": "Dubai Holding"},
+  "documents": [
+    {"document_id": "DOC-1009-EID", "doc_type": "emirates_id", "status": "present", "file_name": "eid.pdf", "issued_on": "2022-09-01", "uploaded_on": "2026-06-09", "raw_text": "Emirates ID 784-****-1009"},
+    {"document_id": "DOC-1009-SAL", "doc_type": "salary_certificate", "status": "present", "file_name": "salary.pdf", "issued_on": "2026-05-20", "uploaded_on": "2026-06-09", "raw_text": "Employer: Dubai Holding\nMonthly Salary: AED 19,000\nIssued: 2026-05-20"},
+    {"document_id": "DOC-1009-BNK", "doc_type": "bank_statement", "status": "present", "file_name": "bank.pdf", "issued_on": "2026-05-31", "uploaded_on": "2026-06-09", "raw_text": "Balance: AED 31,000\nSalary credit: AED 19,000"}
+  ]
+}

@@ -1,8 +1,8 @@
 import { useEffect, useState, type ReactNode } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useI18n } from "../i18n";
 import { api } from "../api";
-import { getSession } from "../session";
+import { getSession, isCitizen, isOfficer, signOutCitizen, signOutOfficer } from "../session";
 
 function useHealth() {
   const [h, setH] = useState<any>(null);
@@ -13,10 +13,12 @@ function useHealth() {
   return { h, err };
 }
 
-const NAV = [
-  { to: "/", end: true, num: "00", key: "home" },
+const NAV_HOME = { to: "/", end: true, num: "00", key: "home" } as const;
+const NAV_CITIZEN = [
   { to: "/new-request", num: "01", key: "new_request" },
   { to: "/my-case", num: "02", key: "my_case" },
+] as const;
+const NAV_OFFICER = [
   { to: "/officer/queue", num: "03", key: "queue" },
   { to: "/officer/case", num: "04", label: "Case Review" },
   { to: "/proactive", num: "05", key: "proactive" },
@@ -57,6 +59,7 @@ function Brand({ footer }: { footer?: boolean }) {
 
 export default function Layout({ children }: { children: ReactNode }) {
   const { t, lang, setLang, hc, setHc } = useI18n();
+  const nav = useNavigate();
   const [, force] = useState(0);
   const [scrolled, setScrolled] = useState(false);
   const { h, err } = useHealth();
@@ -73,6 +76,14 @@ export default function Layout({ children }: { children: ReactNode }) {
   }, []);
 
   const s = getSession();
+  const citizen = isCitizen(s);
+  const officer = isOfficer(s);
+
+  const navItems = [
+    NAV_HOME,
+    ...(citizen ? NAV_CITIZEN : []),
+    ...(officer ? NAV_OFFICER : []),
+  ];
 
   return (
     <div className="shell">
@@ -80,7 +91,7 @@ export default function Layout({ children }: { children: ReactNode }) {
         <Brand />
 
         <nav className="topnav">
-          {NAV.map((item) => (
+          {navItems.map((item) => (
             <NavLink key={item.to} to={item.to} end={(item as any).end}>
               <span className="num">{item.num}</span>
               {(item as any).label ?? t((item as any).key)}
@@ -96,6 +107,42 @@ export default function Layout({ children }: { children: ReactNode }) {
             />
             {err ? "Offline" : h ? `${h.engine}` : "Online"}
           </span>
+
+          {/* Session chip + sign in / out */}
+          {citizen ? (
+            <span className="statuschip" title="Citizen session">
+              👤 {s.name}
+              <button
+                className="flink"
+                style={{ marginLeft: 8 }}
+                onClick={() => {
+                  signOutCitizen();
+                  nav("/login");
+                }}
+              >
+                Sign out
+              </button>
+            </span>
+          ) : officer ? (
+            <span className="statuschip" title="Officer session">
+              ⚖ {s.officerName}
+              <button
+                className="flink"
+                style={{ marginLeft: 8 }}
+                onClick={() => {
+                  signOutOfficer();
+                  nav("/officer/login");
+                }}
+              >
+                Sign out
+              </button>
+            </span>
+          ) : (
+            <button className="btn ghost" style={{ padding: "8px 14px" }} onClick={() => nav("/login")}>
+              Sign in
+            </button>
+          )}
+
           <div className="seg" role="group" aria-label="Language">
             <button className={lang === "en" ? "on" : ""} onClick={() => setLang("en")}>
               EN

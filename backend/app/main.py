@@ -6,15 +6,18 @@ deterministic graph; these routes are thin orchestration + persistence.
 """
 from __future__ import annotations
 
+import json
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import StreamingResponse
 
 from . import __version__
 from .config import get_settings
 from .db import get_repository
 from .graph import engine_name, run_pipeline
+from .graph.stream import run_stream
 from .schemas import (
     AuditEventType,
     CandidatePlan,
@@ -158,6 +161,38 @@ def run_case(case_id: str) -> RunResponse:
         needs_human_review=case.needs_human_review,
         confidence=case.confidence.value if case.confidence else None,
         case=case,
+    )
+
+
+@app.post("/api/cases/{case_id}/run/stream")
+def run_case_stream(case_id: str) -> StreamingResponse:
+    """Run the pipeline node-by-node, streaming progress as Server-Sent Events.
+
+    The UI shows a live load bar ("Auditing documents", "Checking for fraud", …)
+    and, on a duplicate/active-application conflict, the request is rejected
+    immediately — affordability and risk forecasting are skipped. The final
+    `complete` event carries the persisted case.
+    """
+    case = _load(case_id)
+
+    def event_source():
+        final_case = None
+        for event in run_stream(case):
+            if event["type"] == "complete":
+                final_case = event["case"]
+            yield f"data: {json.dumps(event)}\n\n"
+        # Persist whatever final state the stream produced.
+        if final_case is not None:
+            _repo().save(CaseState.model_validate(final_case))
+
+    return StreamingResponse(
+        event_source(),
+        media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "Connection": "keep-alive",
+            "X-Accel-Buffering": "no",  # disable proxy buffering (nginx)
+        },
     )
 
 

@@ -319,6 +319,98 @@ export function AuditTimeline({ events }: { events: any[] }) {
   );
 }
 
+/* ── Live pipeline progress (load bar) ─────────────────────────────────────── */
+export type StepState = "pending" | "active" | "done" | "skipped" | "failed";
+
+export interface ProgressStep {
+  key: string;
+  label: string;
+  state: StepState;
+}
+
+const STEP_GLYPH: Record<StepState, string> = {
+  pending: "○",
+  active: "◐",
+  done: "✓",
+  skipped: "⤼",
+  failed: "✕",
+};
+
+export function PipelineProgress({
+  steps,
+  caption,
+  failed,
+}: {
+  steps: ProgressStep[];
+  caption?: string;
+  failed?: boolean;
+}) {
+  const total = steps.length || 1;
+  const settled = steps.filter((s) => s.state === "done" || s.state === "skipped" || s.state === "failed").length;
+  const pctDone = Math.round((settled / total) * 100);
+  const active = steps.find((s) => s.state === "active");
+
+  return (
+    <div className="card" style={{ marginTop: 16 }}>
+      <div className="spread" style={{ alignItems: "baseline" }}>
+        <span className="eyebrow">{failed ? "Stopped — request rejected" : active ? caption ?? active.label : "Assessment"}</span>
+        <span className="mono caption">{pctDone}%</span>
+      </div>
+      <div className="progress" style={{ marginTop: 10 }}>
+        <span
+          style={{
+            width: `${pctDone}%`,
+            background: failed ? "var(--danger)" : undefined,
+            transition: "width .35s ease",
+          }}
+        />
+      </div>
+      <div style={{ marginTop: 14, display: "grid", gap: 8 }}>
+        {steps.map((s) => {
+          const tone =
+            s.state === "done"
+              ? "var(--green)"
+              : s.state === "failed"
+                ? "var(--danger)"
+                : s.state === "skipped"
+                  ? "var(--muted)"
+                  : s.state === "active"
+                    ? "var(--ink)"
+                    : "var(--line-2)";
+          return (
+            <div
+              key={s.key}
+              className="kv"
+              style={{
+                display: "grid",
+                gridTemplateColumns: "22px 1fr",
+                gap: 10,
+                alignItems: "center",
+                opacity: s.state === "pending" ? 0.5 : 1,
+              }}
+            >
+              <span
+                className={s.state === "active" ? "spinner" : ""}
+                style={
+                  s.state === "active"
+                    ? undefined
+                    : { color: tone, fontFamily: "var(--mono)", fontWeight: 700, textAlign: "center" }
+                }
+              >
+                {s.state === "active" ? "" : STEP_GLYPH[s.state]}
+              </span>
+              <span style={{ color: tone, fontWeight: s.state === "active" ? 700 : 400 }}>
+                {s.label}
+                {s.state === "skipped" && <span className="muted"> · skipped</span>}
+              </span>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 export function Expander({
   summary,
   children,

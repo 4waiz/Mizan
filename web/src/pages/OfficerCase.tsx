@@ -28,7 +28,7 @@ export default function OfficerCase() {
   const [caseId, setCaseId] = useState(urlCase ?? getSession().officerCaseId ?? "");
   const [caseData, setCaseData] = useState<any>(null);
   const [audit, setAudit] = useState<any>(null);
-  const [officerId, setOfficerId] = useState("officer-001");
+  const [officerId, setOfficerId] = useState(getSession().officerId ?? "officer-001");
   const [notes, setNotes] = useState("");
   const [msg, setMsg] = useState<{ kind: "ok" | "err" | "info"; text: string } | null>(null);
   const [err, setErr] = useState<string | null>(null);

@@ -3,7 +3,16 @@ import { Link } from "react-router-dom";
 import { useI18n } from "../i18n";
 import { api } from "../api";
 import { getSession, setSession } from "../session";
-import { Band, Alert, ProfileCard, DecisionBadge, PolicyTable, Metric } from "../components/ui";
+import {
+  Band,
+  Alert,
+  ProfileCard,
+  DecisionBadge,
+  PolicyTable,
+  Metric,
+  PipelineProgress,
+  type ProgressStep,
+} from "../components/ui";
 
 export default function NewRequest() {
   const { t } = useI18n();
@@ -11,6 +20,12 @@ export default function NewRequest() {
   const [run, setRun] = useState<any>(null);
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
+
+  // live pipeline progress
+  const [steps, setSteps] = useState<ProgressStep[]>([]);
+  const [activeLabel, setActiveLabel] = useState<string>("");
+  const [failure, setFailure] = useState<string | null>(null);
+
   const s = getSession();
 
   useEffect(() => {
@@ -35,21 +50,65 @@ export default function NewRequest() {
     return (
       <>
         <Band title={t("new_request")} subtitle={t("subtitle")} />
-        <Alert kind="warn">Please sign in on the Home page first.</Alert>
+        <Alert kind="warn">
+          Please <Link to="/login">sign in to the Citizen Portal</Link> first.
+        </Alert>
       </>
     );
 
   const doRun = async () => {
     setBusy(true);
     setErr(null);
+    setRun(null);
+    setFailure(null);
+    setActiveLabel("");
+    setSteps([]);
+
+    const caseId = getSession().activeCaseId!;
     try {
-      const r = await api.runCase(getSession().activeCaseId!);
-      setRun(r);
-      setSession({ lastRunCaseId: getSession().activeCaseId });
+      await api.runCaseStream(caseId, (ev) => {
+        switch (ev.type) {
+          case "start":
+            setSteps(
+              ev.steps.map((st: any) => ({ key: st.key, label: st.label, state: "pending" as const })),
+            );
+            break;
+          case "step":
+            setActiveLabel(ev.active);
+            setSteps((prev) =>
+              prev.map((p) =>
+                p.key === ev.key ? { ...p, state: "active" } : p,
+              ),
+            );
+            break;
+          case "done":
+            setSteps((prev) =>
+              prev.map((p) =>
+                p.key === ev.key
+                  ? { ...p, state: ev.status === "conflict" ? "failed" : "done" }
+                  : p,
+              ),
+            );
+            break;
+          case "skipped":
+            setSteps((prev) =>
+              prev.map((p) => (p.key === ev.key ? { ...p, state: "skipped" } : p)),
+            );
+            break;
+          case "failed":
+            setFailure(ev.reason);
+            break;
+          case "complete":
+            setRun({ case: ev.case });
+            setSession({ lastRunCaseId: caseId });
+            break;
+        }
+      });
     } catch (e) {
       setErr(String(e));
     } finally {
       setBusy(false);
+      setActiveLabel("");
     }
   };
 
@@ -86,14 +145,34 @@ export default function NewRequest() {
       <div className="section-title">3 · Submit &amp; assess</div>
       <p className="muted">
         Submitting runs the governed pipeline: document audit → fraud/dedupe →
-        affordability → risk → policy solver → human-review gate.
+        affordability → risk → policy solver → human-review gate. A duplicate or
+        active application is rejected immediately at the fraud/dedupe step.
       </p>
 
       <button className="btn primary" onClick={doRun} disabled={busy || !caseData}>
         {busy ? <span className="spinner" /> : "▶"} {t("run")}
       </button>
 
-      {run && (
+      {/* Live progress load bar */}
+      {steps.length > 0 && (
+        <PipelineProgress steps={steps} caption={activeLabel} failed={!!failure} />
+      )}
+
+      {/* Hard rejection (early exit on conflict) */}
+      {failure && (
+        <Alert kind="err">
+          <b>Assessment failed — request rejected.</b>
+          <br />
+          {failure}
+          <br />
+          <span className="muted">
+            Affordability and risk analysis were skipped: there is no point assessing a
+            duplicate request.
+          </span>
+        </Alert>
+      )}
+
+      {run && !failure && (
         <div style={{ marginTop: 24 }}>
           <Alert kind="ok">Assessment complete.</Alert>
           <div className="grid grid-3">
@@ -109,6 +188,16 @@ export default function NewRequest() {
           <div className="section-title">{t("validation")}</div>
           <PolicyTable case={run.case} />
           <Link className="btn" to="/my-case">
+            ➡ View full result on My Case
+          </Link>
+        </div>
+      )}
+
+      {/* Even on rejection, show the decision + link to the record */}
+      {run && failure && (
+        <div style={{ marginTop: 16 }}>
+          <DecisionBadge case={run.case} />
+          <Link className="btn" to="/my-case" style={{ marginTop: 12 }}>
             ➡ View full result on My Case
           </Link>
         </div>
