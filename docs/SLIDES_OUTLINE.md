@@ -29,7 +29,7 @@ MOEI · Sheikh Zayed Housing Programme. *"The balance between compassion and pol
 - LangGraph pipeline over one typed `CaseState`:
   intake → documents → fraud → affordability → risk → **policy solver** →
   human-review gate → rationale → finalize.
-- FastAPI + SQLite (Postgres-ready) + Streamlit workflow UI.
+- FastAPI + SQLite (Postgres-ready) + React + Vite workflow UI.
 
 ### Slide 6 — The candidate-plan solver
 - Generates concrete options (update / transfer / maintain / request-info /

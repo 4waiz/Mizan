@@ -10,7 +10,7 @@
 # Terminal 1
 make backend        # http://localhost:8000  (auto-seeds 8 demo cases on first run)
 # Terminal 2
-make frontend       # http://localhost:8501
+cd web && npm run dev   # http://localhost:5173
 ```
 
 Open the UI. In the left sidebar you can switch **language (EN/AR)** and toggle

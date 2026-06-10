@@ -85,7 +85,7 @@ identical in-process sequential runner so the app always runs.
 
 ## 5. Frontend
 
-A Streamlit multipage **workflow** UI (not a chatbot):
+A React + Vite + TypeScript multipage **workflow** UI (not a chatbot):
 
 - **Beneficiary:** Home (mock UAE PASS login) → New Request (auto-filled profile,
   documents, validation) → My Case (recommendation, plans, confidence, bilingual

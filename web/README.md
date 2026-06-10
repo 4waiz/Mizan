@@ -1,7 +1,7 @@
 # Mizan — React Frontend
 
-A React + Vite + TypeScript replacement for the Streamlit UI, built on the
-**Paper** design system (see `../SKILL.md`). It talks to the same FastAPI backend
+The Mizan workflow UI — React + Vite + TypeScript, built on the
+**Paper** design system (see `../SKILL.md`). It talks to the FastAPI backend
 and covers every screen: Home (mock UAE PASS login), New Request, My Case,
 Officer Queue, Officer Case Review, Proactive Alerts, and the Replay Dashboard.
 

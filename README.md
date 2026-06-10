@@ -82,8 +82,7 @@ backend/
     db/              SQLite store (Postgres-ready repository pattern)
     fixtures/        synthetic JSON cases (8 scenarios) + loader
   tests/             pytest suite
-web/                 React + Vite + TypeScript workflow UI (primary, "Paper" design system)
-streamlit_app/       legacy Streamlit workflow UI (still runnable against the same API)
+web/                 React + Vite + TypeScript workflow UI ("Paper" design system)
 docs/                ARCHITECTURE, DECISION_LOGIC, API_CONTRACT, DEMO_SCRIPT, SLIDES_OUTLINE
 ```
 
@@ -124,11 +123,11 @@ Vite proxies `/api` and `/` to the backend on :8000. Set `VITE_API_BASE` to
 point at a non-proxied backend for a production build (`npm run build`).
 See [web/README.md](web/README.md) for details.
 
-The legacy Streamlit UI is still available against the same API:
+Or run both tiers with a single command from the repo root:
 
 ```bash
-# http://localhost:8501
-make frontend        # or: streamlit run streamlit_app/app.py
+npm run setup        # one-time: create .venv, install backend + web deps
+npm run dev:all      # backend :8000 + React UI :5173 together
 ```
 
 Seed the SQLite DB with the 8 demo fixtures:
@@ -147,7 +146,7 @@ make test            # or: pytest backend/tests -q
 Docker (one shot):
 
 ```bash
-docker-compose up --build      # backend :8000 · React UI :8080 · legacy Streamlit :8501
+docker-compose up --build      # backend :8000 · React UI :8080
 ```
 
 ## 7. Demo
@@ -158,10 +157,9 @@ human review → proactive risk alert (bonus).
 
 ## 8. Trade-offs
 
-- **React + Vite UI on a UI-agnostic API**: the primary frontend is a
-  React + TypeScript app (the "Paper" design system) talking to the same FastAPI
-  contract. A legacy Streamlit UI was the original hackathon MVP and still runs
-  unchanged against that contract — proof the engine is decoupled from any front end.
+- **React + Vite UI on a UI-agnostic API**: the frontend is a React + TypeScript
+  app (the "Paper" design system) talking to a clean FastAPI contract. The engine
+  is fully decoupled from the front end — any client speaking the same contract works.
 - **No-interest loan math**: Sheikh Zayed housing assistance is profit-free, so
   the solver uses simple principal arithmetic. An interest/profit term can be
   injected into `policies/solver.py` without changing the node graph.
