@@ -10,6 +10,7 @@ import OfficerQueue from "./pages/OfficerQueue";
 import OfficerCase from "./pages/OfficerCase";
 import Proactive from "./pages/Proactive";
 import Replay from "./pages/Replay";
+import Insights from "./pages/Insights";
 import { isCitizen, isOfficer } from "./session";
 
 function RequireCitizen({ children }: { children: ReactNode }) {
@@ -29,6 +30,8 @@ export default function App() {
     <Layout>
       <Routes>
         <Route path="/" element={<Home />} />
+        {/* Historical Intelligence — PUBLIC (aggregates only, no auth guard) */}
+        <Route path="/insights" element={<Insights />} />
         <Route path="/login" element={<CitizenLogin />} />
         <Route path="/officer/login" element={<OfficerLogin />} />
 

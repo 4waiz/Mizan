@@ -16,6 +16,21 @@ cd web && npm run dev   # http://localhost:5173
 Open the UI. In the left sidebar you can switch **language (EN/AR)** and toggle
 **high-contrast** mode at any time — do this once to show accessibility.
 
+> **Note — data-informed synthetic cases.** The demo scenarios below are
+> **synthetic, but data-informed**: each is mapped to a real pattern found in
+> the organizer-provided historical Excel (`data/RescheduleArrears.xlsx`,
+> 2023–2025). The mapping:
+> - **Clean approval** → common **update-installment** under the 20% cap (86.7% of history).
+> - **Missing documents** → document-validation / completeness path.
+> - **High obligations** → pressure case (income vs obligations).
+> - **Medical hardship** → **transfer arrears** / temporary-circumstance path.
+> - **Unemployment hardship** → maintain installment / **transfer arrears**.
+> - **Active request conflict** → governance rule (active application blocks a new decision).
+> - **Suspicious document** → fraud / inconsistency governance.
+>
+> The documents stay fully synthetic; only their figures and request mix are
+> informed by the real organizer patterns. No real citizen identities appear.
+
 Opening line:
 > "Mizan is not a chatbot. It's an autonomous case officer. Watch it process five
 > very different arrears cases the way a government officer would — and decide,
@@ -75,6 +90,25 @@ Opening line:
    unemployed, high obligations, weak recent payments — **before** serious
    arrears.
 3. Suggested action + one-click into the case for **early outreach**.
+
+## 6 · Historical Intelligence (organizer data) — `/insights`
+
+1. Open the **`/insights`** Historical Intelligence dashboard.
+2. Narrate the **organizer-data story**: "Before building anything, we ingested
+   the organizer's real historical arrears Excel — **2,158 raw / 1,933 usable**
+   cases across **2023–2025**."
+3. Point at the aggregated insights: **median 11 overdue months**, **46.8%
+   Severe/Critical** at 13+ months, **median 11-day approval**, and the
+   treatment split — **update installment 86.7%** vs **transfer arrears 13.3%**.
+4. Show the **policy edge cases**: **13%** of current installments already exceed
+   the **20% deduction cap** — exactly the kind of check Mizan automates.
+5. Show the **proactive scan**: **406 high-risk** historical rows — the basis for
+   shifting from late arrears treatment to **early financial intervention**.
+
+> "This is real historical intelligence, fully anonymized — only aggregates,
+> risk buckets, and banded patterns. No raw personal data, no real identities.
+> It calibrates our risk scoring and demo realism, but it never makes a policy
+> decision — the deterministic rules do that."
 
 ## Close · Replay Dashboard
 

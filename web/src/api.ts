@@ -119,4 +119,11 @@ export const api = {
     }),
   replay: () => get<any>("/api/replay/summary"),
   alerts: () => get<any[]>("/api/proactive/alerts"),
+
+  // ── Historical Intelligence (organizer dataset) ────────────────────────────
+  organizerInsights: () => get<any>("/api/organizer-insights"),
+  organizerRiskBuckets: () => get<any>("/api/organizer-insights/risk-buckets"),
+  organizerPolicyEdgeCases: () => get<any>("/api/organizer-insights/policy-edge-cases"),
+  organizerSamplePatterns: () => get<any>("/api/organizer-insights/sample-patterns"),
+  proactiveScan: () => get<any>("/api/proactive-scan"),
 };

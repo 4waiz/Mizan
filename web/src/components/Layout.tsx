@@ -13,13 +13,15 @@ function useHealth() {
 }
 
 const NAV_HOME = { to: "/", end: true, num: "00", key: "home" } as const;
+// Always-visible top-level nav (like Home) — public Historical Intelligence.
+const NAV_INSIGHTS = { to: "/insights", num: "07", key: "insights" } as const;
 const NAV_CITIZEN = [
   { to: "/new-request", num: "01", key: "new_request" },
   { to: "/my-case", num: "02", key: "my_case" },
 ] as const;
 const NAV_OFFICER = [
   { to: "/officer/queue", num: "03", key: "queue" },
-  { to: "/officer/case", num: "04", label: "Case Review" },
+  { to: "/officer/case", num: "04", key: "nav_case_review" },
   { to: "/proactive", num: "05", key: "proactive" },
   { to: "/replay", num: "06", key: "replay" },
 ] as const;
@@ -36,12 +38,13 @@ const FOOTER_GROUPS = [
     head: "officer",
     links: [
       { to: "/officer/queue", key: "queue" },
-      { to: "/officer/case", label: "Case Review" },
+      { to: "/officer/case", key: "nav_case_review" },
     ],
   },
   {
     head: "insight",
     links: [
+      { to: "/insights", key: "insights" },
       { to: "/proactive", key: "proactive" },
       { to: "/replay", key: "replay" },
     ],
@@ -88,6 +91,7 @@ export default function Layout({ children }: { children: ReactNode }) {
 
   const navItems = [
     NAV_HOME,
+    NAV_INSIGHTS,
     ...(citizen ? NAV_CITIZEN : []),
     ...(officer ? NAV_OFFICER : []),
   ];
@@ -107,21 +111,21 @@ export default function Layout({ children }: { children: ReactNode }) {
         </nav>
 
         <div className="topbar-actions">
-          <span className="statuschip" title={err ? "Service unavailable" : "All systems operational"}>
+          <span className="statuschip" title={err ? t("service_unavailable") : t("all_systems_operational")}>
             <span
               className="dot"
               style={err ? { background: "var(--danger)", boxShadow: "0 0 0 3px rgba(220,38,38,.16)" } : undefined}
             />
-            {err ? "Offline" : "System online"}
+            {err ? t("offline") : t("system_online")}
           </span>
 
           {/* Session: user identity pill + sign out */}
           {citizen || officer ? (
-            <div className="usermenu" title={citizen ? "Citizen session" : "Officer session"}>
+            <div className="usermenu" title={citizen ? t("citizen_session") : t("officer_session")}>
               <span className="avatar">{(citizen ? s.name : s.officerName)?.[0]?.toUpperCase() ?? "U"}</span>
               <span className="who">
                 <span className="who-name">{citizen ? s.name : s.officerName}</span>
-                <span className="who-role">{citizen ? "Beneficiary" : "Officer"}</span>
+                <span className="who-role">{citizen ? t("beneficiary") : t("officer")}</span>
               </span>
               <button
                 className="signout"
@@ -135,12 +139,12 @@ export default function Layout({ children }: { children: ReactNode }) {
                   }
                 }}
               >
-                Sign out
+                {t("sign_out")}
               </button>
             </div>
           ) : (
             <button className="btn ghost" style={{ padding: "8px 14px" }} onClick={() => nav("/login")}>
-              Sign in
+              {t("sign_in")}
             </button>
           )}
 
@@ -168,7 +172,7 @@ export default function Layout({ children }: { children: ReactNode }) {
             </div>
             {s.name && (
               <div className="f-tag" style={{ marginTop: 12 }}>
-                Signed in · <b style={{ color: "#fff" }}>{s.name}</b>
+                {t("footer_signed_in")} <b style={{ color: "#fff" }}>{s.name}</b>
               </div>
             )}
           </div>

@@ -1,0 +1,18 @@
+{
+  "loaded": true,
+  "deduction_cap": 0.2,
+  "edge_cases": {
+    "cap_percent": 20.0,
+    "current_emi": {
+      "evaluated": 1933,
+      "over_cap": 252,
+      "over_cap_percent": 13.0
+    },
+    "new_emi": {
+      "evaluated": 1873,
+      "over_cap": 57,
+      "over_cap_percent": 3.0
+    }
+  },
+  "explanation": "Each historical case is checked against the 20% deduction cap using EMI / salary. Cases where the installment exceeds the cap are exactly the rows that require automated policy enforcement before approval."
+}

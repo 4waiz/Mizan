@@ -72,7 +72,13 @@ def _not_loaded_payload(ds: OrganizerDataset) -> dict:
 
 
 def bucket_for_months(months: float | int | None) -> tuple[str, str] | None:
-    """Return (key, label) for an overdue-month count, or None if unknown."""
+    """Return (key, label) for an overdue-month count, or None if unknown.
+
+    Buckets are a continuous partition over months ≥ 0: a value lands in a bucket
+    if it is ≥ that bucket's lower bound and below the next bucket's lower bound.
+    This keeps fractional months (e.g. 2.13) from falling through the cracks
+    between integer-labelled bands.
+    """
     if months is None:
         return None
     try:
@@ -81,8 +87,9 @@ def bucket_for_months(months: float | int | None) -> tuple[str, str] | None:
         return None
     if m < 0:
         return None
-    for key, label, lo, hi in RISK_BUCKETS:
-        if m >= lo and (hi is None or m <= hi):
+    for i, (key, label, lo, _hi) in enumerate(RISK_BUCKETS):
+        nxt = RISK_BUCKETS[i + 1][2] if i + 1 < len(RISK_BUCKETS) else None
+        if m >= lo and (nxt is None or m < nxt):
             return key, label
     return None
 
@@ -173,12 +180,14 @@ def _risk_bucket_block(df) -> dict:
     known = months.dropna()
     counts: dict[str, dict] = {}
     distribution = []
-    for key, label, lo, hi in RISK_BUCKETS:
-        if hi is None:
+    for i, (key, label, lo, hi) in enumerate(RISK_BUCKETS):
+        nxt = RISK_BUCKETS[i + 1][2] if i + 1 < len(RISK_BUCKETS) else None
+        if nxt is None:
             mask = known >= lo
             range_label = f"{lo}+ months"
         else:
-            mask = (known >= lo) & (known <= hi)
+            # half-open [lo, nxt) so the partition is continuous over fractions
+            mask = (known >= lo) & (known < nxt)
             range_label = f"{lo}–{hi} months"
         n = int(mask.sum())
         counts[key] = {

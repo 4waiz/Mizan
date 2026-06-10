@@ -20,6 +20,17 @@ Required documents (situational): Emirates ID always; salary certificate + bank
 statement if employed/self-employed; termination letter if unemployment hardship;
 medical report if medical hardship.
 
+> **Note — organizer historical data is calibration, not decisioning.** The
+> organizer-provided historical Excel ([`data/RescheduleArrears.xlsx`](../data/RescheduleArrears.xlsx),
+> 2023–2025) is used to **calibrate the risk-score thresholds** (e.g. the
+> overdue-month risk buckets) and to **validate policy edge cases** (e.g. it
+> shows 13% of historical current installments already exceed the 20% cap). But
+> the **20% deduction cap (SZHP-R1), the original-repayment-period cap
+> (SZHP-R2), active-request validation (SZHP-R3), and document-completeness
+> checks (SZHP-R4)** remain **deterministic rules**. **LLMs and historical
+> averages never make the final policy decision** — they inform thresholds and
+> explanations only. See [organizer-data.md](organizer-data.md).
+
 ## 2. Candidate plans (`policies/solver.py`)
 
 Loan math is **profit-free** (simple principal arithmetic). Let

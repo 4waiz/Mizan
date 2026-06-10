@@ -93,3 +93,23 @@ def replay_summary() -> dict:
 
 def proactive_alerts() -> list[dict]:
     return _handle(requests.get(_url("/api/proactive/alerts"), timeout=TIMEOUT))
+
+
+def organizer_insights() -> dict:
+    return _handle(requests.get(_url("/api/organizer-insights"), timeout=TIMEOUT))
+
+
+def organizer_risk_buckets() -> dict:
+    return _handle(requests.get(_url("/api/organizer-insights/risk-buckets"), timeout=TIMEOUT))
+
+
+def organizer_policy_edge_cases() -> dict:
+    return _handle(requests.get(_url("/api/organizer-insights/policy-edge-cases"), timeout=TIMEOUT))
+
+
+def organizer_sample_patterns() -> dict:
+    return _handle(requests.get(_url("/api/organizer-insights/sample-patterns"), timeout=TIMEOUT))
+
+
+def proactive_scan() -> dict:
+    return _handle(requests.get(_url("/api/proactive-scan"), timeout=TIMEOUT))

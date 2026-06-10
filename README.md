@@ -3,6 +3,8 @@
 > **Autonomous AI case officer for Housing Loan Arrears Rescheduling**
 > Built for **MOEI / Sheikh Zayed Housing Programme**.
 
+> **Mizan is not just a chatbot. It is a governed AI officer that combines organizer-provided historical arrears data, deterministic policy enforcement, document intelligence, explainable recommendations, and human escalation for exceptional cases.**
+
 *Mizan* (Arabic: **مِيزان**, "the balance / the scale") weighs each beneficiary's
 hardship against policy and affordability — instantly, consistently, and with a
 full audit trail. It is **not a chatbot**. It is a governed, straight-through
@@ -45,6 +47,68 @@ rule-compliant recommendation**:
 The orchestration is a **LangGraph** state machine over a single shared,
 strongly-typed `CaseState`.
 
+## 2b. Historical Intelligence (organizer data)
+
+Mizan now reads the **organizer-provided historical arrears Excel** placed at
+[`data/RescheduleArrears.xlsx`](data/RescheduleArrears.xlsx) (real 2023–2025
+rescheduling cases). This dataset is used **only** for:
+
+- **Aggregated insights** — medians, counts, and percentages that describe how
+  arrears cases actually behave (salary, overdue amounts, overdue months, EMI
+  changes, request-type split, approval durations).
+- **Risk calibration** — historical overdue-month distributions calibrate the
+  risk-score thresholds and the risk buckets used across the engine.
+- **Demo realism** — synthetic demo documents remain fully synthetic, but are
+  now **data-informed**: their figures are mapped to real organizer patterns so
+  the demo looks like production traffic.
+- **Policy edge-case analysis** — e.g. how often current installments already
+  exceed the **20% deduction cap**, surfacing where automation matters most.
+
+Privacy is preserved end to end. **Raw personal data is never exposed in the
+UI** — only aggregates, risk buckets, and anonymized/banded patterns leave the
+backend. Identifier columns are **dropped at ingestion** before any aggregation.
+Crucially, **final decisions are governed by the deterministic policy rules, not
+by historical averages** — the historical layer calibrates and explains, it does
+not decide.
+
+See [docs/organizer-data.md](docs/organizer-data.md) for the full data
+documentation (columns, cleaning, anonymization, and the verified metrics), and
+the **Historical Intelligence dashboard** at `/insights` for the live view.
+
+## 2c. Quickstart
+
+```bash
+# Step 1 — place the organizer Excel at the expected path
+#   data/RescheduleArrears.xlsx
+
+# Step 2 — install backend dependencies
+pip install -r backend/requirements.txt
+
+# Step 3 — run the historical-insights pipeline
+#   writes data/processed/organizer_insights.json, risk_buckets.json, proactive_scan.json
+python scripts/analyze_organizer_excel.py --input "data/RescheduleArrears.xlsx"
+
+# Step 4 — start the backend API (http://localhost:8000)
+make backend
+
+# Step 5 — start the frontend (http://localhost:5173)
+cd web && npm install && npm run dev
+
+# Step 6 — open the Historical Intelligence dashboard
+#   http://localhost:5173/insights
+```
+
+The pipeline powers these new read-only **aggregates-only** endpoints (no PII):
+
+- `GET /api/organizer-insights` — top-line aggregated metrics.
+- `GET /api/organizer-insights/risk-buckets` — overdue-month risk-bucket distribution.
+- `GET /api/organizer-insights/policy-edge-cases` — 20%-cap and policy edge-case stats.
+- `GET /api/organizer-insights/sample-patterns` — anonymized/banded sample patterns.
+- `GET /api/proactive-scan` — historical high-risk rows for proactive outreach.
+
+> If `data/RescheduleArrears.xlsx` is absent, the endpoints respond gracefully
+> with `{ "loaded": false }` and the rest of the app runs unchanged.
+
 ## 3. Architecture
 
 ```
@@ -78,12 +142,23 @@ backend/
     graph/           LangGraph spine: state, builder, router, nodes/
     policies/        rules.py (hard caps) + solver.py (candidate plans)
     scoring/         affordability.py, risk.py, confidence.py
+    data/            organizer_dataset.py (organizer Excel ingestion, PII dropped at load)
     services/        llm.py (MockLLM), audit.py, explain.py, mocks/ connectors
+                     historical_insights_service.py (aggregates: medians/counts/buckets)
+                     risk_forecaster.py (transparent risk scoring calibrated on history)
     db/              SQLite store (Postgres-ready repository pattern)
     fixtures/        synthetic JSON cases (8 scenarios) + loader
   tests/             pytest suite
+scripts/
+  analyze_organizer_excel.py   ingest data/RescheduleArrears.xlsx → data/processed/*.json
+data/
+  RescheduleArrears.xlsx       organizer-provided historical arrears Excel (2023–2025)
+  processed/                   generated insights (organizer_insights.json, risk_buckets.json,
+                               proactive_scan.json) — aggregates only, no PII
 web/                 React + Vite + TypeScript workflow UI ("Paper" design system)
-docs/                ARCHITECTURE, DECISION_LOGIC, API_CONTRACT, DEMO_SCRIPT, SLIDES_OUTLINE
+  src/pages/Insights.tsx       Historical Intelligence dashboard (served at /insights)
+docs/                ARCHITECTURE, DECISION_LOGIC, API_CONTRACT, DEMO_SCRIPT, SLIDES_OUTLINE,
+                     organizer-data.md (organizer dataset documentation)
 ```
 
 ## 5. Setup

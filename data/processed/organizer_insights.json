@@ -1,0 +1,256 @@
+{
+  "loaded": true,
+  "source_path": "data\\RescheduleArrears.xlsx",
+  "dataset_relative_path": "data/RescheduleArrears.xlsx",
+  "message": "Loaded 1933 usable of 2158 raw records across 3 sheets.",
+  "deduction_cap": 0.2,
+  "totals": {
+    "raw_records": 2158,
+    "usable_records": 1933,
+    "dropped_records": 225,
+    "years_covered": [
+      2023,
+      2024,
+      2025
+    ],
+    "year_span": "2023\u20132025",
+    "sheets": [
+      "2023",
+      "2024",
+      "2025"
+    ]
+  },
+  "medians": {
+    "current_salary": 26205.0,
+    "over_due_amt": 43119.0,
+    "over_due_months": 11.0,
+    "current_emi_amt": 3751.0,
+    "new_emi_amt": 1003.5,
+    "current_emi_ratio": 0.15,
+    "new_emi_ratio": 0.04,
+    "approval_duration_days": 11.0
+  },
+  "request_type_split": {
+    "UPDATE_INSTALLMENT": {
+      "count": 1676,
+      "percent": 86.7
+    },
+    "TRANSFER_ARREARS": {
+      "count": 257,
+      "percent": 13.3
+    }
+  },
+  "risk_buckets": {
+    "evaluated": 1933,
+    "definitions": [
+      {
+        "key": "low",
+        "label": "Low",
+        "min_months": 0,
+        "max_months": 2
+      },
+      {
+        "key": "medium",
+        "label": "Medium",
+        "min_months": 3,
+        "max_months": 6
+      },
+      {
+        "key": "high",
+        "label": "High",
+        "min_months": 7,
+        "max_months": 12
+      },
+      {
+        "key": "severe",
+        "label": "Severe",
+        "min_months": 13,
+        "max_months": 24
+      },
+      {
+        "key": "critical",
+        "label": "Critical",
+        "min_months": 25,
+        "max_months": null
+      }
+    ],
+    "counts": {
+      "low": {
+        "label": "Low",
+        "range": "0\u20132 months",
+        "count": 254,
+        "percent": 13.1
+      },
+      "medium": {
+        "label": "Medium",
+        "range": "3\u20136 months",
+        "count": 413,
+        "percent": 21.4
+      },
+      "high": {
+        "label": "High",
+        "range": "7\u201312 months",
+        "count": 361,
+        "percent": 18.7
+      },
+      "severe": {
+        "label": "Severe",
+        "range": "13\u201324 months",
+        "count": 429,
+        "percent": 22.2
+      },
+      "critical": {
+        "label": "Critical",
+        "range": "25+ months",
+        "count": 476,
+        "percent": 24.6
+      }
+    },
+    "distribution": [
+      {
+        "key": "low",
+        "label": "Low",
+        "range": "0\u20132 months",
+        "count": 254,
+        "percent": 13.1
+      },
+      {
+        "key": "medium",
+        "label": "Medium",
+        "range": "3\u20136 months",
+        "count": 413,
+        "percent": 21.4
+      },
+      {
+        "key": "high",
+        "label": "High",
+        "range": "7\u201312 months",
+        "count": 361,
+        "percent": 18.7
+      },
+      {
+        "key": "severe",
+        "label": "Severe",
+        "range": "13\u201324 months",
+        "count": 429,
+        "percent": 22.2
+      },
+      {
+        "key": "critical",
+        "label": "Critical",
+        "range": "25+ months",
+        "count": 476,
+        "percent": 24.6
+      }
+    ]
+  },
+  "deduction_cap_edge_cases": {
+    "cap_percent": 20.0,
+    "current_emi": {
+      "evaluated": 1933,
+      "over_cap": 252,
+      "over_cap_percent": 13.0
+    },
+    "new_emi": {
+      "evaluated": 1873,
+      "over_cap": 57,
+      "over_cap_percent": 3.0
+    }
+  },
+  "approval_duration": {
+    "available": true,
+    "evaluated": 1933,
+    "median_days": 11.0,
+    "mean_days": 25.8,
+    "p90_days": 62.0,
+    "manual_baseline_days": 5
+  },
+  "justification_keywords": [
+    {
+      "keyword": "bulk",
+      "count": 1425,
+      "percent": 49.7
+    },
+    {
+      "keyword": "manager",
+      "count": 1425,
+      "percent": 49.7
+    },
+    {
+      "keyword": "openfile",
+      "count": 2,
+      "percent": 0.1
+    },
+    {
+      "keyword": "agree",
+      "count": 2,
+      "percent": 0.1
+    },
+    {
+      "keyword": "aed",
+      "count": 1,
+      "percent": 0.0
+    },
+    {
+      "keyword": "please",
+      "count": 1,
+      "percent": 0.0
+    },
+    {
+      "keyword": "adjust",
+      "count": 1,
+      "percent": 0.0
+    },
+    {
+      "keyword": "delayed",
+      "count": 1,
+      "percent": 0.0
+    },
+    {
+      "keyword": "payments",
+      "count": 1,
+      "percent": 0.0
+    },
+    {
+      "keyword": "raised",
+      "count": 1,
+      "percent": 0.0
+    },
+    {
+      "keyword": "our",
+      "count": 1,
+      "percent": 0.0
+    },
+    {
+      "keyword": "still",
+      "count": 1,
+      "percent": 0.0
+    }
+  ],
+  "by_year": [
+    {
+      "year": 2023,
+      "records": 751,
+      "median_over_due_months": 9.0,
+      "median_over_due_amt": 37338.0,
+      "median_salary": 25962.0,
+      "over_cap_percent": 15.8
+    },
+    {
+      "year": 2024,
+      "records": 664,
+      "median_over_due_months": 12.0,
+      "median_over_due_amt": 44557.5,
+      "median_salary": 26845.0,
+      "over_cap_percent": 10.7
+    },
+    {
+      "year": 2025,
+      "records": 518,
+      "median_over_due_months": 14.0,
+      "median_over_due_amt": 49370.16,
+      "median_salary": 26067.5,
+      "over_cap_percent": 12.0
+    }
+  ]
+}

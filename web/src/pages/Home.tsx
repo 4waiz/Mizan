@@ -58,22 +58,22 @@ export default function Home() {
             className="btn intro-skip"
             style={{ position: "absolute", bottom: 20, right: 16, zIndex: 1001 }}
           >
-            Skip intro →
+            {t("skip_intro")}
           </button>
         </div>
       )}
 
-      <Band title="An autonomous case officer" subtitle="Sheikh Zayed Housing Programme · MOEI" />
+      <Band title={t("home_band_title")} subtitle={t("subtitle")} />
 
       <p className="lead">
-        Mizan turns the manual <b>five-working-day</b> arrears rescheduling review into an{" "}
-        <b>instant, explainable, auditable</b> decision - escalating only the exceptional
-        cases to a human.
+        {t("home_lead_pre")} <b>{t("home_lead_days")}</b> {t("home_lead_mid")}{" "}
+        <b>{t("home_lead_attrs")}</b> {t("home_lead_post")}
       </p>
 
       {(citizen || officer) && (
         <Alert kind="info">
-          Signed in as <b>{citizen ? s.name : s.officerName}</b> ({citizen ? "Citizen" : "Officer"}).{" "}
+          {t("signed_in_as")} <b>{citizen ? s.name : s.officerName}</b> (
+          {citizen ? t("signed_in_role_citizen") : t("signed_in_role_officer")}).{" "}
           <a
             href={citizen ? "/new-request" : "/officer/queue"}
             onClick={(e) => {
@@ -81,54 +81,54 @@ export default function Home() {
               nav(citizen ? "/new-request" : "/officer/queue");
             }}
           >
-            Go to your {citizen ? "portal" : "dashboard"} →
+            {citizen ? t("go_to_portal") : t("go_to_dashboard")}
           </a>
         </Alert>
       )}
 
       {!(citizen || officer) && (
         <>
-          <div className="section-title">Choose your portal</div>
+          <div className="section-title">{t("choose_your_portal")}</div>
           <div className="grid grid-2">
             {/* Citizen */}
             <div className="card">
               <span className="chip">👤</span>
-              <h4 style={{ fontSize: 22, marginTop: 16 }}>Citizen Portal</h4>
+              <h4 style={{ fontSize: 22, marginTop: 16 }}>{t("citizen_portal")}</h4>
               <ul className="ticks">
-                <li>Sign in with your account or UAE PASS</li>
-                <li>Submit a rescheduling request</li>
-                <li>Watch the assessment run, step by step</li>
-                <li>Track the decision on My Case</li>
+                <li>{t("citizen_portal_card_t1")}</li>
+                <li>{t("citizen_portal_card_t2")}</li>
+                <li>{t("citizen_portal_card_t3")}</li>
+                <li>{t("citizen_portal_card_t4")}</li>
               </ul>
               <button className="btn primary" style={{ marginTop: 16 }} onClick={() => nav("/login")}>
-                Citizen sign-in →
+                {t("citizen_signin_btn")}
               </button>
             </div>
 
             {/* Officer */}
             <div className="card">
               <span className="chip">⚖</span>
-              <h4 style={{ fontSize: 22, marginTop: 16 }}>Officer Dashboard</h4>
+              <h4 style={{ fontSize: 22, marginTop: 16 }}>{t("officer_dashboard")}</h4>
               <ul className="ticks">
-                <li>Review the escalation queue</li>
-                <li>Approve, override or reject determinations</li>
-                <li>Proactive risk alerts</li>
-                <li>Replay & audit dashboard</li>
+                <li>{t("officer_dashboard_card_t1")}</li>
+                <li>{t("officer_dashboard_card_t2")}</li>
+                <li>{t("officer_dashboard_card_t3")}</li>
+                <li>{t("officer_dashboard_card_t4")}</li>
               </ul>
               <button className="btn" style={{ marginTop: 16 }} onClick={() => nav("/officer/login")}>
-                Officer sign-in →
+                {t("officer_signin_btn")}
               </button>
             </div>
           </div>
         </>
       )}
 
-      <div className="section-title">How it works</div>
+      <div className="section-title">{t("how_it_works")}</div>
       <div className="grid grid-3">
         {[
-          { icon: "✍", h: t("beneficiary"), items: ["New Request", "My Case · status + result"] },
-          { icon: "⚖", h: t("officer"), items: ["Review Queue", "Case detail + actions"] },
-          { icon: "📊", h: t("insight"), items: ["Proactive Alerts", "Replay Dashboard"] },
+          { icon: "✍", h: t("beneficiary"), items: [t("hiw_citizen_i1"), t("hiw_citizen_i2")] },
+          { icon: "⚖", h: t("officer"), items: [t("hiw_officer_i1"), t("hiw_officer_i2")] },
+          { icon: "📊", h: t("insight"), items: [t("hiw_insight_i1"), t("hiw_insight_i2")] },
         ].map((c) => (
           <div key={c.h} className="card">
             <span className="chip">{c.icon}</span>

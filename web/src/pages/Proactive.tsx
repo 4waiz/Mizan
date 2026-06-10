@@ -22,13 +22,12 @@ export default function Proactive() {
 
   return (
     <>
-      <Band title={t("proactive")} subtitle="Insight · early-warning watchlist" />
+      <Band title={t("proactive")} subtitle={t("proactive_subtitle")} />
       <p className="lead" style={{ fontSize: 20 }}>
-        Cases flagged <b>before</b> they fall into serious arrears, ranked by re-default
-        risk - enabling early officer outreach.
+        {t("proactive_lead_pre")} <b>{t("proactive_lead_before")}</b> {t("proactive_lead_post")}
       </p>
       {err && <Alert kind="err">{err}</Alert>}
-      {alerts?.length === 0 && <Alert kind="ok">No proactive alerts at present.</Alert>}
+      {alerts?.length === 0 && <Alert kind="ok">{t("no_proactive_alerts")}</Alert>}
 
       {alerts?.map((a) => {
         const rp = a.redefault_probability;

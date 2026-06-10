@@ -5,6 +5,14 @@
 > identifiers and references in these PDFs are fictional and created for this
 > prototype; entity names (employer, bank, clinic) are generic placeholders.
 
+> **Synthetic citizen profiles generated from historical patterns in the
+> organizer dataset. No real citizen identities are displayed.** These demo
+> documents remain **synthetic but data-informed** — their figures and request
+> mix are mapped onto real patterns from the organizer-provided historical Excel
+> (`data/RescheduleArrears.xlsx`, 2023–2025), so the pack looks like production
+> traffic while exposing no real personal data. See
+> [docs/organizer-data.md](../docs/organizer-data.md).
+
 ## How to regenerate
 
 ```bash

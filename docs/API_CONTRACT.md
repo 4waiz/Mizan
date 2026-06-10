@@ -95,6 +95,70 @@ Runs every fixture through the pipeline and aggregates:
     "suggested_action": "Maintain installment" } ]
 ```
 
+## Historical Intelligence (organizer data)
+
+Read-only endpoints backed by the organizer-provided historical Excel
+(`data/RescheduleArrears.xlsx`, 2023–2025), surfaced on the `/insights`
+dashboard. **All five return aggregates only — no PII / no raw rows.**
+Identifier columns are dropped at ingestion; only medians, counts, percentages,
+risk buckets, and banded anonymized patterns are exposed. These calibrate risk
+and demo realism — they do **not** make policy decisions.
+
+> **Graceful degradation.** If `data/RescheduleArrears.xlsx` is absent (or not
+> yet processed), every endpoint responds with HTTP 200 and
+> `{ "loaded": false }` so the rest of the app runs unchanged.
+
+### `GET /api/organizer-insights`
+Top-line aggregated metrics (volume, medians, request-type split, approval
+duration). Aggregates only.
+```json
+{ "loaded": true, "raw_records": 2158, "usable_records": 1933, "dropped": 225,
+  "years": [2023, 2024, 2025],
+  "medians": { "salary_aed": 26205, "overdue_amount_aed": 43119,
+               "overdue_months": 11, "current_emi_aed": 3751, "new_emi_aed": 1004,
+               "current_emi_salary_ratio": 0.15, "approval_duration_days": 11 },
+  "request_type_split": { "UPDATE_INSTALLMENT": { "pct": 0.867, "count": 1676 },
+                          "TRANSFER_ARREARS":   { "pct": 0.133, "count": 257 } } }
+```
+
+### `GET /api/organizer-insights/risk-buckets`
+Overdue-month risk-bucket distribution (Low 0–2, Medium 3–6, High 7–12,
+Severe 13–24, Critical 25+). Aggregates only.
+```json
+{ "loaded": true,
+  "buckets": [ { "name": "Low", "overdue_months": "0-2", "pct": 0.131 },
+               { "name": "Medium", "overdue_months": "3-6", "pct": 0.214 },
+               { "name": "High", "overdue_months": "7-12", "pct": 0.187 },
+               { "name": "Severe", "overdue_months": "13-24", "pct": 0.222 },
+               { "name": "Critical", "overdue_months": "25+", "pct": 0.246 } ] }
+```
+
+### `GET /api/organizer-insights/policy-edge-cases`
+Policy edge-case statistics — chiefly how often installments breach the 20%
+deduction cap. Aggregates only.
+```json
+{ "loaded": true,
+  "deduction_cap": 0.20,
+  "current_emi_over_cap": { "pct": 0.130, "count": 252, "of": 1933 },
+  "new_emi_over_cap":     { "pct": 0.030, "count": 57,  "of": 1873 } }
+```
+
+### `GET /api/organizer-insights/sample-patterns`
+Anonymized / banded sample patterns (no identifiers; values bucketed into
+bands). Aggregates only.
+```json
+{ "loaded": true,
+  "patterns": [ { "salary_band": "20k-30k", "overdue_band": "13-24m",
+                  "request_type": "UPDATE_INSTALLMENT", "deduction_band": "10-20%" } ] }
+```
+
+### `GET /api/proactive-scan`
+Historical high-risk rows for proactive outreach, by risk band. Aggregates only.
+```json
+{ "loaded": true, "high_risk_rows": 406,
+  "bands": { "Critical": 45, "Severe": 361, "High": 463, "Medium": 641, "Low": 423 } }
+```
+
 ## Status values
 
 `intake · processing · auto_approved · pending_human_review · officer_approved ·

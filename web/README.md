@@ -3,7 +3,17 @@
 The Mizan workflow UI — React + Vite + TypeScript, built on the
 **Paper** design system (see `../SKILL.md`). It talks to the FastAPI backend
 and covers every screen: Home (mock UAE PASS login), New Request, My Case,
-Officer Queue, Officer Case Review, Proactive Alerts, and the Replay Dashboard.
+Officer Queue, Officer Case Review, Proactive Alerts, the Replay Dashboard, and
+the **Historical Intelligence dashboard** (`/insights`).
+
+> **Historical Intelligence (`/insights`).** `src/pages/Insights.tsx` renders the
+> organizer-data dashboard from the `/api/organizer-insights*` and
+> `/api/proactive-scan` endpoints. It is built on the organizer-provided
+> historical Excel (`../data/RescheduleArrears.xlsx`, 2023–2025), used for
+> aggregated insights, risk calibration, and demo realism. It shows **aggregates,
+> risk buckets, and anonymized/banded patterns only** — **no raw personal data is
+> exposed**, and final decisions are still governed by the deterministic policy
+> rules. See [`../docs/organizer-data.md`](../docs/organizer-data.md).
 
 ## Run
 

@@ -1,0 +1,80 @@
+{
+  "loaded": true,
+  "model": "organizer-calibrated-deterministic-v1",
+  "disclaimer": "Transparent, deterministic risk-calibration layer (MVP) \u2014 not a production ML credit model. Thresholds are calibrated on the organizer 2023\u20132025 historical dataset; every score maps to named reasons. Final eligibility is always decided by the deterministic policy engine, not by this score.",
+  "evaluated": 1933,
+  "min_score": 60,
+  "band_distribution": {
+    "Critical": {
+      "count": 45,
+      "percent": 2.3
+    },
+    "Severe": {
+      "count": 361,
+      "percent": 18.7
+    },
+    "High": {
+      "count": 463,
+      "percent": 24.0
+    },
+    "Medium": {
+      "count": 641,
+      "percent": 33.2
+    },
+    "Low": {
+      "count": 423,
+      "percent": 21.9
+    }
+  },
+  "high_risk_count": 406,
+  "patterns": [
+    {
+      "request_type": "TRANSFER_ARREARS",
+      "risk_label": "Critical",
+      "case_count": 40,
+      "median_score": 87,
+      "median_overdue_months": 41.5,
+      "salary_band": "10,000\u201315,000",
+      "overdue_amount_band": "170,000\u2013175,000",
+      "exceeds_cap_share": 100.0,
+      "recommended_intervention": "Urgent collection-risk review",
+      "top_reason": "50 months overdue (critical band, 25+)"
+    },
+    {
+      "request_type": "UPDATE_INSTALLMENT",
+      "risk_label": "Critical",
+      "case_count": 5,
+      "median_score": 86,
+      "median_overdue_months": 56.0,
+      "salary_band": "10,000\u201315,000",
+      "overdue_amount_band": "140,000\u2013145,000",
+      "exceeds_cap_share": 80.0,
+      "recommended_intervention": "Urgent collection-risk review",
+      "top_reason": "24 months overdue (severe band, 13\u201324)"
+    },
+    {
+      "request_type": "TRANSFER_ARREARS",
+      "risk_label": "Severe",
+      "case_count": 58,
+      "median_score": 69,
+      "median_overdue_months": 19.0,
+      "salary_band": "15,000\u201320,000",
+      "overdue_amount_band": "75,000\u201380,000",
+      "exceeds_cap_share": 74.1,
+      "recommended_intervention": "Human review",
+      "top_reason": "19 months overdue (severe band, 13\u201324)"
+    },
+    {
+      "request_type": "UPDATE_INSTALLMENT",
+      "risk_label": "Severe",
+      "case_count": 303,
+      "median_score": 65,
+      "median_overdue_months": 40.0,
+      "salary_band": "25,000\u201330,000",
+      "overdue_amount_band": "145,000\u2013150,000",
+      "exceeds_cap_share": 5.3,
+      "recommended_intervention": "Human review",
+      "top_reason": "43 months overdue (critical band, 25+)"
+    }
+  ]
+}

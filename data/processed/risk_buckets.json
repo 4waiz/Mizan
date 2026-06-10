@@ -1,0 +1,105 @@
+{
+  "loaded": true,
+  "evaluated": 1933,
+  "definitions": [
+    {
+      "key": "low",
+      "label": "Low",
+      "min_months": 0,
+      "max_months": 2
+    },
+    {
+      "key": "medium",
+      "label": "Medium",
+      "min_months": 3,
+      "max_months": 6
+    },
+    {
+      "key": "high",
+      "label": "High",
+      "min_months": 7,
+      "max_months": 12
+    },
+    {
+      "key": "severe",
+      "label": "Severe",
+      "min_months": 13,
+      "max_months": 24
+    },
+    {
+      "key": "critical",
+      "label": "Critical",
+      "min_months": 25,
+      "max_months": null
+    }
+  ],
+  "counts": {
+    "low": {
+      "label": "Low",
+      "range": "0\u20132 months",
+      "count": 254,
+      "percent": 13.1
+    },
+    "medium": {
+      "label": "Medium",
+      "range": "3\u20136 months",
+      "count": 413,
+      "percent": 21.4
+    },
+    "high": {
+      "label": "High",
+      "range": "7\u201312 months",
+      "count": 361,
+      "percent": 18.7
+    },
+    "severe": {
+      "label": "Severe",
+      "range": "13\u201324 months",
+      "count": 429,
+      "percent": 22.2
+    },
+    "critical": {
+      "label": "Critical",
+      "range": "25+ months",
+      "count": 476,
+      "percent": 24.6
+    }
+  },
+  "distribution": [
+    {
+      "key": "low",
+      "label": "Low",
+      "range": "0\u20132 months",
+      "count": 254,
+      "percent": 13.1
+    },
+    {
+      "key": "medium",
+      "label": "Medium",
+      "range": "3\u20136 months",
+      "count": 413,
+      "percent": 21.4
+    },
+    {
+      "key": "high",
+      "label": "High",
+      "range": "7\u201312 months",
+      "count": 361,
+      "percent": 18.7
+    },
+    {
+      "key": "severe",
+      "label": "Severe",
+      "range": "13\u201324 months",
+      "count": 429,
+      "percent": 22.2
+    },
+    {
+      "key": "critical",
+      "label": "Critical",
+      "range": "25+ months",
+      "count": 476,
+      "percent": 24.6
+    }
+  ]
+}

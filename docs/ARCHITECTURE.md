@@ -83,6 +83,41 @@ identical in-process sequential runner so the app always runs.
   powering the officer queue and proactive list. All access is through
   `db/repository.py`; switching to Postgres is a `database.py` change only.
 
+## 4b. Historical Intelligence layer
+
+A separate, **read-only** layer reads the organizer-provided historical arrears
+Excel ([`data/RescheduleArrears.xlsx`](../data/RescheduleArrears.xlsx),
+2023–2025) to calibrate risk and add demo realism — it does **not** participate
+in case decisioning.
+
+```
+data/RescheduleArrears.xlsx
+        │  ingest (PII dropped at load, fuzzy column map, coercion, plausibility filters)
+        ▼
+backend/app/data/organizer_dataset.py
+        │  clean rows
+        ▼
+backend/app/services/historical_insights_service.py     (medians, counts, %, risk buckets, banded patterns)
+backend/app/services/risk_forecaster.py                 (transparent risk scoring calibrated on history)
+        │  aggregates only → data/processed/*.json
+        ▼
+GET /api/organizer-insights · /risk-buckets · /policy-edge-cases · /sample-patterns
+GET /api/proactive-scan
+        ▼
+web/src/pages/Insights.tsx  →  /insights dashboard  (aggregates / buckets / anonymized patterns only)
+```
+
+The offline ingestion entrypoint is `scripts/analyze_organizer_excel.py`, which
+writes `data/processed/organizer_insights.json`, `risk_buckets.json`, and
+`proactive_scan.json`.
+
+**This layer CALIBRATES risk and demo realism; it does NOT make policy
+decisions.** Every outcome is still produced by the deterministic policy engine
+(`policies/rules.py` + `policies/solver.py`); historical averages and the LLM
+never decide. Only aggregates, risk buckets, and anonymized/banded patterns
+leave the backend, and the endpoints degrade gracefully (`{ "loaded": false }`)
+when the Excel is absent. See [organizer-data.md](organizer-data.md).
+
 ## 5. Frontend
 
 A React + Vite + TypeScript multipage **workflow** UI (not a chatbot):

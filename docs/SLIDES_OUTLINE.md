@@ -1,6 +1,6 @@
 # Mizan — Slides Outline
 
-A 12-slide deck for the hackathon pitch, built around a live **demo video**.
+A 13-slide deck for the hackathon pitch, built around a live **demo video**.
 
 > **Demo video:** [`intro.mp4`](../intro.mp4) (project root). Embed it on Slide 9
 > and keep it queued as a fallback in case the live environment misbehaves.
@@ -76,13 +76,27 @@ What the video shows, in order:
 - Outcome distribution + per-case table, all reproducible (deterministic seed).
 - Bonus: **proactive risk alerts** catch beneficiaries *before* serious arrears.
 
-### Slide 11 — Why it's safe to trust
+### Slide 11 — What the organizer data revealed
+- Historical arrears cases across **2023–2025** (**2,158 raw / 1,933 usable**).
+- A **recurring operational workflow**, not a rare case.
+- Arrears often accumulate for months before action — **median 11 overdue
+  months**; **46.8% of cases are Severe/Critical** at 13+ months.
+- Main treatment paths: **update installment (86.7%)** or **transfer arrears
+  (13.3%)**.
+- **20% deduction-cap validation needs automation** — **13%** of current
+  installments already exceed the cap.
+- Mizan moves the service from **late arrears treatment** to **early financial
+  intervention**.
+
+> **Speaker notes:** "The organizer Excel changed our approach. Instead of building a generic AI demo, we used real historical arrears patterns to calibrate risk scoring, validate policy edge cases, and create realistic synthetic demo cases. This makes Mizan data-informed while still preserving privacy."
+
+### Slide 12 — Why it's safe to trust
 - Decisions are **deterministic and reproducible** — same inputs, same outcome.
 - **On suspicion, never auto-reject** — hand the officer evidence + a safe default.
 - Synthetic, watermarked demo data — **no real persons, banks, or government
   records**; only neutral placeholders.
 
-### Slide 12 — Roadmap
+### Slide 13 — Roadmap
 - Real UAE PASS + MOEI/AECB connectors (same interfaces).
 - Postgres + event-sourced audit; officer-feedback retraining of the risk model.
 - Policy versioning for faithful historical replay.

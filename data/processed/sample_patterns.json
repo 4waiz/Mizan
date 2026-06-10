@@ -1,0 +1,86 @@
+{
+  "loaded": true,
+  "note": "Synthetic aggregate patterns derived from historical groups. Figures are medians within anonymized bands \u2014 no individual record is shown.",
+  "patterns": [
+    {
+      "request_type": "UPDATE_INSTALLMENT",
+      "risk_bucket": "critical",
+      "case_count": 420,
+      "salary_band": "25,000\u201330,000",
+      "median_overdue_months": 37.0,
+      "median_overdue_amount_band": "130,000\u2013135,000",
+      "median_current_emi_ratio": 0.14,
+      "exceeds_cap_share": 2.9
+    },
+    {
+      "request_type": "UPDATE_INSTALLMENT",
+      "risk_bucket": "severe",
+      "case_count": 378,
+      "salary_band": "25,000\u201330,000",
+      "median_overdue_months": 18.0,
+      "median_overdue_amount_band": "60,000\u201365,000",
+      "median_current_emi_ratio": 0.14,
+      "exceeds_cap_share": 2.1
+    },
+    {
+      "request_type": "UPDATE_INSTALLMENT",
+      "risk_bucket": "medium",
+      "case_count": 363,
+      "salary_band": "25,000\u201330,000",
+      "median_overdue_months": 4.0,
+      "median_overdue_amount_band": "15,000\u201320,000",
+      "median_current_emi_ratio": 0.14,
+      "exceeds_cap_share": 3.6
+    },
+    {
+      "request_type": "UPDATE_INSTALLMENT",
+      "risk_bucket": "high",
+      "case_count": 315,
+      "salary_band": "25,000\u201330,000",
+      "median_overdue_months": 9.0,
+      "median_overdue_amount_band": "30,000\u201335,000",
+      "median_current_emi_ratio": 0.14,
+      "exceeds_cap_share": 2.5
+    },
+    {
+      "request_type": "UPDATE_INSTALLMENT",
+      "risk_bucket": "low",
+      "case_count": 200,
+      "salary_band": "25,000\u201330,000",
+      "median_overdue_months": 1.0,
+      "median_overdue_amount_band": "5,000\u201310,000",
+      "median_current_emi_ratio": 0.15,
+      "exceeds_cap_share": 5.5
+    },
+    {
+      "request_type": "TRANSFER_ARREARS",
+      "risk_bucket": "critical",
+      "case_count": 56,
+      "salary_band": "15,000\u201320,000",
+      "median_overdue_months": 38.0,
+      "median_overdue_amount_band": "150,000\u2013155,000",
+      "median_current_emi_ratio": 0.23,
+      "exceeds_cap_share": 75.0
+    },
+    {
+      "request_type": "TRANSFER_ARREARS",
+      "risk_bucket": "low",
+      "case_count": 54,
+      "salary_band": "15,000\u201320,000",
+      "median_overdue_months": 1.0,
+      "median_overdue_amount_band": "5,000\u201310,000",
+      "median_current_emi_ratio": 0.23,
+      "exceeds_cap_share": 74.1
+    },
+    {
+      "request_type": "TRANSFER_ARREARS",
+      "risk_bucket": "severe",
+      "case_count": 51,
+      "salary_band": "15,000\u201320,000",
+      "median_overdue_months": 17.0,
+      "median_overdue_amount_band": "60,000\u201365,000",
+      "median_current_emi_ratio": 0.22,
+      "exceeds_cap_share": 78.4
+    }
+  ]
+}

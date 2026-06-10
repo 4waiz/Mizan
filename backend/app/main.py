@@ -41,7 +41,14 @@ from .schemas.api import (
     RunResponse,
 )
 from .policies import rules
-from .services import audit, case_factory, historical_insights_service, pdf_extract, risk_forecaster
+from .services import (
+    audit,
+    case_factory,
+    demo_scenarios,
+    historical_insights_service,
+    pdf_extract,
+    risk_forecaster,
+)
 from .services.mocks import mock_document_store, registry
 from .services.replay import replay_summary
 
@@ -93,6 +100,7 @@ def root() -> dict:
         "llm_provider": "anthropic" if s.use_real_llm else "mock",
         "max_deduction_ratio": s.max_deduction_ratio,
         "fixtures": sorted(registry.all_fixtures().keys()),
+        "synthetic_data_disclaimer": demo_scenarios.SYNTHETIC_DATA_DISCLAIMER,
     }
 
 
@@ -106,6 +114,7 @@ def health() -> dict:
 def list_fixtures() -> list[dict]:
     out = []
     for fid, rec in sorted(registry.all_fixtures().items()):
+        pattern = demo_scenarios.SCENARIO_PATTERN_MAP.get(fid, {})
         out.append(
             {
                 "fixture_id": fid,
@@ -114,9 +123,20 @@ def list_fixtures() -> list[dict]:
                 "trigger_type": rec.get("trigger_type", "application"),
                 "expected_outcome": rec.get("expected_outcome"),
                 "note": rec.get("scenario_note"),
+                # Data-informed framing: which historical pattern this synthetic
+                # case mirrors (no real identity is ever used).
+                "data_informed_pattern": pattern.get("pattern"),
+                "historical_basis": pattern.get("historical_basis"),
+                "synthetic": True,
             }
         )
     return out
+
+
+@app.get("/api/demo-scenarios")
+def demo_scenarios_endpoint() -> dict:
+    """How the synthetic demo cases map to real organizer-data patterns."""
+    return demo_scenarios.demo_scenarios_payload()
 
 
 # ── beneficiary flow ─────────────────────────────────────────────────────────
