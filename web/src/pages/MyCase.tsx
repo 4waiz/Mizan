@@ -14,6 +14,7 @@ import {
   MemoBlock,
   AuditTimeline,
   Expander,
+  DocumentPreview,
 } from "../components/ui";
 
 export default function MyCase() {
