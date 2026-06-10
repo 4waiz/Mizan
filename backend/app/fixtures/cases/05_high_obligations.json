@@ -35,7 +35,7 @@
   "salary_verification": {"verified": true, "verified_income_aed": 18000, "employer_name": "Ajman Ports"},
   "documents": [
     {"document_id": "DOC-1005-EID", "doc_type": "emirates_id", "status": "present", "file_name": "eid.pdf", "issued_on": "2023-07-01", "uploaded_on": "2026-06-08", "raw_text": "Emirates ID 784-****-1005"},
-    {"document_id": "DOC-1005-SAL", "doc_type": "salary_certificate", "status": "present", "file_name": "salary.pdf", "issued_on": "2026-05-12", "uploaded_on": "2026-06-08", "raw_text": "Employer: Ajman Ports\nMonthly Salary: AED 18,000\nIssued: 2026-05-12"},
-    {"document_id": "DOC-1005-BNK", "doc_type": "bank_statement", "status": "present", "file_name": "bank.pdf", "issued_on": "2026-05-31", "uploaded_on": "2026-06-08", "raw_text": "Balance: AED 9,000\nBalance: AED 6,500\nSalary credit: AED 18,000"}
+    {"document_id": "DOC-1005-SAL", "doc_type": "salary_certificate", "status": "present", "file_name": "salary.pdf", "issued_on": "2026-05-12", "uploaded_on": "2026-06-08", "raw_text": "Employee Name: Saeed Al Nuaimi\nEmployer: Emirates Employer Services LLC\nBasic Salary: AED 18,000\nAllowances: AED 12,000\nGross Monthly Salary: AED 30,000\nDeductions: AED 3,000\nNet Salary: AED 27,000\nIssued: 2026-05-12"},
+    {"document_id": "DOC-1005-BNK", "doc_type": "bank_statement", "status": "present", "file_name": "bank.pdf", "issued_on": "2026-05-31", "uploaded_on": "2026-06-08", "raw_text": "Account Holder: Saeed Al Nuaimi\nAverage Monthly Income (net): AED 27,000\nSalary credit (gross): AED 30,000\nSalary credit (net): AED 27,000"}
   ]
 }

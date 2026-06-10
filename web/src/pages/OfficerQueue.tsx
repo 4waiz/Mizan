@@ -39,7 +39,7 @@ export default function OfficerQueue() {
       {queue?.map((item) => (
         <div key={item.case_id} className="card" style={{ borderLeft: "4px solid var(--gold)" }}>
           <div
-            className="grid"
+            className="grid queue-row"
             style={{ gridTemplateColumns: "1.6fr 1fr 1fr auto", alignItems: "center", gap: 18 }}
           >
             <div>

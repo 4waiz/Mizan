@@ -52,7 +52,7 @@ export default function Replay() {
       </div>
 
       <div className="section-title">Cases</div>
-      <div style={{ overflowX: "auto" }}>
+      <div className="table-scroll">
         <table className="tbl">
           <thead>
             <tr>

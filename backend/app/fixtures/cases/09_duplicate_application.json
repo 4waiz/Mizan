@@ -5,8 +5,8 @@
   "scenario_note": "DEMO — duplicate request. A rescheduling application is already open for this beneficiary, so the new request is rejected immediately at the fraud/dedupe step (SZHP-R3) — affordability and risk analysis are skipped.",
   "beneficiary": {
     "beneficiary_id": "SZHP-1009",
-    "full_name_en": "Saeed Al Marri",
-    "full_name_ar": "سعيد المرّي",
+    "full_name_en": "Saeed Al Nuaimi",
+    "full_name_ar": "سعيد النعيمي",
     "emirates_id_masked": "784-****-****-1009",
     "emirate": "Dubai",
     "employment_status": "employed",
@@ -33,7 +33,7 @@
   "salary_verification": {"verified": true, "verified_income_aed": 19000, "employer_name": "Dubai Holding"},
   "documents": [
     {"document_id": "DOC-1009-EID", "doc_type": "emirates_id", "status": "present", "file_name": "eid.pdf", "issued_on": "2022-09-01", "uploaded_on": "2026-06-09", "raw_text": "Emirates ID 784-****-1009"},
-    {"document_id": "DOC-1009-SAL", "doc_type": "salary_certificate", "status": "present", "file_name": "salary.pdf", "issued_on": "2026-05-20", "uploaded_on": "2026-06-09", "raw_text": "Employer: Dubai Holding\nMonthly Salary: AED 19,000\nIssued: 2026-05-20"},
-    {"document_id": "DOC-1009-BNK", "doc_type": "bank_statement", "status": "present", "file_name": "bank.pdf", "issued_on": "2026-05-31", "uploaded_on": "2026-06-09", "raw_text": "Balance: AED 31,000\nSalary credit: AED 19,000"}
+    {"document_id": "DOC-1009-SAL", "doc_type": "salary_certificate", "status": "present", "file_name": "salary.pdf", "issued_on": "2026-05-20", "uploaded_on": "2026-06-09", "raw_text": "Employee Name: Saeed Al Nuaimi\nEmployer: Dubai Holding\nMonthly Salary: AED 19,000\nIssued: 2026-05-20"},
+    {"document_id": "DOC-1009-BNK", "doc_type": "bank_statement", "status": "present", "file_name": "bank.pdf", "issued_on": "2026-05-31", "uploaded_on": "2026-06-09", "raw_text": "Account Holder: Saeed Al Nuaimi\nBalance: AED 31,000\nSalary credit: AED 19,000"}
   ]
 }

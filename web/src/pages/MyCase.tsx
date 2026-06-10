@@ -49,7 +49,7 @@ export default function MyCase() {
     <>
       <Band title={t("status")} subtitle={t("subtitle")} />
 
-      <div className="grid" style={{ gridTemplateColumns: "1fr auto", alignItems: "end" }}>
+      <div className="grid form-toolbar" style={{ gridTemplateColumns: "1fr auto", alignItems: "end" }}>
         <div>
           <label className="field">Case ID</label>
           <input value={caseId} onChange={(e) => setCaseId(e.target.value)} />
@@ -65,7 +65,7 @@ export default function MyCase() {
       {caseData && (
         <>
           <div
-            className="grid"
+            className="grid split-2-1"
             style={{ gridTemplateColumns: "2fr 1fr", marginTop: 16 }}
           >
             <ProfileCard case={caseData} />

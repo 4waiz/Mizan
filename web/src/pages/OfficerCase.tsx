@@ -95,7 +95,7 @@ export default function OfficerCase() {
     <>
       <Band title="Case Review" subtitle="Officer · evidence, policy & determination" />
 
-      <div className="grid" style={{ gridTemplateColumns: "1fr auto auto", alignItems: "end" }}>
+      <div className="grid form-toolbar" style={{ gridTemplateColumns: "1fr auto auto", alignItems: "end" }}>
         <div>
           <label className="field">Case ID</label>
           <input value={caseId} onChange={(e) => setCaseId(e.target.value)} />
@@ -114,7 +114,7 @@ export default function OfficerCase() {
       {msg && <Alert kind={msg.kind}>{msg.text}</Alert>}
 
       {caseData && (
-        <div className="grid" style={{ gridTemplateColumns: "3fr 2fr", marginTop: 16 }}>
+        <div className="grid split-3-2" style={{ gridTemplateColumns: "3fr 2fr", marginTop: 16 }}>
           {/* LEFT */}
           <div>
             <ProfileCard case={caseData} />
