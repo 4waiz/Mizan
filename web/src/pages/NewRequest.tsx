@@ -14,6 +14,12 @@ import {
   type ProgressStep,
 } from "../components/ui";
 
+// Show ms under a second, otherwise seconds (e.g. "8.4 s").
+function formatProcessing(ms: number): string {
+  if (ms < 1000) return `${Math.round(ms)} ms`;
+  return `${(ms / 1000).toFixed(1)} s`;
+}
+
 export default function NewRequest() {
   const { t } = useI18n();
   const [caseData, setCaseData] = useState<any>(null);
@@ -178,8 +184,7 @@ export default function NewRequest() {
           <div className="grid grid-3">
             <Metric
               k="Processing time"
-              v={proc != null ? `${Math.round(proc)} ms` : "-"}
-              delta="vs. 5 working days manually"
+              v={proc != null ? formatProcessing(proc) : "-"}
             />
           </div>
           <div style={{ marginTop: 12 }}>

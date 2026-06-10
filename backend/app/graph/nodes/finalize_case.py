@@ -1,7 +1,7 @@
 """Node 9 — finalize_case.
 
-Stamp the SLA clock (the 'instant vs 5 working days' story), emit the final
-recommendation/escalation audit event, and seal the case.
+Stamp the processing clock, emit the final recommendation/escalation audit
+event, and seal the case.
 """
 from __future__ import annotations
 

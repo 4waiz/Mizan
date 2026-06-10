@@ -12,6 +12,8 @@ immediately, the skipped steps are reported, and the case is finalised.
 """
 from __future__ import annotations
 
+import os
+import time
 from collections.abc import Iterator
 
 from ..schemas import (
@@ -69,6 +71,36 @@ STEP_LABELS: dict[str, dict[str, str]] = {
 
 # The full ordered list of step keys (used by the UI to lay out the load bar).
 STEP_ORDER: list[str] = [n.NODE for n in nodes.PIPELINE]
+
+# Per-step "thinking" time (seconds) so the live load bar reads like real
+# processing instead of flashing through instantly. Heavier analytical steps
+# (affordability, risk, policy solving) linger longer than bookkeeping ones.
+# Every duration is scaled by the MIZAN_STEP_SPEED env var so the whole run can
+# be sped up or slowed down at once (e.g. MIZAN_STEP_SPEED=0 disables it for
+# tests, MIZAN_STEP_SPEED=2 doubles every pause).
+STEP_DURATIONS: dict[str, float] = {
+    "intake_and_retrieve": 1.6,
+    "document_audit": 2.4,
+    "fraud_and_dedupe_check": 2.0,
+    "affordability_analysis": 3.2,
+    "risk_forecast": 3.0,
+    "policy_solver": 3.4,
+    "human_review_gate": 1.8,
+    "rationale_generator": 2.6,
+    "finalize_case": 1.4,
+}
+_DEFAULT_DURATION = 2.0
+
+
+def _step_speed() -> float:
+    try:
+        return max(0.0, float(os.getenv("MIZAN_STEP_SPEED", "1.0")))
+    except ValueError:
+        return 1.0
+
+
+def _step_duration(node_name: str, speed: float) -> float:
+    return STEP_DURATIONS.get(node_name, _DEFAULT_DURATION) * speed
 
 
 def _meta(node_name: str) -> dict[str, str]:
@@ -157,6 +189,12 @@ def run_stream(case: CaseState) -> Iterator[dict]:
     """
     pipeline = nodes.PIPELINE
     total = len(pipeline)
+    speed = _step_speed()
+
+    # Start the processing clock when the assessment actually begins, so the
+    # reported processing time reflects this run (not the gap since intake).
+    if case.sla is not None:
+        case.sla.created_at = audit.now_iso()
 
     yield {
         "type": "start",
@@ -175,6 +213,12 @@ def run_stream(case: CaseState) -> Iterator[dict]:
             "index": index,
             "total": total,
         }
+
+        # Linger on the "active" state so the step is visibly worked on rather
+        # than completing instantly.
+        dwell = _step_duration(name, speed)
+        if dwell:
+            time.sleep(dwell)
 
         case = node_module.run(case)
 
@@ -196,6 +240,8 @@ def run_stream(case: CaseState) -> Iterator[dict]:
                     if skip_name in ("rationale_generator", "finalize_case"):
                         continue  # we still seal the case below
                     smeta = _meta(skip_name)
+                    if speed:
+                        time.sleep(0.6 * speed)
                     yield {
                         "type": "skipped",
                         "key": skip_name,
