@@ -9,7 +9,6 @@ from ...schemas import AuditEventType, CaseState, CaseStatus, SLAClock
 from ...services import audit
 from ...services.mocks import (
     mock_bank_verifier,
-    mock_document_store,
     mock_moei_loan_system,
     registry,
 )
@@ -28,8 +27,10 @@ def run(state: CaseState) -> CaseState:
         state.family = mock_moei_loan_system.get_family(record)
         state.active_application = mock_moei_loan_system.get_active_application(record)
         state.obligations = mock_bank_verifier.get_obligations(record)
-        if not state.document_inventory.documents:
-            state.document_inventory = mock_document_store.build_inventory(record)
+        # NB: documents are NOT auto-retrieved here. The document inventory is
+        # owned by case creation (seeder seeds it; the citizen portal starts
+        # empty and the beneficiary uploads through the API). Re-seeding here
+        # would defeat the "upload your documents" flow.
 
     if state.sla is None:
         state.sla = SLAClock(legacy_sla_working_days=5, created_at=audit.now_iso())
