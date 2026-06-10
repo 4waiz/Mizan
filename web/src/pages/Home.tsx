@@ -80,38 +80,42 @@ export default function Home() {
         </Alert>
       )}
 
-      <div className="section-title">Choose your portal</div>
-      <div className="grid grid-2">
-        {/* Citizen */}
-        <div className="card">
-          <span className="chip">👤</span>
-          <h4 style={{ fontSize: 22, marginTop: 16 }}>Citizen Portal</h4>
-          <ul className="ticks">
-            <li>Sign in with your account or UAE PASS</li>
-            <li>Submit a rescheduling request</li>
-            <li>Watch the assessment run, step by step</li>
-            <li>Track the decision on My Case</li>
-          </ul>
-          <button className="btn primary" style={{ marginTop: 16 }} onClick={() => nav("/login")}>
-            {citizen ? "Open Citizen Portal →" : "Citizen sign-in →"}
-          </button>
-        </div>
+      {!(citizen || officer) && (
+        <>
+          <div className="section-title">Choose your portal</div>
+          <div className="grid grid-2">
+            {/* Citizen */}
+            <div className="card">
+              <span className="chip">👤</span>
+              <h4 style={{ fontSize: 22, marginTop: 16 }}>Citizen Portal</h4>
+              <ul className="ticks">
+                <li>Sign in with your account or UAE PASS</li>
+                <li>Submit a rescheduling request</li>
+                <li>Watch the assessment run, step by step</li>
+                <li>Track the decision on My Case</li>
+              </ul>
+              <button className="btn primary" style={{ marginTop: 16 }} onClick={() => nav("/login")}>
+                Citizen sign-in →
+              </button>
+            </div>
 
-        {/* Officer */}
-        <div className="card">
-          <span className="chip">⚖</span>
-          <h4 style={{ fontSize: 22, marginTop: 16 }}>Officer Dashboard</h4>
-          <ul className="ticks">
-            <li>Review the escalation queue</li>
-            <li>Approve, override or reject determinations</li>
-            <li>Proactive risk alerts</li>
-            <li>Replay & audit dashboard</li>
-          </ul>
-          <button className="btn" style={{ marginTop: 16 }} onClick={() => nav("/officer/login")}>
-            {officer ? "Open Officer Dashboard →" : "Officer sign-in →"}
-          </button>
-        </div>
-      </div>
+            {/* Officer */}
+            <div className="card">
+              <span className="chip">⚖</span>
+              <h4 style={{ fontSize: 22, marginTop: 16 }}>Officer Dashboard</h4>
+              <ul className="ticks">
+                <li>Review the escalation queue</li>
+                <li>Approve, override or reject determinations</li>
+                <li>Proactive risk alerts</li>
+                <li>Replay & audit dashboard</li>
+              </ul>
+              <button className="btn" style={{ marginTop: 16 }} onClick={() => nav("/officer/login")}>
+                Officer sign-in →
+              </button>
+            </div>
+          </div>
+        </>
+      )}
 
       <div className="section-title">How it works</div>
       <div className="grid grid-3">
