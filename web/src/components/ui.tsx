@@ -75,11 +75,22 @@ export function StatusPill({ status, lg }: { status: string; lg?: boolean }) {
   );
 }
 
-export function ProfileCard({ case: c }: { case: any }) {
+export function ProfileCard({
+  case: c,
+  revealFinancials = true,
+}: {
+  case: any;
+  revealFinancials?: boolean;
+}) {
   const { t } = useI18n();
   const b = c.beneficiary ?? {};
   const loan = c.loan ?? {};
   const arr = c.arrears ?? {};
+  const hidden = (
+    <span style={{ fontSize: 13, fontWeight: 500, color: "var(--ink-soft, #9aa0a6)" }}>
+      🔒 Pending documents
+    </span>
+  );
   return (
     <div className="card tab">
       <div className="spread" style={{ alignItems: "flex-start", marginBottom: 16 }}>
@@ -105,9 +116,12 @@ export function ProfileCard({ case: c }: { case: any }) {
         </span>
       </div>
       <div className="grid grid-3">
-        <Metric k={t("income")} v={aed(b.monthly_income_aed)} />
-        <Metric k={t("installment")} v={aed(loan.current_installment_aed)} />
-        <Metric k={t("arrears")} v={aed(arr.arrears_amount_aed)} />
+        <Metric k={t("income")} v={revealFinancials ? aed(b.monthly_income_aed) : hidden} />
+        <Metric
+          k={t("installment")}
+          v={revealFinancials ? aed(loan.current_installment_aed) : hidden}
+        />
+        <Metric k={t("arrears")} v={revealFinancials ? aed(arr.arrears_amount_aed) : hidden} />
       </div>
     </div>
   );

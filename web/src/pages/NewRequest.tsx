@@ -52,15 +52,38 @@ export default function NewRequest() {
     }
   };
 
+  // Create a fresh, empty application (clears any prior case + uploads).
+  const startNew = async () => {
+    if (!s.fixture) return;
+    setErr(null);
+    setRun(null);
+    setFailure(null);
+    setUploadMsg(null);
+    setSteps([]);
+    setCaseData(null);
+    setReqDocs(null);
+    try {
+      const res = await api.intake(s.fixture, "application");
+      setSession({ activeCaseId: res.case_id, lastRunCaseId: undefined });
+      setCaseData(await api.getCase(res.case_id));
+      await refreshRequired(res.case_id);
+    } catch (e) {
+      setErr(String(e));
+    }
+  };
+
   useEffect(() => {
     if (!s.fixture) return;
     (async () => {
       try {
         let caseId = s.activeCaseId;
-        if (getSession().fixture !== s.fixture || !caseId) {
+        // Start a fresh empty application when none is active, the beneficiary
+        // changed, or the active case has already been assessed.
+        const stale = getSession().fixture !== s.fixture || !caseId || !!s.lastRunCaseId;
+        if (stale) {
           const res = await api.intake(s.fixture!, "application");
           caseId = res.case_id;
-          setSession({ activeCaseId: caseId });
+          setSession({ activeCaseId: caseId, lastRunCaseId: undefined });
         }
         setCaseData(await api.getCase(caseId!));
         await refreshRequired(caseId!);
@@ -217,10 +240,32 @@ export default function NewRequest() {
       {err && <Alert kind="err">{err}</Alert>}
 
       <div className="section-title">1 · {t("profile")}</div>
-      <div className="caption">Auto-filled from UAE PASS and MOEI records.</div>
-      {caseData && <ProfileCard case={caseData} />}
+      <div className="caption">
+        Identity auto-filled from UAE PASS. Financial figures are revealed once your
+        supporting documents are uploaded and verified below.
+      </div>
+      {caseData && (
+        <ProfileCard
+          case={caseData}
+          revealFinancials={reqDocs != null && reqDocs.missing.length === 0 && docs.length > 0}
+        />
+      )}
 
-      <div className="section-title">2 · {t("documents")}</div>
+      <div
+        className="section-title"
+        style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}
+      >
+        <span>2 · {t("documents")}</span>
+        <button
+          className="btn ghost"
+          style={{ padding: "6px 12px", fontSize: 13 }}
+          onClick={startNew}
+          disabled={uploading || busy}
+          title="Discard uploads and begin a fresh application"
+        >
+          ↺ Start new application
+        </button>
+      </div>
 
       {/* Required-documents checklist */}
       {reqDocs && (

@@ -5,12 +5,11 @@ import { api } from "../api";
 import { getSession, isCitizen, isOfficer, signOutCitizen, signOutOfficer } from "../session";
 
 function useHealth() {
-  const [h, setH] = useState<any>(null);
   const [err, setErr] = useState(false);
   useEffect(() => {
-    api.health().then(setH).catch(() => setErr(true));
+    api.health().catch(() => setErr(true));
   }, []);
-  return { h, err };
+  return { err };
 }
 
 const NAV_HOME = { to: "/", end: true, num: "00", key: "home" } as const;
@@ -62,7 +61,7 @@ export default function Layout({ children }: { children: ReactNode }) {
   const nav = useNavigate();
   const [, force] = useState(0);
   const [scrolled, setScrolled] = useState(false);
-  const { h, err } = useHealth();
+  const { err } = useHealth();
 
   useEffect(() => {
     const onSession = () => force((n) => n + 1);
@@ -100,43 +99,37 @@ export default function Layout({ children }: { children: ReactNode }) {
         </nav>
 
         <div className="topbar-actions">
-          <span className="statuschip" title={err ? "Backend offline" : "Backend online"}>
+          <span className="statuschip" title={err ? "Service unavailable" : "All systems operational"}>
             <span
               className="dot"
               style={err ? { background: "var(--danger)", boxShadow: "0 0 0 3px rgba(220,38,38,.16)" } : undefined}
             />
-            {err ? "Offline" : h ? `${h.engine}` : "Online"}
+            {err ? "Offline" : "System online"}
           </span>
 
-          {/* Session chip + sign in / out */}
-          {citizen ? (
-            <span className="statuschip" title="Citizen session">
-              👤 {s.name}
+          {/* Session: user identity pill + sign out */}
+          {citizen || officer ? (
+            <div className="usermenu" title={citizen ? "Citizen session" : "Officer session"}>
+              <span className="avatar">{(citizen ? s.name : s.officerName)?.[0]?.toUpperCase() ?? "U"}</span>
+              <span className="who">
+                <span className="who-name">{citizen ? s.name : s.officerName}</span>
+                <span className="who-role">{citizen ? "Beneficiary" : "Officer"}</span>
+              </span>
               <button
-                className="flink"
-                style={{ marginLeft: 8 }}
+                className="signout"
                 onClick={() => {
-                  signOutCitizen();
-                  nav("/login");
+                  if (citizen) {
+                    signOutCitizen();
+                    nav("/login");
+                  } else {
+                    signOutOfficer();
+                    nav("/officer/login");
+                  }
                 }}
               >
                 Sign out
               </button>
-            </span>
-          ) : officer ? (
-            <span className="statuschip" title="Officer session">
-              ⚖ {s.officerName}
-              <button
-                className="flink"
-                style={{ marginLeft: 8 }}
-                onClick={() => {
-                  signOutOfficer();
-                  nav("/officer/login");
-                }}
-              >
-                Sign out
-              </button>
-            </span>
+            </div>
           ) : (
             <button className="btn ghost" style={{ padding: "8px 14px" }} onClick={() => nav("/login")}>
               Sign in

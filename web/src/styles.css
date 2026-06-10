@@ -317,6 +317,66 @@ code,
   box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.16);
 }
 
+/* professional user identity + sign-out */
+.usermenu {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  border: 1px solid var(--line-2);
+  background: var(--card);
+  border-radius: var(--radius-pill);
+  padding: 4px 4px 4px 8px;
+}
+.usermenu .avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--ink-fill);
+  color: #fff;
+  font-family: var(--label);
+  font-weight: 700;
+  font-size: 12px;
+  flex: none;
+}
+.usermenu .who {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+}
+.usermenu .who-name {
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--ink);
+}
+.usermenu .who-role {
+  font-family: var(--label);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.usermenu .signout {
+  border: 1px solid var(--line-2);
+  background: transparent;
+  color: var(--ink-soft);
+  font-family: var(--label);
+  font-weight: 600;
+  font-size: 11px;
+  padding: 6px 11px;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+.usermenu .signout:hover {
+  background: var(--ink-fill);
+  color: #fff;
+  border-color: var(--ink-fill);
+}
+
 .main {
   width: 100%;
   max-width: 1120px;
