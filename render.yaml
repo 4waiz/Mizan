@@ -8,6 +8,10 @@ services:
     startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
     healthCheckPath: /api/health
     envVars:
+      # Pin Python 3.12 — pydantic-core/numpy/pandas/scikit-learn have no
+      # prebuilt wheels for Render's default 3.14, so they fail to compile.
+      - key: PYTHON_VERSION
+        value: "3.12.7"
       # Free tier has no persistent disk, so SQLite lives in the ephemeral
       # filesystem. The app auto-seeds demo data on every boot, so the queues
       # repopulate after each restart.
