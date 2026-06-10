@@ -1,0 +1,14 @@
+{
+  "name": "mizan",
+  "private": true,
+  "version": "0.1.0",
+  "scripts": {
+    "setup": "python -m venv .venv && .venv\\Scripts\\python.exe -m pip install -r backend/requirements.txt && npm --prefix web install",
+    "dev:backend": "uvicorn app.main:app --reload --app-dir backend",
+    "dev:frontend": "npm --prefix web run dev",
+    "dev:all": "concurrently -k -n backend,frontend -c blue,magenta \"npm:dev:backend\" \"npm:dev:frontend\""
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0"
+  }
+}
